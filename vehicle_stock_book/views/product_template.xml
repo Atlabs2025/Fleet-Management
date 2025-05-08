@@ -1,0 +1,92 @@
+<odoo>
+<record id="product_template_vehicle_info_page" model="ir.ui.view">
+    <field name="name">product.template.vehicle.info</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_only_form_view"/>
+    <field name="arch" type="xml">
+<!--        <xpath expr="//search" position="inside">-->
+<!--            <field name="engine_no" string="Engine Number"/>-->
+<!--        </xpath>-->
+        <xpath expr="//sheet/notebook" position="inside">
+            <page string="Vehicle Informations">
+                <group>
+                    <group>
+
+                         <field name="vehicle_type"/>
+                         <field name="vehicle_id"/>
+                         <field name="model_id"/>
+                         <field name="vin"/>
+                         <field name="engine_no"/>
+                         <field name="plate_no"/>
+                         <field name="brand_id"/>
+                         <field name="specification"/>
+                         <field name="fuel_type"/>
+                         <field name="date_of_purchase"/>
+                         <field name="year_of_manufacturing"/>
+                         <field name="date_of_manufacturing"/>
+                         <field name="country_of_origin_id"/>
+                         <field name="number_of_cylinders"/>
+                         <field name="order_date"/>
+
+                    </group>
+
+                    <group>
+                        <field name="product_code" readonly="1"/>
+                        <field name="bought_from"/>
+                        <field name="bought_by"/>
+                        <field name="consignment"/>
+                        <field name="consignment_location"/>
+                        <field name="hours_spent"/>
+                        <field name="service_history"/>
+                        <field name="odoo_meeter"/>
+                        <field name="colour_type"/>
+                        <field name="trim_colour"/>
+                        <field name="interior_type"/>
+                         <field name="additional_features"/>
+                        <field name="send_to_id"/>
+                    </group>
+                    <group string="Cost Details" col="2">
+                        <field name="landing_price"/>
+                        <field name="sales_cost"/>
+                        <field name="refurb_cost"/>
+                        <field name="additional_expenses"/>
+                        <field name="sales_price"/>
+
+                    </group>
+
+                    <group string="Vehicle Images" colspan="4">
+                        <field name="image_ids">
+                            <list editable="bottom">
+                                <field name="image" widget="image"/>
+                            </list>
+                        </field>
+                    </group>
+
+
+                </group>
+
+            </page>
+        </xpath>
+
+
+    </field>
+</record>
+
+    <record id="product_template_search_engine_no" model="ir.ui.view">
+        <field name="name">product.template.search.engine.no</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <!-- Make engine_no searchable -->
+                <field name="engine_no" string="Engine Number"/>
+                <field name="model_id" string="Model ID"/>
+                <field name="vin" string="VIN"/>
+                <field name="product_code" string="Product Code"/>
+
+                <!-- Optional: Add quick filter -->
+<!--                <filter string="Has Engine Number" name="has_engine_no" domain="[('engine_no', '!=', False)]"/>-->
+            </xpath>
+        </field>
+    </record>
+</odoo>

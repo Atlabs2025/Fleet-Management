@@ -1,0 +1,119 @@
+<odoo>
+    <record id="view_vehicle_stock_book_list" model="ir.ui.view">
+        <field name="name">vehicle.stock.book.list</field>
+        <field name="model">vehicle.stock.book</field>
+        <field name="arch" type="xml">
+            <list string="Vehicle Stock Book">
+                <field name="vehicle_id"/>
+                  <field name="model"/>
+                <field name="chasis_no"/>
+                <field name="vin"/>
+                <field name="brand"/>
+                <field name="quantity"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vehicle_stock_book_form" model="ir.ui.view">
+    <field name="name">vehicle.stock.book.form</field>
+    <field name="model">vehicle.stock.book</field>
+    <field name="arch" type="xml">
+        <form string="Vehicle Stock Book">
+             <header>
+                  <field name="state" widget="statusbar" statusbar_visible="draft,invoice,done"/>
+                    <button name="action_create_estimate" type="object" string="Create Estimate" class="btn-primary" invisible="1"/>
+                 <button name="action_confirm_stock" type="object" string="Confirm" class="btn-primary" invisible="state !='quotation'"/>
+                </header>
+            <sheet>
+
+
+                <group>
+                    <group>
+                        <field name="partner_id" requierd="1"/>
+                        <field name="vehicle_id"/>
+                         <field name="model_id"/>
+                         <field name="vehicle_type"/>
+                         <field name="varient"/>
+                         <field name="vin"/>
+                         <field name="engine_no"/>
+                         <field name="date_of_purchase"/>
+                        <field name="year_of_manufacturing"/>
+                        <field name="date_of_manufacturing"/>
+                        <field name="country_of_origin_id"/>
+                        <field name="specification"/>
+                        <field name="number_of_cylinders"/>
+                        <field name="fuel_type"/>
+                         <field name="brand_id"/>
+                        <field name="chasis_no" invisible="1"/>
+                        <field name="order_date"/>
+                    </group>
+                    <group>
+                        <field name="bought_from"/>
+                        <field name="bought_by"/>
+                        <field name="consignment"/>
+                        <field name="consignment_location"/>
+                        <field name="image" invisible="1"/>
+                        <field name="name" invisible="1"/>
+                        <field name="brand" invisible="1"/>
+                        <field name="company_id"/>
+                        <field name="model" invisible="1"/>
+                        <field name="hours_spent"/>
+                        <field name="quantity"/>
+                        <field name="service_history"/>
+                        <field name="present_km"/>
+                        <field name="colour_type"/>
+                        <field name="interior_type" invisible="colour_type != 'interior'"/>
+
+                        <field name="additional_features"/>
+                        <field name="send_to_id"/>
+
+                    </group>
+                     <group string="Cost Details" col="2">
+                        <field name="landing_price"/>
+                        <field name="sales_cost"/>
+                        <field name="refurb_cost"/>
+                        <field name="additional_expenses"/>
+                        <field name="sales_price"/>
+                    </group>
+
+
+                </group>
+
+                <group string="Vehicle Images">
+                    <field name="image_ids">
+                        <list editable="bottom">
+                            <field name="image" widget="image"/>
+                            <field name="name"/>
+                        </list>
+                    </field>
+                </group>
+                  <notebook>
+                    <page string="Stock Lines">
+                        <field name="stock_line_ids">
+                            <list editable="bottom">
+<!--                                <field name="product_id"/>-->
+                                <field name="description"/>
+                                <field name="price"/>
+                                <field name="quantity"/>
+                                <field name="tax"/>
+                                <field name="total" readonly="1"/>
+                            </list>
+                        </field>
+                    </page>
+                 </notebook>
+
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+
+
+    <record id="action_vehicle_stock_book" model="ir.actions.act_window">
+        <field name="name">Vehicle Stock Book</field>
+        <field name="res_model">vehicle.stock.book</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

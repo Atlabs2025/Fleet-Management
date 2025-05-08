@@ -1,0 +1,269 @@
+<odoo>
+    <template id="report_tax_invoice">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <header>
+                    <h2 style="text-align: center;">
+                        <u>Tax Invoice</u>
+                    </h2>
+                </header>
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <div class="row mt32">
+
+
+                            <div style="margin-top: 20px;">
+                                <!-- Title Row with lines above and below -->
+                                <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 0; text-align: center; font-weight: bold;">
+                                    Customer Details
+                                </div>
+
+                                <!-- Two-Column Vertical Layout -->
+                                <table style="width: 100%; margin-top: 10px; font-size: 14px;">
+                                    <tr>
+                                        <!-- Left Section -->
+                                        <td style="width: 60%; vertical-align: top;">
+                                            <div style="line-height: 1.4;">
+                                                <div>
+                                                    <strong>Company:</strong>
+                                                    <span t-esc="doc.job_card_id.company_id.name"/>
+                                                </div>
+                                                <div>
+                                                    <strong>Phone:</strong>
+                                                    <span t-esc="doc.partner_id.phone"/>
+                                                </div>
+                                                <div>
+                                                    <strong>VAT:</strong>
+                                                    <span t-esc="doc.partner_id.vat"/>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- Right Section -->
+                                        <td style="width: 50%; vertical-align: top;">
+                                            <div style="line-height: 1.4;">
+                                                <div>
+                                                    <strong>Customer:</strong>
+                                                    <span t-esc="doc.partner_id.name"/>
+                                                </div>
+                                                <div>
+                                                    <strong>WhatsApp No:</strong>
+                                                    <span t-esc="doc.partner_id.whatsapp_no"/>
+                                                </div>
+                                                <div>
+                                                    <strong>Email:</strong>
+                                                    <span t-esc="doc.partner_id.email"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <!-- Closing line -->
+                                <div style="border-top: 1px solid #000; margin-top: 10px;"></div>
+                            </div>
+
+
+                            <!-- Right column: Vehicle Details -->
+                            <!-- Vehicle Details Section -->
+                            <div style="margin-top: 30px;">
+                                <!-- Title Row with lines above and below -->
+                                <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 0; text-align: center; font-weight: bold;">
+                                    Vehicle Details
+                                </div>
+
+                                <!-- Two-Column Vertical Layout -->
+                                <table style="width: 100%; margin-top: 10px; font-size: 14px;">
+                                    <tr>
+                                        <!-- Left Section -->
+                                        <td style="width: 60%; vertical-align: top;">
+                                            <div style="line-height: 1.4;">
+                                                <div>
+                                                    <strong>Vehicle:</strong>
+                                                    <span t-esc="doc.job_card_id.vehicle_id.name"/>
+                                                </div>
+                                                <div>
+                                                    <strong>Register No:</strong>
+                                                    <span t-esc="doc.job_card_id.register_no"/>
+                                                </div>
+                                                <div>
+                                                    <strong>VIN Number:</strong>
+                                                    <span t-esc="doc.job_card_id.vin_number"/>
+                                                </div>
+                                                <div>
+                                                    <strong>Vehicle Make:</strong>
+                                                    <span t-esc="doc.job_card_id.vehicle_make_id.name"/>
+                                                </div>
+                                                <div>
+                                                    <strong>VIN SN:</strong>
+                                                    <span t-esc="doc.job_card_id.vin_sn"/>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- Right Section -->
+                                        <td style="width: 50%; vertical-align: top;">
+                                            <div style="line-height: 1.4;">
+                                                <div>
+                                                    <strong>Engine No:</strong>
+                                                    <span t-esc="doc.job_card_id.engine_no"/>
+                                                </div>
+                                                <div>
+                                                    <strong>Odoo Meter Reading:</strong>
+                                                    <span t-esc="doc.job_card_id.odoo_meter_reading"/>
+                                                </div>
+                                                <div>
+                                                    <strong>Fuel Level:</strong>
+                                                    <span t-esc="doc.job_card_id.fuel_level"/>
+                                                </div>
+                                                <div>
+                                                    <strong>Vehicle Colour:</strong>
+                                                    <span t-esc="doc.job_card_id.vehicle_colour"/>
+                                                </div>
+                                                <div>
+                                                    <strong>In/Out:</strong>
+                                                    <span t-esc="doc.job_card_id.vehicle_in_out"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <!-- Closing line -->
+                                <div style="border-top: 1px solid #000; margin-top: 10px;"></div>
+                            </div>
+                        </div>
+
+<!--                        <t t-if="doc.job_detail_line_ids">-->
+<!--                            <h4 style="margin-top: 30px;">Job Details</h4>-->
+<!--                            <table style="width: 100%; margin-top: 10px; font-size: 14px; border-collapse: collapse;">-->
+<!--                                <thead>-->
+<!--                                    <tr>-->
+<!--                                        <th style="text-align: left; padding: 4px;font-weight:bold;">Department</th>-->
+<!--                                        <th style="text-align: left; padding: 4px;font-weight:bold;">Description</th>-->
+<!--                                    </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                    <t t-foreach="doc.job_detail_line_ids" t-as="line">-->
+<!--                                        <tr>-->
+<!--                                            <td style="padding: 4px;">-->
+<!--                                                <span t-esc="line.department"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 4px;">-->
+<!--                                                <span t-esc="line.description"/>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                    </t>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </t>-->
+
+                        <t t-if="doc.invoice_line_ids">
+    <h4 style="margin-top: 30px;">Invoice Lines</h4>
+    <table style="width: 100%; margin-top: 10px; font-size: 14px; border-collapse: collapse; border: 1px solid #000;">
+        <thead>
+            <tr>
+                <th style="text-align: left; padding: 4px; font-weight: bold; border: 1px solid #000;">Product</th>
+                <th style="text-align: left; padding: 4px; font-weight: bold; border: 1px solid #000;">Description</th>
+                <th style="text-align: right; padding: 4px; font-weight: bold; border: 1px solid #000;">Quantity</th>
+                <th style="text-align: right; padding: 4px; font-weight: bold; border: 1px solid #000;">Unit Price</th>
+                <th style="text-align: right; padding: 4px; font-weight: bold; border: 1px solid #000;">Taxes</th>
+                <th style="text-align: right; padding: 4px; font-weight: bold; border: 1px solid #000;">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <t t-foreach="doc.invoice_line_ids" t-as="line">
+                <tr>
+                    <td style="padding: 4px; border: 1px solid #000;">
+                        <span t-esc="line.product_id.display_name"/>
+                    </td>
+                    <td style="padding: 4px; border: 1px solid #000;">
+                        <span t-esc="line.name"/>
+                    </td>
+                    <td style="padding: 4px; text-align: right; border: 1px solid #000;">
+                        <span t-esc="line.quantity"/>
+                    </td>
+                    <td style="padding: 4px; text-align: right; border: 1px solid #000;">
+                        <span t-esc="line.price_unit"/>
+                    </td>
+                    <td style="padding: 4px; text-align: right; border: 1px solid #000;">
+                        <span t-esc="' ,'.join(t.name for t in line.tax_ids)"/>
+                    </td>
+                    <td style="padding: 4px; text-align: right; border: 1px solid #000;">
+                        <span t-esc="line.price_subtotal"/>
+                    </td>
+                </tr>
+            </t>
+        </tbody>
+    </table>
+</t>
+
+
+
+
+
+
+
+
+
+
+<!--                        <div class="row mt32">-->
+<!--                            <div class="col-6">-->
+<!--                                <h4>Summary</h4>-->
+<!--                                <table class="table table-sm">-->
+<!--                                    <tbody>-->
+<!--                                        <tr t-if="doc.total_labour">-->
+<!--                                            <td>-->
+<!--                                                <strong>Labour Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_labour"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_parts">-->
+<!--                                            <td>-->
+<!--                                                <strong>Parts Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_parts"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_material">-->
+<!--                                            <td>-->
+<!--                                                <strong>Material Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_material"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_lubricant">-->
+<!--                                            <td>-->
+<!--                                                <strong>Lubricant Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_lubricant"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_sublets">-->
+<!--                                            <td>-->
+<!--                                                <strong>Sublets Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_sublets"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_paint_material">-->
+<!--                                            <td>-->
+<!--                                                <strong>Paint Material Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_paint_material"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_tyre">-->
+<!--                                            <td>-->
+<!--                                                <strong>Tyre Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_tyre"/>-->
+<!--                                        </tr>-->
+<!--                                    </tbody>-->
+<!--                                </table>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                </t>
+
+
+            </t>
+        </t>
+    </template>
+</odoo>
+

@@ -1,0 +1,36 @@
+<odoo>
+<record id="view_partner_form_inherit_vehicles_tab" model="ir.ui.view">
+    <field name="name">res.partner.form.inherit.vehicles</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+         <xpath expr="//field[@name='category_id']" position="after">
+            <field name="whatsapp_no"/>
+        </xpath>
+
+        <xpath expr="//field[@name='vat']" position="after">
+            <field name="customer_type"/>
+            <field name="customer_code"/>
+        </xpath>
+
+        <xpath expr="//notebook" position="inside">
+            <page string="Vehicles">
+                <field name="job_card_vehicle_ids">
+                    <list>
+                        <field name="vehicle_make_id"/>
+                        <field name="vin_sn"/>
+
+                    </list>
+                </field>
+<!--                <field name="job_card_vehicle_ids" mode="tree" context="{'default_partner_id': active_id}">-->
+<!--                    <tree editable="bottom">-->
+<!--                        <field name="vehicle_make_id"/>-->
+<!--                        <field name="register_no"/>-->
+<!--                        <field name="chassis_no"/>-->
+<!--                    </tree>-->
+<!--                </field>-->
+            </page>
+        </xpath>
+    </field>
+</record>
+</odoo>
