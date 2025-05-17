@@ -20,7 +20,7 @@ class VehicleStockBook(models.Model):
     odoo_meter_reading = fields.Char(string="Odoo Meter Reading")
     fuel_level = fields.Char(string="Fuel Level")
     vehicle_colour = fields.Char(string="Vehicle Colour")
-    vin_number = fields.Char(string="VIN Number")
+    # vin_number = fields.Char(string="VIN Number")
     vin_sn = fields.Char(string="Chassis Number")
 
     state = fields.Selection([
@@ -160,7 +160,7 @@ class VehicleStockBook(models.Model):
         for rec in self:
             if rec.vehicle_id:
                 rec.vehicle_make_id = rec.vehicle_id.model_id.brand_id
-                rec.vin_number = rec.vehicle_id.vin_number
+                # rec.vin_number = rec.vehicle_id.vin_number
                 rec.vin_sn = rec.vehicle_id.vin_sn
                 rec.engine_no = rec.vehicle_id.engine_no
                 rec.register_no = rec.vehicle_id.license_plate
@@ -249,6 +249,12 @@ class VehicleStockBook(models.Model):
 
 
 
+    def action_complete_job_card(self):
+        for rec in self:
+            rec.state = 'completed'
+
+
+
 class JobCardLine(models.Model):
     _name = 'job.card.line'
     _description = 'Job Card Line'
@@ -265,7 +271,7 @@ class JobCardLine(models.Model):
     ], string="Department")
 
     description = fields.Text(string="Description")
-    product_template_id = fields.Many2one('product.template', string="Product")
+    product_template_id = fields.Many2one('product.template', string="Part Number")
     price_unit = fields.Float(string="Unit Price")
     price_amt = fields.Float(string="Amount")
     quantity = fields.Float(string="Qty")
@@ -312,7 +318,13 @@ class JobCardLine(models.Model):
         store=False
     )
 
-    part_number = fields.Char(string="Part Number")
+    # part_number = fields.Char(string="Part Number")
+    part_number = fields.Many2one(
+        'product.template',
+        string="Product",
+
+    )
+
 
 
     @api.depends('product_template_id', 'job_card_id')
@@ -392,7 +404,7 @@ class JobCardLine(models.Model):
     #         discount_amount = subtotal * (line.discount / 100.0)
     #         line.total = subtotal - discount_amount
 
-
+# commented on saturday complete button add cheyyan paranjath kondu
     def write(self, vals):
         res = super().write(vals)
         for line in self:
@@ -416,7 +428,7 @@ class JobCardLine(models.Model):
         for line in self:
             if line.department == 'parts' and line.product_template_id:
                 line.price_unit = line.product_template_id.list_price
-                line.part_number = line.product_template_id.default_code
+                line.part_number = line.product_template_id
 
 
 
@@ -540,3 +552,5 @@ class JobCardServiceLine(models.Model):
         for record in records:
             record._compute_service_details()
         return records
+
+

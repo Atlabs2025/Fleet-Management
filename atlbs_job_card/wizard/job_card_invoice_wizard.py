@@ -486,7 +486,7 @@ class JobCardInvoiceWizard(models.TransientModel):
                     'product_uom_qty': line.quantity,
                     'product_uom': product.uom_id.id,
                     'location_id': self.env.ref('stock.stock_location_stock').id,
-                    'location_des0.00t_id': self.job_card_id.partner_id.property_stock_customer.id,
+                    'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
                 }))
 
             invoice_lines.append((0, 0, {
