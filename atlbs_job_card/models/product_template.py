@@ -16,6 +16,8 @@ class ProductTemplate(models.Model):
 
     service_amount = fields.Float(string="Service Amount")
 
+
+
     @api.onchange('menu_service')
     def _onchange_menu_service(self):
         for rec in self:
@@ -29,3 +31,6 @@ class ProductTemplate(models.Model):
                 rec.service_amount = 300
             else:
                 rec.service_amount = 0.0
+
+
+

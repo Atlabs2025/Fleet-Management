@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Project Task',
+    'name': 'Vehicle Stock Book',
     'version': '18.0.1.0.0',
     'category': 'Vehicle Stock',
     'summary': 'Stock of the vehicles',
     'description': 'stock book',
     'depends': [
-        'stock', 'fleet'
+        'base','stock', 'fleet'
     ],
 'data': [
+    'security/car_user_security.xml',
     'security/ir.model.access.csv',
-    # 'views/vehicle_stock_book.xml',
-    'views/product_template.xml',
+    # 'data/sequence.xml',
+    'views/vehicle_stock_book.xml',
+    # 'views/product_template.xml',
     # 'views/menu.xml',
 ],
     'assets': {},

@@ -7,7 +7,7 @@
             <list string="Job Card" default_order="create_date desc">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="vin_number"/>
+                <!--                <field name="vin_number"/>-->
                 <field name="vin_sn"/>
                 <field name="state"/>
 
@@ -29,13 +29,17 @@
                     <button name="action_reset_to_draft" string="Reset To Draft" type="object"
                             invisible="state != 'completed'" class="btn-success"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"
-                            invisible="state  !='memo'"/>
+                            invisible="state  !='completed'"/>
                     <button name="action_create_estimate" string="Create Estimate" type="object" class="btn-primary"
                             invisible="state  !='memo'"/>
                     <button name="action_preforma_invoice" string="Create Preforma Invoice" type="object"
                             class="btn-primary" invisible="state  !='memo'"/>
                     <button name="action_open_material_requisition_form" type="object"
                             string="Create Material Requisition" class="btn-primary" invisible="state  !='memo'"/>
+
+                    <button name="action_complete_job_card" type="object"
+                            string="Complete" class="btn-primary" invisible="state  !='memo'"/>
+
 
                 </header>
                 <sheet>
@@ -60,8 +64,8 @@
                             <field name="is_insurance_claim"/>
                             <field name="insurance_company_id" invisible="is_insurance_claim == False"/>
                             <!--                            <field name="insurance_company"/>-->
-                            <field name="company_id"/>
                             <field name="partner_id"/>
+                            <field name="company_id"/>
                             <field name="phone"/>
                             <field name="email"/>
                             <field name="vat"/>
@@ -74,7 +78,7 @@
 
                             <field name="vehicle_id"/>
                             <field name="register_no"/>
-                            <field name="vin_number"/>
+                            <!--                            <field name="vin_number"/>-->
                             <field name="vehicle_make_id"/>
                             <field name="vin_sn"/>
                             <field name="engine_no"/>
@@ -112,6 +116,60 @@
                                     <!--                                    <field name="is_request_pending"/>-->
                                 </list>
                             </field>
+
+                            <group>
+                                <div style="display: flex; justify-content: space-between; margin-top: 10px; gap: 30px;">
+
+                                    <!-- Left Side: Summary Totals -->
+                                    <div>
+                                        <group string="Summary" col="2">
+                                            <field name="total_labour" readonly="1"/>
+                                            <field name="total_parts" readonly="1"/>
+                                            <field name="total_material" readonly="1"/>
+                                            <field name="total_lubricant" readonly="1"/>
+                                            <field name="total_sublets" readonly="1"/>
+                                            <field name="total_paint_material" readonly="1"/>
+                                            <field name="total_tyre" readonly="1"/>
+                                        </group>
+                                    </div>
+
+                                    <div style="flex: 1; margin-left: 700px;">
+                                        <group string="" col="2"
+                                               style="font-size: 16px; font-weight: 600; color: black;">
+                                            <field name="total_price_amt"
+                                                   readonly="1"
+                                                   widget="monetary"
+                                                   style="font-size: 16px; font-weight: 600; color: black;"/>
+                                            <field name="total_discount"
+                                                   readonly="1"
+                                                   widget="monetary"
+                                                   style="font-size: 16px; font-weight: 600; color: black;"/>
+                                            <field name="subtotal"
+                                                   readonly="1"
+                                                   widget="monetary"
+                                                   style="font-size: 16px; font-weight: 600; color: black;"/>
+                                            <field name="vat_total"
+                                                   readonly="1"
+                                                   widget="monetary"
+                                                   style="font-size: 16px; font-weight: 600; color: black;"/>
+                                            <field name="total_amount"
+                                                   readonly="1"
+                                                   widget="monetary"
+                                                   string="Grand Total"
+                                                   style="font-size: 20px; font-weight: bold; color: black;"/>
+                                        </group>
+                                    </div>
+
+                                </div>
+                            </group>
+
+
+
+
+
+
+
+
                         </page>
                         <page string="Requisition Lines">
                             <field name="material_request_ids">
@@ -140,144 +198,6 @@
 
 
                     </notebook>
-
-                    <!--                    <group>-->
-                    <!--                        <div style="float: right; width: 450px; margin-top: 10px;">-->
-                    <!--                            <group string="Summary" col="2">-->
-                    <!--                                <group>-->
-                    <!--                                    <field name="total_labour" readonly="1"/>-->
-                    <!--                                    <field name="total_parts" readonly="1"/>-->
-                    <!--                                    <field name="total_material" readonly="1"/>-->
-                    <!--                                    <field name="total_lubricant" readonly="1"/>-->
-                    <!--                                    <field name="total_sublets" readonly="1"/>-->
-                    <!--                                    <field name="total_paint_material" readonly="1"/>-->
-                    <!--                                    <field name="total_tyre" readonly="1"/>-->
-
-                    <!--                                    <field name="total_price_amt" readonly="1" widget="monetary"/>-->
-                    <!--                                    <field name="total_discount" readonly="1" widget="monetary"/>-->
-                    <!--                                    <field name="subtotal" readonly="1" widget="monetary"/>-->
-                    <!--                                    <field name="vat_total" readonly="1" widget="monetary"/>-->
-
-
-                    <!--                                    <div style="display: flex; justify-content: flex-end; margin-top: 15px; margin-right: 20px;">-->
-                    <!--                                        <div style="display: flex; align-items: center; gap: 10px;">-->
-                    <!--                                            &lt;!&ndash; Label styled with large, bold text &ndash;&gt;-->
-                    <!--                                            <span class="o_form_label"-->
-                    <!--                                                  style="font-size: 18px; font-weight: bold; color: black;">Grand Total:-->
-                    <!--                                            </span>-->
-                    <!--                                            &lt;!&ndash; Field styled with larger font and bold text &ndash;&gt;-->
-                    <!--                                            <field name="total_amount"-->
-                    <!--                                                   readonly="1"-->
-                    <!--                                                   widget="monetary"-->
-                    <!--                                                   style="font-size: 24px; font-weight: bold; color: black; border: none;"/>-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-
-                    <!--                                </group>-->
-                    <!--                            </group>-->
-                    <!--                        </div>-->
-                    <!--                    </group>-->
-
-
-                    <group>
-                        <div style="display: flex; justify-content: space-between; margin-top: 10px; gap: 30px;">
-
-                            <!-- Left Side: Summary Totals -->
-                            <div style="flex: 1;">
-                                <group string="Summary" col="2">
-                                    <field name="total_labour" readonly="1"/>
-                                    <field name="total_parts" readonly="1"/>
-                                    <field name="total_material" readonly="1"/>
-                                    <field name="total_lubricant" readonly="1"/>
-                                    <field name="total_sublets" readonly="1"/>
-                                    <field name="total_paint_material" readonly="1"/>
-                                    <field name="total_tyre" readonly="1"/>
-                                </group>
-                            </div>
-
-
-                            <div style="flex: 1; margin-left: 700px;">
-                                <group string="" col="2" style="font-size: 16px; font-weight: 600; color: black;">
-                                    <field name="total_price_amt"
-                                           readonly="1"
-                                           widget="monetary"
-                                           style="font-size: 16px; font-weight: 600; color: black;"/>
-                                    <field name="total_discount"
-                                           readonly="1"
-                                           widget="monetary"
-                                           style="font-size: 16px; font-weight: 600; color: black;"/>
-                                    <field name="subtotal"
-                                           readonly="1"
-                                           widget="monetary"
-                                           style="font-size: 16px; font-weight: 600; color: black;"/>
-                                    <field name="vat_total"
-                                           readonly="1"
-                                           widget="monetary"
-                                           style="font-size: 16px; font-weight: 600; color: black;"/>
-                                    <field name="total_amount"
-                                           readonly="1"
-                                           widget="monetary"
-                                           string="Grand Total"
-                                           style="font-size: 20px; font-weight: bold; color: black;"/>
-                                </group>
-                            </div>
-
-
-
-
-
-
-
-
-
-<!--                            <group>-->
-<!--                                <div style="margin-left: 100px; font-size: 16px;">-->
-<!--                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">-->
-<!--                                        <span style="font-weight: bold;">Total:</span>-->
-<!--                                        <field name="total_price_amt"-->
-<!--                                               nolabel="1"-->
-<!--                                               readonly="1"-->
-<!--                                               widget="monetary"-->
-<!--                                               style="font-weight: bold; color: black;"/>-->
-<!--                                    </div>-->
-<!--                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">-->
-<!--                                        <span style="font-weight: bold;">Discount:</span>-->
-<!--                                        <field name="total_discount"-->
-<!--                                               nolabel="1"-->
-<!--                                               readonly="1"-->
-<!--                                               widget="monetary"-->
-<!--                                               style="font-weight: bold; color: black;"/>-->
-<!--                                    </div>-->
-<!--                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">-->
-<!--                                        <span style="font-weight: bold;">Subtotal:</span>-->
-<!--                                        <field name="subtotal"-->
-<!--                                               nolabel="1"-->
-<!--                                               readonly="1"-->
-<!--                                               widget="monetary"-->
-<!--                                               style="font-weight: bold; color: black;"/>-->
-<!--                                    </div>-->
-<!--                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">-->
-<!--                                        <span style="font-weight: bold;">VAT 5%:</span>-->
-<!--                                        <field name="vat_total"-->
-<!--                                               nolabel="1"-->
-<!--                                               readonly="1"-->
-<!--                                               widget="monetary"-->
-<!--                                               style="font-weight: bold; color: black;"/>-->
-<!--                                    </div>-->
-<!--                                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">-->
-<!--                                        <span style="font-weight: bold; font-size: 18px;">Grand Total:</span>-->
-<!--                                        <field name="total_amount"-->
-<!--                                               nolabel="1"-->
-<!--                                               readonly="1"-->
-<!--                                               widget="monetary"-->
-<!--                                               style="font-weight: bold; font-size: 18px; color: black;"/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </group>-->
-
-
-                        </div>
-                    </group>
 
 
                 </sheet>
