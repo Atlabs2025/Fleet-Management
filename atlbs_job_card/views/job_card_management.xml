@@ -14,6 +14,8 @@
             </list>
         </field>
     </record>
+
+
     <!-- Form View -->
 
     <record id="view_job_card_form" model="ir.ui.view">
@@ -50,47 +52,170 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <h1>
+
+
+                        <h1 style="margin-bottom: 0px !important; padding-bottom: 0px !important; font-size: 16px;">
                             <field name="name" readonly="1"/>
                         </h1>
                     </div>
 
-                    <!-- Two-column layout -->
-                    <group col="2">
-                        <!-- Left Column: clean layout -->
-                        <group>
+                    <group col="3" style="margin-top: -50px !important; padding-top: 0px !important;">
+                        <separator string="Customer Details" colspan="3"
+                                   style="margin-bottom: 2px !important; font-size: 13px !important;"/>
 
-                            <separator string="Customer Details" colspan="2"/>
+
+                        <group class="small-fields-group">
                             <field name="is_insurance_claim"/>
-                            <field name="insurance_company_id" invisible="is_insurance_claim == False"/>
-                            <!--                            <field name="insurance_company"/>-->
                             <field name="partner_id"/>
+                            <field name="email"/>
+                        </group>
+
+
+                        <group class="small-fields-group">
                             <field name="company_id"/>
                             <field name="phone"/>
-                            <field name="email"/>
                             <field name="vat"/>
+                        </group>
+
+                        <group class="small-fields-group">
+                            <field name="insurance_company_id" invisible="is_insurance_claim == False"/>
                             <field name="whatsapp_no"/>
 
                         </group>
+                    </group>
+                    <group col="3" style="margin-top: -30px !important; padding-top: 0px !important;">
+                        <separator string="Vehicle Details" colspan="3"
+                                   style="margin-bottom: 2px !important; font-size: 13px !important;"/>
 
-                        <!-- Right Column: Customer Info -->
-                        <group string="Vehicle Details" col="2">
 
+                        <group class="small-fields-group">
                             <field name="vehicle_id"/>
                             <field name="register_no"/>
-                            <!--                            <field name="vin_number"/>-->
                             <field name="vehicle_make_id"/>
+                        </group>
+
+                        <!--                            <field name="vin_number"/>-->
+
+                        <group class="small-fields-group">
                             <field name="vin_sn"/>
                             <field name="engine_no"/>
                             <field name="odoo_meter_reading"/>
+                        </group>
+                        <group class="small-fields-group">
                             <field name="fuel_level"/>
                             <field name="vehicle_colour"/>
                             <field name="vehicle_in_out"/>
                         </group>
                     </group>
 
-                    <notebook>
-                        <page string="Job Details">
+<!--                    <notebook>-->
+<!--                    <notebook>-->
+
+<!--                        <page string="Job Details">-->
+<!--                            <field name="job_detail_line_ids">-->
+<!--                                <list editable="bottom">-->
+<!--                                    <field name="department"/>-->
+<!--                                    <field name="product_template_id"/>-->
+<!--                                    <field name="part_number"/>-->
+<!--                                    <field name="description"/>-->
+<!--                                    <field name="quantity"/>-->
+<!--                                    <field name="price_unit"/>-->
+<!--                                    <field name="price_amt"/>-->
+<!--                                    <field name="discount"/>-->
+<!--                                    <field name="after_discount"/>-->
+<!--                                    &lt;!&ndash;                                    <field name="vat_percentage"/>&ndash;&gt;-->
+
+<!--                                    <field name="tax_ids" widget="many2many_tags"/>-->
+<!--                                    <field name="tax_amount"/>-->
+
+<!--                                    &lt;!&ndash;                                 readonly="context.get('invoiced', True)"&ndash;&gt;-->
+<!--                                    <field name="total" readonly="1"/>-->
+<!--                                    <field name="line_state" required="1"/>-->
+<!--                                    <field name="invoiced" column_invisible="1"/>-->
+<!--                                    <field name="is_request_pending" column_invisible="1"/>-->
+<!--                                    <field name="is_request_completed" column_invisible="1"/>-->
+<!--                                    &lt;!&ndash;                                    <field name="is_request_pending"/>&ndash;&gt;-->
+<!--                                </list>-->
+<!--                            </field>-->
+
+<!--                            <group>-->
+<!--                                <div style="display: flex; justify-content: space-between; margin-top: 10px; gap: 30px;">-->
+
+<!--                                    &lt;!&ndash; Left Side: Summary Totals &ndash;&gt;-->
+<!--                                    <div>-->
+<!--                                        <group string="Summary" col="2">-->
+<!--                                            <field name="total_labour" readonly="1"/>-->
+<!--                                            <field name="total_parts" readonly="1"/>-->
+<!--                                            <field name="total_material" readonly="1"/>-->
+<!--                                            <field name="total_lubricant" readonly="1"/>-->
+<!--                                            <field name="total_sublets" readonly="1"/>-->
+<!--                                            <field name="total_paint_material" readonly="1"/>-->
+<!--                                            <field name="total_tyre" readonly="1"/>-->
+<!--                                        </group>-->
+<!--                                    </div>-->
+
+<!--                                    <div style="flex: 1; margin-left: 700px;">-->
+<!--                                        <group string="" col="2"-->
+<!--                                               style="font-size: 16px; font-weight: 600; color: black;">-->
+<!--                                            <field name="total_price_amt"-->
+<!--                                                   readonly="1"-->
+<!--                                                   widget="monetary"-->
+<!--                                                   style="font-size: 16px; font-weight: 600; color: black;"/>-->
+<!--                                            <field name="total_discount"-->
+<!--                                                   readonly="1"-->
+<!--                                                   widget="monetary"-->
+<!--                                                   style="font-size: 16px; font-weight: 600; color: black;"/>-->
+<!--                                            <field name="subtotal"-->
+<!--                                                   readonly="1"-->
+<!--                                                   widget="monetary"-->
+<!--                                                   style="font-size: 16px; font-weight: 600; color: black;"/>-->
+<!--                                            <field name="vat_total"-->
+<!--                                                   readonly="1"-->
+<!--                                                   widget="monetary"-->
+<!--                                                   style="font-size: 16px; font-weight: 600; color: black;"/>-->
+<!--                                            <field name="total_amount"-->
+<!--                                                   readonly="1"-->
+<!--                                                   widget="monetary"-->
+<!--                                                   string="Grand Total"-->
+<!--                                                   style="font-size: 20px; font-weight: bold; color: black;"/>-->
+<!--                                        </group>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </group>-->
+
+
+<!--                        </page>-->
+<!--                        <page string="Requisition Lines">-->
+<!--                            <field name="material_request_ids">-->
+<!--                                <list editable="bottom">-->
+<!--                                    <field name="employee_id"/>-->
+<!--                                    <field name="request_date"/>-->
+<!--                                    &lt;!&ndash;                                    <field name="requisition_type"/>&ndash;&gt;-->
+<!--                                    <field name="product_id"/>-->
+<!--                                    &lt;!&ndash;                                    <field name="descriptiois_request_completedn"/>&ndash;&gt;-->
+<!--                                    <field name="qty"/>-->
+<!--                                    <field name="uom"/>-->
+<!--                                    <field name="state"/>-->
+<!--                                </list>-->
+<!--                            </field>-->
+<!--                        </page>-->
+
+<!--                        <page string="Services">-->
+<!--                            <field name="service_line_ids">-->
+<!--                                <list editable="bottom">-->
+<!--                                    <field name="menu_service"/>-->
+<!--                                    <field name="service_amount" readonly="1"/>-->
+<!--                                    <field name="product_template_ids" widget="many2many_tags"/>-->
+<!--                                </list>-->
+<!--                            </field>-->
+<!--                        </page>-->
+
+
+<!--                    </notebook>-->
+
+                    <notebook class="small-pages">
+                        <page string="Job Details" class="small-page">
                             <field name="job_detail_line_ids">
                                 <list editable="bottom">
                                     <field name="department"/>
@@ -102,25 +227,19 @@
                                     <field name="price_amt"/>
                                     <field name="discount"/>
                                     <field name="after_discount"/>
-                                    <!--                                    <field name="vat_percentage"/>-->
-
                                     <field name="tax_ids" widget="many2many_tags"/>
                                     <field name="tax_amount"/>
-
-                                    <!--                                 readonly="context.get('invoiced', True)"-->
                                     <field name="total" readonly="1"/>
                                     <field name="line_state" required="1"/>
                                     <field name="invoiced" column_invisible="1"/>
-                                    <field name="is_request_pending"/>
-                                    <field name="is_request_completed"/>
-                                    <!--                                    <field name="is_request_pending"/>-->
+                                    <field name="is_request_pending" column_invisible="1"/>
+                                    <field name="is_request_completed" column_invisible="1"/>
                                 </list>
                             </field>
 
                             <group>
-                                <div style="display: flex; justify-content: space-between; margin-top: 10px; gap: 30px;">
-
-                                    <!-- Left Side: Summary Totals -->
+                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">
+                                    <!-- Summary Totals -->
                                     <div>
                                         <group string="Summary" col="2">
                                             <field name="total_labour" readonly="1"/>
@@ -133,52 +252,26 @@
                                         </group>
                                     </div>
 
-                                    <div style="flex: 1; margin-left: 700px;">
-                                        <group string="" col="2"
-                                               style="font-size: 16px; font-weight: 600; color: black;">
-                                            <field name="total_price_amt"
-                                                   readonly="1"
-                                                   widget="monetary"
-                                                   style="font-size: 16px; font-weight: 600; color: black;"/>
-                                            <field name="total_discount"
-                                                   readonly="1"
-                                                   widget="monetary"
-                                                   style="font-size: 16px; font-weight: 600; color: black;"/>
-                                            <field name="subtotal"
-                                                   readonly="1"
-                                                   widget="monetary"
-                                                   style="font-size: 16px; font-weight: 600; color: black;"/>
-                                            <field name="vat_total"
-                                                   readonly="1"
-                                                   widget="monetary"
-                                                   style="font-size: 16px; font-weight: 600; color: black;"/>
-                                            <field name="total_amount"
-                                                   readonly="1"
-                                                   widget="monetary"
-                                                   string="Grand Total"
-                                                   style="font-size: 20px; font-weight: bold; color: black;"/>
+                                    <div style="flex: 1; margin-left: 700px;margin-top: 75px;">
+                                        <group col="2" style="font-size: 14px; font-weight: 600;">
+                                            <field name="total_price_amt" readonly="1" widget="monetary"/>
+                                            <field name="total_discount" readonly="1" widget="monetary"/>
+                                            <field name="subtotal" readonly="1" widget="monetary"/>
+                                            <field name="vat_total" readonly="1" widget="monetary"/>
+                                            <field name="total_amount" readonly="1" widget="monetary"
+                                                   string="Grand Total"/>
                                         </group>
                                     </div>
-
                                 </div>
                             </group>
-
-
-
-
-
-
-
-
                         </page>
-                        <page string="Requisition Lines">
+
+                        <page string="Requisition Lines" class="small-page">
                             <field name="material_request_ids">
                                 <list editable="bottom">
                                     <field name="employee_id"/>
                                     <field name="request_date"/>
-                                    <!--                                    <field name="requisition_type"/>-->
                                     <field name="product_id"/>
-                                    <!--                                    <field name="descriptiois_request_completedn"/>-->
                                     <field name="qty"/>
                                     <field name="uom"/>
                                     <field name="state"/>
@@ -186,7 +279,7 @@
                             </field>
                         </page>
 
-                        <page string="Services">
+                        <page string="Services" class="small-page">
                             <field name="service_line_ids">
                                 <list editable="bottom">
                                     <field name="menu_service"/>
@@ -195,8 +288,6 @@
                                 </list>
                             </field>
                         </page>
-
-
                     </notebook>
 
 
@@ -206,7 +297,7 @@
     </record>
 
 
-    <!-- Action -->
+    <!--     Action-->
     <record id="action_job_card_management" model="ir.actions.act_window">
         <field name="name">Job Card</field>
         <field name="res_model">job.card.management</field>
