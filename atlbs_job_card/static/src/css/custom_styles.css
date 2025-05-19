@@ -1,0 +1,162 @@
+/* Reduce vertical space between labels */
+.small-fields-group .o_form_label,
+.small-fields-group label {
+    font-size: 13px !important;
+    white-space: nowrap;
+    min-width: 80px !important;
+    padding-right: 5px !important;
+    margin-bottom: 0 !important;   /* No extra space below label */
+    line-height: 12px !important;  /* Tighter label text */
+}
+
+/* Reduce vertical space between fields */
+.small-fields-group .o_group .o_field {
+    margin-bottom: 1px !important; /* Vertical gap between fields */
+    padding-bottom: 0 !important;
+}
+
+/* Further tightening field widget space */
+.small-fields-group .o_field_widget {
+    font-size: 13px !important;
+    height: 20px !important;        /* Smaller height */
+    padding: 1px 5px !important;    /* Less padding for tighter fit */
+    margin-bottom: 1px !important;  /* Vertical gap inside field widget */
+}
+
+/* Align label and field tighter */
+.small-fields-group .o_form_label {
+    vertical-align: middle !important; /* Aligns labels properly */
+}
+
+/* Optional: Align labels and fields to baseline for perfect alignment */
+.small-fields-group .o_field_widget,
+.small-fields-group .o_field {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+
+
+/*notebook size reducing
+
+/* Reduce padding and spacing for notebook pages */
+.small-pages .small-page {
+    padding: 5px !important;  /* Reduce internal padding */
+    margin-bottom: 5px !important;  /* Reduce spacing between pages */
+}
+
+/* Tighten field and label spacing */
+.small-pages .o_form_label,
+.small-pages .o_field_widget {
+    font-size: 12px !important;
+    height: 22px !important;  /* Reduce height */
+    padding: 2px 5px !important;  /* Tighter padding */
+    margin-bottom: 2px !important;  /* Reduce margin */
+}
+
+/* Reduce label and field alignment gap */
+.small-pages .o_form_label {
+    vertical-align: middle !important;
+}
+
+/* Compact field groups */
+.small-pages .o_group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.small-pages .o_group > div {
+    flex: 1;
+    min-width: 150px;
+}
+
+/* Adjust the summary section in Job Details */
+.small-pages .small-page .o_group > div > field {
+    font-size: 12px !important;
+}
+
+.small-pages .o_field_widget,
+.small-pages .o_field {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Tighten the summary block */
+.small-pages .small-page .o_group .o_field {
+    margin-bottom: 2px !important;
+    padding-bottom: 0 !important;
+}
+
+/* Align label and field tighter */
+.small-pages .o_form_label {
+    min-width: 70px !important;
+    padding-right: 3px !important;
+    line-height: 12px !important;
+}
+
+/* Compact the field widget space */
+.small-pages .o_field_widget {
+    font-size: 13px !important;
+    height: 20px !important;
+    padding: 1px 5px !important;
+    margin-bottom: 1px !important;
+}
+
+/* Optional: Adjust label and field alignment for a neat look */
+.small-pages .o_field_widget,
+.small-pages .o_field {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* --- New: Compact lines inside editable lists --- */
+
+/* Shrink row height without expanding columns */
+.small-pages .o_list_view tbody tr {
+    height: 24px !important;  /* Compact rows */
+}
+
+/* Tighten padding and font size inside list cells */
+.small-pages .o_list_view tbody tr td {
+    padding: 2px 4px !important;  /* Less padding left-right */
+    vertical-align: middle !important;
+    font-size: 12px !important;  /* Smaller text */
+    white-space: nowrap;         /* Prevent line wrap expanding cells */
+    max-width: 150px;            /* Limit max width so columns don't grow */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Tighter many2many_tags inside list */
+.small-pages .o_list_view tbody tr td .o_many2manytags {
+    min-height: 18px !important;
+    font-size: 11px !important;
+    line-height: 16px !important;
+    padding: 0 2px !important;
+}
+
+/* Smaller checkboxes & selection */
+.small-pages .o_list_view tbody tr td .o_checkbox,
+.small-pages .o_list_view tbody tr td .o_select {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Smaller input fields inside lists */
+.small-pages .o_list_view tbody tr td .o_field_widget {
+    height: 20px !important;
+    font-size: 12px !important;
+    padding: 1px 3px !important;
+    margin-bottom: 0 !important;
+}
+
+/* Prevent columns from stretching too wide */
+.small-pages .o_list_view thead th,
+.small-pages .o_list_view tbody td {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

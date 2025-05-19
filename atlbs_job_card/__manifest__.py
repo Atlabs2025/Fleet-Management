@@ -23,7 +23,11 @@
     'wizard/job_card_invoice_wizard.xml',
 
 ],
-    'assets': {},
+    'assets': {
+    'web.assets_backend': [
+        'atlbs_job_card/static/src/css/custom_styles.css',
+    ],
+    },
     'license': 'LGPL-3',
     'installable': True,
     'auto_install': False,
