@@ -7,7 +7,7 @@ class MaterialPurchaseRequisitionLine(models.Model):
     _name = "material.purchase.requisition.line"
     _description = 'Material Purchase Requisition Lines'
 
-    
+
     requisition_id = fields.Many2one(
         'material.purchase.requisition',
         string='Requisitions', 
@@ -58,6 +58,9 @@ class MaterialPurchaseRequisitionLine(models.Model):
 
     stock_qty = fields.Float(string="Stock", compute="_compute_stock_qty", readonly=True)
 
+    from_job_card = fields.Boolean(
+        string='From Job Card')
+
     @api.depends('product_id')
     def _compute_stock_qty(self):
         for rec in self:
@@ -95,3 +98,19 @@ class MaterialPurchaseRequisitionLine(models.Model):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# added for seeing the from job card field true
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if self.env.context.get('from_job_card_origin'):
+            res['from_job_card'] = True
+        return res
+
+
+
+    # @api.model
+    # def create(self, vals):
+    #     # Check if we are coming from job card context
+    #     if self.env.context.get('from_job_card_origin'):
+    #         vals['from_job_card'] = True
+    #     return super(MaterialPurchaseRequisitionLine, self).create(vals)
