@@ -428,7 +428,7 @@ class JobCardLine(models.Model):
         for line in self:
             if line.department == 'parts' and line.product_template_id:
                 line.price_unit = line.product_template_id.list_price
-                line.part_number = line.product_template_id
+                line.part_number = line.product_template_id.default_code
 
 
 
