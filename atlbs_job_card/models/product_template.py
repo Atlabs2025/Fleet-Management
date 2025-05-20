@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
 
 
 
+
     @api.onchange('menu_service')
     def _onchange_menu_service(self):
         for rec in self:
