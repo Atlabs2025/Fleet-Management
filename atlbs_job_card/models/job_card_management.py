@@ -80,6 +80,11 @@ class VehicleStockBook(models.Model):
 
     # invoice_count = fields.Integer(string="Excess Invoice Count", compute='_compute_invoice_count')
 
+
+
+
+
+
     def open_excess_invoice(self):
         self.ensure_one()
         return {
@@ -229,7 +234,7 @@ class VehicleStockBook(models.Model):
     #             'default_job_number': self.name,
     #         }
     #     }
-
+# here field hiding context added
     def action_open_material_requisition_form(self):
         self.ensure_one()
         employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -244,6 +249,10 @@ class VehicleStockBook(models.Model):
                 'default_job_card_id': self.id,
                 'default_employee_id': employee.id if employee else False,
                 'default_job_number': self.name,
+                'from_job_card_origin': True,
+
+
+
             }
         }
 
