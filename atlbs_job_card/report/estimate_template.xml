@@ -4,7 +4,7 @@
             <t t-call="web.external_layout">
                 <header>
                     <h2 style="text-align: center;">
-                        <u>Job Card Estimate</u>
+                        <u>Estimate</u>
                     </h2>
                 </header>
 

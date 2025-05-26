@@ -16,7 +16,7 @@
 
 
     <record id="report_job_estimate_action" model="ir.actions.report">
-        <field name="name">Job Estimate Report</field>
+        <field name="name">Estimate</field>
         <field name="model">job.card.management</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">atlbs_job_card.report_job_estimate_template</field>

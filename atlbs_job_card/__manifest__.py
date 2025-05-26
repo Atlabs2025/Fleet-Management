@@ -6,7 +6,7 @@
     'summary': 'Atlabs Job Card Management',
     'description': 'job card',
     'depends': [
-        'contacts', 'fleet','product','stock','material_purchase_requisitions','hr','purchase','stock'
+        'contacts', 'fleet','product','stock','material_purchase_requisitions','hr','hr_timesheet','purchase','stock','project'
     ],
 'data': [
     'security/ir.model.access.csv',
@@ -20,6 +20,8 @@
     'views/res_partner.xml',
     'views/product_template.xml',
     'views/account_move.xml',
+    'views/job_card_timesheet.xml',
+    'views/hr_employee.xml',
     'wizard/job_card_invoice_wizard.xml',
 
 ],
