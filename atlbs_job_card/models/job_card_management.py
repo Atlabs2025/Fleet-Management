@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+datetime.now()
 from importlib.resources._common import _
 from xml import etree
 
@@ -74,15 +75,13 @@ class VehicleStockBook(models.Model):
 
     service_line_ids = fields.One2many('job.card.service.line', 'job_card_id', string="Service Lines")
 
+    time_sheet_ids = fields.One2many('job.card.time.sheet','job_card_id',string="Time Sheets"
+    )
     is_insurance_claim = fields.Boolean(string="Is Insurance Claim", default=False, store=True)
     insurance_company_id = fields.Many2one('res.partner',string='Insurance Company')
     # insurance_company = fields.One2many('res.partner',string="Is Insurance Claim")
 
     # invoice_count = fields.Integer(string="Excess Invoice Count", compute='_compute_invoice_count')
-
-
-
-
 
 
     def open_excess_invoice(self):
@@ -159,6 +158,7 @@ class VehicleStockBook(models.Model):
         if vals.get('name', 'New') == 'New':
             vals['name'] = self.env['ir.sequence'].next_by_code('job.card.management') or 'New'
         return super(VehicleStockBook, self).create(vals)
+
 
     @api.onchange('vehicle_id')
     def _onchange_vehicle_id(self):
@@ -441,6 +441,25 @@ class JobCardLine(models.Model):
 
 
 
+# added this funtion for fetching the labour line into time sheet
+    @api.model
+    def create(self, vals):
+        print(">>> CREATE CALLED with vals:", vals)
+        record = super().create(vals)
+
+        if record.department == 'labour':
+            print(">>> Creating time sheet for labour line")
+            timesheet_vals = {
+                'name': record.description,
+                'assigned_hours': record.quantity,
+                'date': fields.Date.today(),
+                'job_card_id': record.job_card_id.id,  # <-- ADD THIS
+            }
+            ts = self.env['job.card.time.sheet'].create(timesheet_vals)
+            print(">>> Created timesheet ID:", ts.id)
+
+        return record
+
 
 class JobCardMaterialRequest(models.Model):
     _name = 'job.card.material.request'
@@ -563,3 +582,186 @@ class JobCardServiceLine(models.Model):
         return records
 
 
+class JobCardTimeSheet(models.Model):
+    _name = 'job.card.time.sheet'
+    _description = 'Job Card Time Sheet'
+        # _rec_name = 'name'
+
+    employee_id = fields.Many2one('hr.employee', string="Technician")
+    start_time = fields.Float(string="Start Time")
+    pause_time = fields.Float(string="Pause Time")
+    end_time = fields.Float(string="End Time")
+    status = fields.Selection([
+            ('new', 'New'),
+            ('in_progress', 'In Progress'),
+            ('paused', 'Paused'),
+            ('done', 'Completed'),
+        ], string="Status", default='new', tracking=True)
+
+    job_card_id = fields.Many2one('job.card.management', string="Job Card")
+    date = fields.Date(string="Date", default=lambda self: fields.Date.today())
+    name = fields.Char(string="Description")
+    assigned_hours = fields.Float(string="Assigned Hours")
+    working_hours = fields.Float(string="Working Hours", compute="_compute_working_hours", store=True)
+    project_id = fields.Many2one('project.project', string='Project')
+    analytic_line_id = fields.Many2one('account.analytic.line', string="Analytic Line")
+
+    pause_start = fields.Float(string="Pause Start Time")
+    pause_duration = fields.Float(string="Pause Duration", default=0.0)
+
+
+    def _get_current_time_float(self):
+        now = datetime.now()
+        return now.hour + now.minute / 60.0 + now.second / 3600.0
+
+    def action_start(self):
+        current_time = self._get_current_time_float()
+        self.write({
+            'start_time': current_time,
+            'status': 'in_progress',
+            'pause_duration': 0.0,
+            'pause_start': 0.0,
+        })
+
+    def action_pause(self):
+        now = self._get_current_time_float()
+        self.write({
+            'pause_time': now,
+            'status': 'paused',
+        })
+
+    # def action_resume(self):
+    #     for rec in self:
+    #         if rec.pause_start:
+    #             now = rec._get_current_time_float()
+    #             pause_time = now - rec.pause_start
+    #             rec.write({
+    #                 'pause_duration': rec.pause_duration + pause_time,
+    #                 'pause_start': 0.0,
+    #                 'status': 'in_progress',
+    #             })
+
+    def action_resume(self):
+        for rec in self:
+            if rec.pause_start:
+                now = rec._get_current_time_float()
+                duration = now - rec.pause_start
+                rec.write({
+                    'pause_duration': rec.pause_duration + duration,
+                    'pause_start': 0.0,
+                })
+            # Update status regardless of pause_start
+            rec.write({
+                'status': 'in_progress',
+            })
+
+    def action_end(self):
+        current_time = self._get_current_time_float()
+        self.write({
+            'end_time': current_time,
+            'status': 'done',
+        })
+
+    # @api.depends('start_time', 'pause_time', 'end_time', 'status')
+    # def _compute_working_hours(self):
+    #     for rec in self:
+    #         if rec.status == 'done' and rec.start_time and rec.end_time:
+    #             pause = rec.pause_time or 0.0
+    #             rec.working_hours = max((rec.end_time - rec.start_time) - pause, 0.0)
+    #         else:
+    #             rec.working_hours = 0.0
+
+    @api.depends('start_time', 'end_time', 'pause_duration', 'status')
+    def _compute_working_hours(self):
+        print('fdeffffffff')
+        for rec in self:
+            if rec.status == 'done' and rec.start_time and rec.end_time:
+                pause = rec.pause_duration or 0.0
+                rec.working_hours = max((rec.end_time - rec.start_time) - pause, 0.0)
+            else:
+                rec.working_hours = 0.0
+
+# commented and gave another create below
+    # @api.model
+    # def create(self, vals):
+    #     # Set default project if not given
+    #     if not vals.get('project_id'):
+    #         project = self.env['project.project'].search([('id', '=', 1)], limit=1)
+    #         vals['project_id'] = project.id if project else False
+    #
+    #     record = super().create(vals)
+    #
+    #     # Create related analytic line
+    #     analytic_vals = {
+    #         'date': record.date,
+    #         'employee_id': record.employee_id.id,
+    #         'project_id': record.project_id.id,
+    #         'job_card_id': record.job_card_id.id,
+    #         'name': record.name or 'Job Card Time Entry',
+    #         'start_time': vals.get('start_time', 0.0),
+    #         'pause_time': vals.get('pause_time', 0.0),
+    #         'end_time': vals.get('end_time', 0.0),
+    #         'status': vals.get('status', 'new'),
+    #     }
+    #     analytic = self.env['account.analytic.line'].create(analytic_vals)
+    #     record.analytic_line_id = analytic.id
+    #
+    #     return record
+
+    def write(self, vals):
+        res = super().write(vals)
+        for rec in self:
+            if rec.analytic_line_id:
+                rec.analytic_line_id.write({
+                    'employee_id': rec.employee_id.id,
+                    'start_time': rec.start_time,
+                    'pause_time': rec.pause_time,
+                    'end_time': rec.end_time,
+                    'status': rec.status,
+                })
+        return res
+
+
+
+
+
+
+# added this create function for avoiding recursion and commented above
+    @api.model
+    def create(self, vals):
+        # Set default project if not given
+        if not vals.get('project_id'):
+            project = self.env['project.project'].search([('id', '=', 1)], limit=1)
+            vals['project_id'] = project.id if project else False
+
+        # Prevent recursion: If 'analytic_line_id' is already in vals, skip creating another analytic line
+        if 'analytic_line_id' in vals:
+            return super().create(vals)
+
+        # Create the job card time sheet record first
+        record = super().create(vals)
+
+        # Prepare analytic line values, link back to this time sheet record
+        analytic_vals = {
+            'date': record.date,
+            'employee_id': record.employee_id.id,
+            'project_id': record.project_id.id,
+            'job_card_id': record.job_card_id.id,
+            'name': record.name or 'Job Card Time Entry',
+            'start_time': record.start_time or 0.0,
+            'pause_time': record.pause_duration or record.pause_time or 0.0,
+            'end_time': record.end_time or 0.0,
+            'status': record.status or 'new',
+            'working_hours': record.working_hours or 0.0,
+            'assigned_hours': record.assigned_hours or 0.0,
+            # Optional: link back to the timesheet if you want two-way reference
+            # 'time_sheet_id': record.id,
+        }
+
+        # Create the analytic line record
+        analytic = self.env['account.analytic.line'].create(analytic_vals)
+
+        # Update the job card time sheet with the analytic line reference, but avoid recursion by writing directly (no triggers)
+        record.write({'analytic_line_id': analytic.id})
+
+        return record

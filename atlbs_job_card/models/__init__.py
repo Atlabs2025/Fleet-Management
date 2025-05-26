@@ -4,3 +4,5 @@ from .import res_partner
 from .import job_card_report
 from .import account_move
 from .import product_template
+from .import job_card_timesheet
+from .import hr_employee

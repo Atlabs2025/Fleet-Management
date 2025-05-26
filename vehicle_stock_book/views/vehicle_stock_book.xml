@@ -27,7 +27,8 @@
                 <sheet>
 
                     <h1>
-                        <field name="name"/>
+<!--                        <field name="name"/>-->
+                        <field name="name" placeholder="e.g. Mercedes Benz"/>
                     </h1>
                     <group>
                         <group>

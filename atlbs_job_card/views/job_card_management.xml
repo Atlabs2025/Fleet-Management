@@ -290,6 +290,40 @@
                                 </list>
                             </field>
                         </page>
+
+
+                        <page string="Time Sheet" class="small-page">
+                            <field name="time_sheet_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <button name="action_start" type="object" class="fa fa-play" string="Start" column_invisible="status not in 'new'"/>
+                                    <button name="action_pause" type="object" string="Pause" class="fa fa-pause" column_invisible="status in 'new'"/>
+                                    <button name="action_resume" type="object" string="Resume" class="fa fa-play-circle" column_invisible="status in 'new'"/>
+                                    <button name="action_end" type="object" string="End" class="fa fa-stop"/>
+                                    <field name="employee_id"/>
+                                    <field name="status"/>
+                                    <field name="start_time" widget="float_time"/>
+                                    <field name="pause_time" widget="float_time"/>
+                                    <field name="pause_start" widget="float_time"/>
+                                    <field name="pause_duration" widget="float_time"/>
+                                    <field name="end_time" widget="float_time"/>
+                                    <field name="assigned_hours"/>
+                                    <field name="working_hours" widget="float_time"/>
+
+                                </list>
+                            </field>
+                        </page>
+
+
+                        <!--                            <field name="service_line_ids">-->
+<!--                                <list editable="bottom">-->
+<!--                                    <field name="menu_service"/>-->
+<!--                                    <field name="service_amount" readonly="1"/>-->
+<!--                                    <field name="product_template_ids" widget="many2many_tags"/>-->
+<!--                                </list>-->
+<!--                            </field>-->
+
                     </notebook>
 
 
@@ -313,8 +347,6 @@
         </search>
     </field>
 </record>
-
-
 
 
 
