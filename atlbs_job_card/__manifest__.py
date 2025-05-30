@@ -22,6 +22,8 @@
     'views/account_move.xml',
     'views/job_card_timesheet.xml',
     'views/hr_employee.xml',
+    'views/job_categories.xml',
+    'views/fleet_vehicle_log_contract_views.xml',
     'wizard/job_card_invoice_wizard.xml',
 
 ],

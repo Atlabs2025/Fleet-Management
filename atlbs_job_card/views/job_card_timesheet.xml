@@ -7,7 +7,8 @@
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="before">
-                <field name="employee_id"/>
+<!--                <field name="employee_id"/>-->
+                <field name="employee_id" domain="[('employee_status', '=', 'available')]"/>
                 <field name="start_time" widget="float_time"/>
                 <field name="pause_time" widget="float_time"/>
                 <field name="end_time" widget="float_time"/>
@@ -18,8 +19,11 @@
                 <button name="action_pause" type="object" string="Pause" class="fa fa-pause" column_invisible="status in 'done'"/>
             <button name="action_resume" type="object" string="Resume" class="fa fa-play-circle"/>
             <button name="action_end" type="object" string="End" class="fa fa-stop" column_invisible="status in 'done'"/>
-                <field name="status"/>
+<!--                <field name="status"/>-->
+                <field name="status" column_invisible="1"/>
+                <field name="status_badge" widget="html" readonly="1"/>
                 <field name="job_card_id"/>
+                <field name="job_category_id"/>
 
             </xpath>
             <xpath expr="//field[@name='unit_amount']" position="after">

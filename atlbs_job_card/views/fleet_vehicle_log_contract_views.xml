@@ -1,0 +1,7 @@
+<odoo>
+
+<menuitem id="menu_service_contract_root" name="Service Contracts" />
+    <menuitem id="menu_service_contract" name="Contracts" parent="menu_service_contract_root"
+              action="fleet.fleet_vehicle_log_contract_action"/>
+
+</odoo>

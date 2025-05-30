@@ -8,3 +8,11 @@ class HrEmployee(models.Model):
         'employee_id',
         string="Timesheets"
     )
+
+
+
+    employee_status = fields.Selection([
+            ('available', 'Available'),
+            ('not_available', 'Not Available'),
+            ('annual_leave', 'Annual Leave'),
+        ], string='Employee Status', default='available')

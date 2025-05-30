@@ -6,3 +6,4 @@ from .import account_move
 from .import product_template
 from .import job_card_timesheet
 from .import hr_employee
+from .import job_categories
