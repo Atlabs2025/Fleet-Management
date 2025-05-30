@@ -94,6 +94,7 @@
                             <field name="vehicle_id"/>
                             <field name="register_no"/>
                             <field name="vehicle_make_id"/>
+                            <field name="contract_status"/>
                         </group>
 
                         <!--                            <field name="vin_number"/>-->
@@ -102,6 +103,7 @@
                             <field name="vin_sn"/>
                             <field name="engine_no"/>
                             <field name="odoo_meter_reading"/>
+                            <field name="service_contract_id"/>
                         </group>
                         <group class="small-fields-group">
                             <field name="fuel_level"/>
@@ -223,6 +225,7 @@
                                     <field name="department"/>
                                     <field name="product_template_id"/>
                                     <field name="part_number"/>
+                                    <field name="job_category_id"/>
                                     <field name="description"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
@@ -296,12 +299,14 @@
                             <field name="time_sheet_ids">
                                 <list editable="bottom">
                                     <field name="date"/>
+                                    <field name="job_category_id"/>
                                     <field name="name"/>
                                     <button name="action_start" type="object" class="fa fa-play" string="Start" column_invisible="status not in 'new'"/>
                                     <button name="action_pause" type="object" string="Pause" class="fa fa-pause" column_invisible="status in 'new'"/>
                                     <button name="action_resume" type="object" string="Resume" class="fa fa-play-circle" column_invisible="status in 'new'"/>
                                     <button name="action_end" type="object" string="End" class="fa fa-stop"/>
-                                    <field name="employee_id"/>
+<!--                                    <field name="employee_id"/>-->
+                                    <field name="employee_id" domain="[('employee_status', '=', 'available')]"/>
                                     <field name="status"/>
                                     <field name="start_time" widget="float_time"/>
                                     <field name="pause_time" widget="float_time"/>

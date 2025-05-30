@@ -7,4 +7,4 @@ access_job_card_material_request,access_job_card_material_request,model_job_card
 access_job_card_service_line,access_job_card_service_line,model_job_card_service_line,base.group_user,1,1,1,1
 access_job_card_invoice_wizard_service_line,access_job_card_invoice_wizard_service_line,model_job_card_invoice_wizard_service_line,base.group_user,1,1,1,1
 access_job_card_time_sheet,access_job_card_time_sheet,model_job_card_time_sheet,base.group_user,1,1,1,1
-
+access_job_categories,access_job_categories,model_job_categories,base.group_user,1,1,1,1
