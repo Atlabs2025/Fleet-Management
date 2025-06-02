@@ -1,6 +1,33 @@
 <odoo>
 
-<menuitem id="menu_service_contract_root" name="Service Contracts" />
+    <record id="view_fleet_vehicle_log_contract_inherit_total_services" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.form.inherit.total.services</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_form"/>
+        <field name="arch" type="xml">
+
+
+            <div class="oe_button_box" name="button_box">
+                <button type="object"
+                        name="action_view_job_cards"
+                        class="oe_stat_button"
+                        icon="fa-wrench">
+                    <div class="o_stat_info">
+                        <field name="job_card_count" widget="statinfo" string="Job Cards"/>
+                    </div>
+                </button>
+            </div>
+
+
+            <!-- Insert total_services after company_id -->
+            <xpath expr="//field[@name='service_ids']" position="after">
+                <field name="total_services"/>
+                <field name="contract_cost"/>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_service_contract_root" name="Service Contracts"/>
     <menuitem id="menu_service_contract" name="Contracts" parent="menu_service_contract_root"
               action="fleet.fleet_vehicle_log_contract_action"/>
 
