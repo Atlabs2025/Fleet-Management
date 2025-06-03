@@ -838,25 +838,7 @@ class JobCardTimeSheet(models.Model):
 
         return record
 
-    # def write(self, vals):
-    #     res = super().write(vals)
-    #     for rec in self:
-    #         # Avoid recursion via context
-    #         if self.env.context.get('skip_analytic_sync'):
-    #             continue
-    #         if rec.analytic_line_id:
-    #             rec.analytic_line_id.with_context(skip_timesheet_sync=True).write({
-    #                 'employee_id': rec.employee_id.id,
-    #                 'start_time': rec.start_time,
-    #                 'pause_time': rec.pause_time,
-    #                 'end_time': rec.end_time,
-    #                 'status': rec.status,
-    #                 'working_hours': rec.working_hours,
-    #                 'assigned_hours': rec.assigned_hours,
-    #                 'name': rec.name,
-    #                 'date': rec.date,
-    #             })
-    #     return res
+
 
     def write(self, vals):
         res = super(JobCardTimeSheet, self).write(vals)
