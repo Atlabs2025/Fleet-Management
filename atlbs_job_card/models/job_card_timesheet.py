@@ -105,36 +105,36 @@ class AccountAnalyticLine(models.Model):
             )
 
     # added for creation time sheet from this to job card
-#     @api.model
-#     def create(self, vals):
-#         # First, create the analytic line
-#         analytic = super().create(vals)
-#
-#         # Then create the job card time sheet, but avoid recursion by NOT calling back into analytic line
-#         if analytic.job_card_id:
-#             self.env['job.card.time.sheet'].create({
-#                 'job_card_id': analytic.job_card_id.id,
-#                 'employee_id': analytic.employee_id.id,
-#                 'start_time': analytic.start_time,
-#                 'pause_time': analytic.pause_time,
-#                 'end_time': analytic.end_time,
-#                 'status': analytic.status,
-#                 'working_hours': analytic.working_hours,
-#                 'assigned_hours': analytic.assigned_hours,
-#                 'analytic_line_id': analytic.id,  # store link
-#                 'name': analytic.name,
-#                 'date': analytic.date,
-#             })
-#
-#         return analytic
-
+# just 3rd june removed function
+    # @api.model
+    # def create(self, vals):
+    #     analytic = super().create(vals)
+    #
+    #     # Create linked job card time sheet only if no recursion flag and job_card_id exists
+    #     if not self.env.context.get('skip_timesheet_sync') and analytic.job_card_id:
+    #         self.env['job.card.time.sheet'].with_context(skip_analytic_sync=True).create({
+    #             'job_card_id': analytic.job_card_id.id,
+    #             'employee_id': vals.get('employee_id'),
+    #             'start_time': vals.get('start_time', 0.0),
+    #             'pause_time': vals.get('pause_time', 0.0),
+    #             'end_time': vals.get('end_time', 0.0),
+    #             'status': vals.get('status', 'new'),
+    #             'working_hours': vals.get('working_hours', 0.0),
+    #             'assigned_hours': vals.get('assigned_hours', 0.0),
+    #             'analytic_line_id': analytic.id,
+    #             'job_category_id': analytic.job_category_id.id,
+    #             'name': vals.get('name'),
+    #             'date': vals.get('date'),
+    #         })
+    #
+    #     return analytic
+# 3rd june added function
     @api.model
     def create(self, vals):
         analytic = super().create(vals)
 
-        # Create linked job card time sheet only if no recursion flag and job_card_id exists
         if not self.env.context.get('skip_timesheet_sync') and analytic.job_card_id:
-            self.env['job.card.time.sheet'].with_context(skip_analytic_sync=True).create({
+            job_card_time_sheet = self.env['job.card.time.sheet'].with_context(skip_analytic_sync=True).create({
                 'job_card_id': analytic.job_card_id.id,
                 'employee_id': vals.get('employee_id'),
                 'start_time': vals.get('start_time', 0.0),
@@ -149,15 +149,21 @@ class AccountAnalyticLine(models.Model):
                 'date': vals.get('date'),
             })
 
+            # <-- Add this: Link the created time sheet back to analytic line
+            analytic.job_card_time_sheet_id = job_card_time_sheet.id
+
         return analytic
 
+
+# 3rd june commented function
     # def write(self, vals):
     #     res = super().write(vals)
     #     for rec in self:
-    #         # Avoid recursion
     #         if self.env.context.get('skip_timesheet_sync'):
     #             continue
     #         if rec.job_card_time_sheet_id:
+    #             _logger.info(
+    #                 f"Syncing write from analytic line {rec.id} to job card time sheet {rec.job_card_time_sheet_id.id}")
     #             rec.job_card_time_sheet_id.with_context(skip_analytic_sync=True).write({
     #                 'employee_id': vals.get('employee_id', rec.employee_id.id),
     #                 'start_time': vals.get('start_time', rec.start_time),
@@ -166,28 +172,28 @@ class AccountAnalyticLine(models.Model):
     #                 'status': vals.get('status', rec.status),
     #                 'working_hours': vals.get('working_hours', rec.working_hours),
     #                 'assigned_hours': vals.get('assigned_hours', rec.assigned_hours),
+    #                 'job_category_id': rec.job_category_id.id,
     #                 'name': vals.get('name', rec.name),
     #                 'date': vals.get('date', rec.date),
     #             })
+    #         else:
+    #             _logger.warning(f"Analytic line {rec.id} has no linked job card time sheet")
     #     return res
-
-
-
+# 3rd june added write function
     def write(self, vals):
         res = super().write(vals)
         for rec in self:
             if self.env.context.get('skip_timesheet_sync'):
                 continue
             if rec.job_card_time_sheet_id:
-                _logger.info(
-                    f"Syncing write from analytic line {rec.id} to job card time sheet {rec.job_card_time_sheet_id.id}")
+                _logger.info(f"Syncing analytic {rec.id} → timesheet {rec.job_card_time_sheet_id.id} with vals: {vals}")
                 rec.job_card_time_sheet_id.with_context(skip_analytic_sync=True).write({
                     'employee_id': vals.get('employee_id', rec.employee_id.id),
                     'start_time': vals.get('start_time', rec.start_time),
                     'pause_time': vals.get('pause_time', rec.pause_time),
                     'end_time': vals.get('end_time', rec.end_time),
                     'status': vals.get('status', rec.status),
-                    'working_hours': vals.get('working_hours', rec.working_hours),
+                    'working_hours': rec.working_hours,
                     'assigned_hours': vals.get('assigned_hours', rec.assigned_hours),
                     'job_category_id': rec.job_category_id.id,
                     'name': vals.get('name', rec.name),
@@ -196,6 +202,8 @@ class AccountAnalyticLine(models.Model):
             else:
                 _logger.warning(f"Analytic line {rec.id} has no linked job card time sheet")
         return res
+
+
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
