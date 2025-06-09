@@ -6,9 +6,13 @@
         <field name="arch" type="xml">
             <list string="Job Card" default_order="create_date desc">
                 <field name="name"/>
+                <field name="vehicle_make_id" optional="hide"/>
                 <field name="partner_id"/>
-                <!--                <field name="vin_number"/>-->
-                <field name="vin_sn"/>
+                <field name="vin_sn" optional="hide"/>
+                <field name="is_insurance_claim" optional="hide"/>
+                <field name="register_no" optional="hide"/>
+                 <field name="created_datetime"/>
+                <field name="total_amount" optional="hide"/>
                 <field name="state"/>
 
             </list>
@@ -81,6 +85,7 @@
                         <group class="small-fields-group">
                             <field name="insurance_company_id" invisible="is_insurance_claim == False"/>
                             <field name="email"/>
+                            <field name="created_datetime"/>
 
                         </group>
                     </group>
@@ -107,7 +112,7 @@
                         <group class="small-fields-group">
                             <field name="fuel_level"/>
                             <field name="vehicle_colour"/>
-                            <field name="vehicle_in_out"/>
+                            <field name="vehicle_in_out" required="1"/>
                         </group>
                     </group>
 
@@ -297,7 +302,7 @@
                         <page string="Time Sheet" class="small-page">
                             <field name="time_sheet_ids">
                                 <list editable="bottom">
-                                    <field name="date"/>
+                                    <field name="date" readonly="1"/>
                                     <field name="job_category_id"/>
                                     <field name="name"/>
                                     <button name="action_start" type="object" class="fa fa-play" string="Start" column_invisible="status not in 'new'"/>
