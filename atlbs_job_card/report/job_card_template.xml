@@ -87,10 +87,10 @@
                                                     <strong>Register No:</strong>
                                                     <span t-esc="doc.register_no"/>
                                                 </div>
-                                                <div>
-                                                    <strong>VIN Number:</strong>
-                                                    <span t-esc="doc.vin_number"/>
-                                                </div>
+<!--                                                <div>-->
+<!--                                                    <strong>VIN Number:</strong>-->
+<!--                                                    <span t-esc="doc.vin_number"/>-->
+<!--                                                </div>-->
                                                 <div>
                                                     <strong>Vehicle Make:</strong>
                                                     <span t-esc="doc.vehicle_make_id.name"/>
