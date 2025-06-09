@@ -24,12 +24,12 @@
                         type="object"
                         string="Create Payment"
                         class="btn btn-primary"
-                        />
+                />
                 <button name="action_close_contract"
                         type="object"
                         string="Close Contract"
                         class="btn btn-secondary"
-                        />
+                />
             </xpath>
 
 
@@ -40,7 +40,8 @@
             </xpath>
             <xpath expr="//field[@name='service_ids']" position="before">
                 <field name="contract_type"/>
-                <field name="service_name_ids" widget="many2many_tags" invisible="contract_type != 'fixed_services'"/>
+                <field name="service_name_ids" widget="many2many_tags" invisible="contract_type != 'fixed_services'"
+                       required="1"/>
             </xpath>
         </field>
     </record>
@@ -81,22 +82,15 @@
     </record>
 
 
-
-
-
-
-
-
-
     <menuitem id="menu_service_contract_root" name="Service Contracts"/>
     <menuitem id="menu_service_contract" name="Contracts" parent="menu_service_contract_root"
               action="fleet.fleet_vehicle_log_contract_action"/>
 
 
     <menuitem id="menu_service_contract_services"
-          name="Services"
-          parent="menu_service_contract_root"
-          action="action_fleet_vehicle_service"/>
+              name="Services"
+              parent="menu_service_contract_root"
+              action="action_fleet_vehicle_service"/>
 
 
 </odoo>
