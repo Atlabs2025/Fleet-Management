@@ -90,6 +90,8 @@ class VehicleStockBook(models.Model):
     service_contract_id = fields.Many2one('fleet.vehicle.log.contract', string='Service Contract', store=True)
     # contract_invoice_status = fields.Boolean('Contract Invoice Status')
 
+    created_datetime = fields.Datetime(string="Created Date",default=fields.Datetime.now,readonly=True)
+
     def open_excess_invoice(self):
         self.ensure_one()
         return {
