@@ -126,17 +126,6 @@ class VehicleStockBook(models.Model):
 
 
 
-    # @api.depends('job_detail_line_ids.department', 'job_detail_line_ids.total')
-    # def _compute_totals(self):
-    #     for rec in self:
-    #         rec.total_labour = sum(line.total for line in rec.job_detail_line_ids if line.department == 'labour')
-    #         rec.total_parts = sum(line.total for line in rec.job_detail_line_ids if line.department == 'parts')
-    #         rec.total_material = sum(line.total for line in rec.job_detail_line_ids if line.department == 'material')
-    #         rec.total_lubricant = sum(line.total for line in rec.job_detail_line_ids if line.department == 'lubricant')
-    #         rec.total_sublets = sum(line.total for line in rec.job_detail_line_ids if line.department == 'sublets')
-    #         rec.total_paint_material = sum(
-    #             line.total for line in rec.job_detail_line_ids if line.department == 'paint_material')
-    #         rec.total_tyre = sum(line.total for line in rec.job_detail_line_ids if line.department == 'tyre')
 
     @api.depends('job_detail_line_ids.department', 'job_detail_line_ids.total',
                  'job_detail_line_ids.price_amt', 'job_detail_line_ids.after_discount',
@@ -166,15 +155,15 @@ class VehicleStockBook(models.Model):
         return super(VehicleStockBook, self).create(vals)
 
 
-    @api.onchange('vehicle_id')
-    def _onchange_vehicle_id(self):
-        for rec in self:
-            if rec.vehicle_id:
-                rec.vehicle_make_id = rec.vehicle_id.model_id.brand_id
-                # rec.vin_number = rec.vehicle_id.vin_number
-                rec.vin_sn = rec.vehicle_id.vin_sn
-                rec.engine_no = rec.vehicle_id.engine_no
-                rec.register_no = rec.vehicle_id.license_plate
+    # @api.onchange('vehicle_id')
+    # def _onchange_vehicle_id(self):
+    #     for rec in self:
+    #         if rec.vehicle_id:
+    #             rec.vehicle_make_id = rec.vehicle_id.model_id.brand_id
+    #             # rec.vin_number = rec.vehicle_id.vin_number
+    #             rec.vin_sn = rec.vehicle_id.vin_sn
+    #             rec.engine_no = rec.vehicle_id.engine_no
+    #             rec.register_no = rec.vehicle_id.license_plate
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -268,25 +257,38 @@ class VehicleStockBook(models.Model):
         for rec in self:
             rec.state = 'completed'
 
-
-
     @api.onchange('vehicle_id')
     def _onchange_vehicle_id(self):
         for rec in self:
-            contract = self.env['fleet.vehicle.log.contract'].search([
-                ('vehicle_id', '=', rec.vehicle_id.id),
-            ], order="id desc", limit=1)
+            if rec.vehicle_id:
+                # Assign related vehicle details
+                rec.vehicle_make_id = rec.vehicle_id.model_id.brand_id
+                rec.vin_sn = rec.vehicle_id.vin_sn
+                rec.engine_no = rec.vehicle_id.engine_no
+                rec.register_no = rec.vehicle_id.license_plate
 
-            if contract:
-                rec.service_contract_id = contract
-                if contract.state == 'open':
-                    rec.contract_status = 'incontract'
+                # Search for the latest contract for this vehicle
+                contract = self.env['fleet.vehicle.log.contract'].search([
+                    ('vehicle_id', '=', rec.vehicle_id.id),
+                ], order="id desc", limit=1)
+
+                if contract:
+                    rec.service_contract_id = contract
+                    if contract.state == 'open':
+                        rec.contract_status = 'incontract'
+                    else:
+                        rec.contract_status = 'outcontract'
                 else:
+                    rec.service_contract_id = False
                     rec.contract_status = 'outcontract'
             else:
+                # Clear fields if no vehicle selected
+                rec.vehicle_make_id = False
+                rec.vin_sn = False
+                rec.engine_no = False
+                rec.register_no = False
                 rec.service_contract_id = False
                 rec.contract_status = 'outcontract'
-
 
 
 class JobCardLine(models.Model):
