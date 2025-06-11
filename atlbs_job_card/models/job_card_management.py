@@ -269,27 +269,25 @@ class VehicleStockBook(models.Model):
             self.odoo_meter_reading = self.register_no.odometer
             self.partner_id = self.register_no.partner_id.id
 
-            # Fetch related service contract (latest open contract)
+            # Fetch the latest contract (open or closed)
             contract = self.env['fleet.vehicle.log.contract'].search([
-                ('vehicle_id', '=', self.register_no.id),
-                ('state', '=', 'open')
+                ('vehicle_id', '=', self.register_no.id)
             ], order='id desc', limit=1)
 
             if contract:
                 self.service_contract_id = contract.id
-                self.contract_status = 'incontract'
+                self.contract_status = 'incontract' if contract.state == 'open' else 'outcontract'
             else:
                 self.service_contract_id = False
-                self.contract_status = 'outcontract'
+                self.contract_status = False
         else:
             self.vehicle_make_id = False
             self.engine_no = ''
             self.vin_sn = ''
+            self.odoo_meter_reading = 0.0
+            self.partner_id = False
             self.service_contract_id = False
             self.contract_status = False
-
-
-
 
     @api.onchange('phone')
     def _onchange_phone(self):
