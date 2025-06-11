@@ -13,24 +13,18 @@
             <field name="customer_code"/>
         </xpath>
 
-        <xpath expr="//notebook" position="inside">
-            <page string="Vehicles">
-                <field name="job_card_vehicle_ids">
-                    <list>
-                        <field name="vehicle_make_id"/>
-                        <field name="vin_sn"/>
-
-                    </list>
-                </field>
-<!--                <field name="job_card_vehicle_ids" mode="tree" context="{'default_partner_id': active_id}">-->
-<!--                    <tree editable="bottom">-->
+<!--        <xpath expr="//notebook" position="inside">-->
+<!--            <page string="Vehicles">-->
+<!--                <field name="job_card_vehicle_ids">-->
+<!--                    <list>-->
 <!--                        <field name="vehicle_make_id"/>-->
-<!--                        <field name="register_no"/>-->
-<!--                        <field name="chassis_no"/>-->
-<!--                    </tree>-->
+<!--                        <field name="vin_sn"/>-->
+
+<!--                    </list>-->
 <!--                </field>-->
-            </page>
-        </xpath>
+
+<!--            </page>-->
+<!--        </xpath>-->
     </field>
 </record>
 </odoo>

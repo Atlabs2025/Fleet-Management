@@ -5,9 +5,12 @@
     <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='category_id']" position="after">
-            <field name="vin_number" required="1"/>
+            <field name="vin_number" invisible="1"/>
             <field name="engine_no" required="1"/>
+            <field name="partner_id" required="1"/>
+
         </xpath>
+
     </field>
 </record>
 </odoo>
