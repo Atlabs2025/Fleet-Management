@@ -318,7 +318,7 @@ class VehicleStockBook(models.Model):
                 self.vehicle_make_id = vehicle.brand_id.id
                 self.engine_no = vehicle.engine_no
                 self.register_no = vehicle.id
-               
+
 
 
 

@@ -81,11 +81,11 @@
                                             <div style="line-height: 1.4;">
                                                 <div>
                                                     <strong>Vehicle:</strong>
-                                                    <span t-esc="doc.vehicle_id.name"/>
+                                                    <span t-esc="doc.register_no.name"/>
                                                 </div>
                                                 <div>
                                                     <strong>Register No:</strong>
-                                                    <span t-esc="doc.register_no"/>
+                                                    <span t-esc="doc.register_no.license_plate"/>
                                                 </div>
 <!--                                                <div>-->
 <!--                                                    <strong>VIN Number:</strong>-->
