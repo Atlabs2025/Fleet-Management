@@ -10,7 +10,7 @@
                 <field name="partner_id"/>
                 <field name="vin_sn" optional="hide"/>
                 <field name="is_insurance_claim" optional="hide"/>
-                <field name="register_no" optional="hide"/>
+<!--                <field name="register_id" optional="hide"/>-->
                  <field name="created_datetime"/>
                 <field name="total_amount" optional="hide"/>
                 <field name="state"/>
@@ -95,8 +95,8 @@
 
 
                         <group class="small-fields-group">
-                            <field name="vehicle_id"/>
                             <field name="register_no"/>
+<!--                            <field name="vehicle_id"/>-->
                             <field name="vehicle_make_id"/>
                             <field name="contract_status"/>
                         </group>

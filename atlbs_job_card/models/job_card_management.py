@@ -13,16 +13,17 @@ class VehicleStockBook(models.Model):
     _rec_name = 'name'
 
     name = fields.Char(string='Job Card Number', required=True, copy=False, readonly=True, default='New')
-    vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
-    register_no = fields.Char(string="Register Number")
+    # vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
+    register_no = fields.Many2one('fleet.vehicle',string="Reg.No")
+    # register_id = fields.Many2one('fleet.vehicle', string="Register Number")
+
     vehicle_make_id = fields.Many2one('fleet.vehicle.model.brand', string="Vehicle Model")
-    # chassis_no = fields.Char(string="Chassis Number")
     engine_no = fields.Char(string="Engine Number")
     odoo_meter_reading = fields.Char(string="Odoo Meter Reading")
     fuel_level = fields.Char(string="Fuel Level")
     vehicle_colour = fields.Char(string="Vehicle Colour")
     # vin_number = fields.Char(string="VIN Number")
-    vin_sn = fields.Char(string="Chassis Number")
+    vin_sn = fields.Char(string="VIN Number")
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -156,17 +157,6 @@ class VehicleStockBook(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('job.card.management') or 'New'
         return super(VehicleStockBook, self).create(vals)
 
-
-    # @api.onchange('vehicle_id')
-    # def _onchange_vehicle_id(self):
-    #     for rec in self:
-    #         if rec.vehicle_id:
-    #             rec.vehicle_make_id = rec.vehicle_id.model_id.brand_id
-    #             # rec.vin_number = rec.vehicle_id.vin_number
-    #             rec.vin_sn = rec.vehicle_id.vin_sn
-    #             rec.engine_no = rec.vehicle_id.engine_no
-    #             rec.register_no = rec.vehicle_id.license_plate
-
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         for rec in self:
@@ -175,6 +165,8 @@ class VehicleStockBook(models.Model):
                 rec.email = rec.partner_id.email
                 rec.vat = rec.partner_id.vat
                 rec.whatsapp_no = rec.partner_id.whatsapp_no
+
+
 
     def action_create_job_card(self):
 
@@ -215,22 +207,7 @@ class VehicleStockBook(models.Model):
 
 
 
-    # def action_open_material_requisition_form(self):
-    #     self.ensure_one()
-    #     employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-    #
-    #     return {
-    #         'name': 'Create Material Requisition',
-    #         'type': 'ir.actions.act_window',
-    #         'res_model': 'material.purchase.requisition',
-    #         'view_mode': 'form',
-    #         'target': 'new',
-    #         'context': {
-    #             'default_job_card_id': self.id,
-    #             'default_employee_id': employee.id if employee else False,
-    #             'default_job_number': self.name,
-    #         }
-    #     }
+
 # here field hiding context added
     def action_open_material_requisition_form(self):
         self.ensure_one()
@@ -259,38 +236,90 @@ class VehicleStockBook(models.Model):
         for rec in self:
             rec.state = 'completed'
 
-    @api.onchange('vehicle_id')
-    def _onchange_vehicle_id(self):
-        for rec in self:
-            if rec.vehicle_id:
-                # Assign related vehicle details
-                rec.vehicle_make_id = rec.vehicle_id.model_id.brand_id
-                rec.vin_sn = rec.vehicle_id.vin_sn
-                rec.engine_no = rec.vehicle_id.engine_no
-                rec.register_no = rec.vehicle_id.license_plate
 
-                # Search for the latest contract for this vehicle
-                contract = self.env['fleet.vehicle.log.contract'].search([
-                    ('vehicle_id', '=', rec.vehicle_id.id),
-                ], order="id desc", limit=1)
+    # @api.onchange('register_no')
+    # def _onchange_register_no(self):
+    #     if self.register_no:
+    #         self.vehicle_make_id = self.register_no.brand_id.id
+    #         self.engine_no = self.register_no.engine_no
+    #         self.vin_sn = self.register_no.vin_sn
+    #         self.partner_id = self.register_no.partner_id.id
+    #
+    #         # Fetch related service contract
+    #         contract = self.env['fleet.vehicle.log.contract'].search([
+    #             ('vehicle_id', '=', self.register_no.id)
+    #         ], order='id desc', limit=1)
+    #
+    #         if contract and contract.state == 'open':
+    #             self.contract_status = 'incontract'
+    #         else:
+    #             self.contract_status = 'outcontract'
+    #     else:
+    #         self.vehicle_make_id = False
+    #         self.engine_no = ''
+    #         self.vin_sn = ''
+    #         self.contract_status = False
 
-                if contract:
-                    rec.service_contract_id = contract
-                    if contract.state == 'open':
-                        rec.contract_status = 'incontract'
-                    else:
-                        rec.contract_status = 'outcontract'
-                else:
-                    rec.service_contract_id = False
-                    rec.contract_status = 'outcontract'
+    @api.onchange('register_no')
+    def _onchange_register_no(self):
+        if self.register_no:
+            self.vehicle_make_id = self.register_no.brand_id.id
+            self.engine_no = self.register_no.engine_no
+            self.vin_sn = self.register_no.vin_sn
+            self.odoo_meter_reading = self.register_no.odometer
+            self.partner_id = self.register_no.partner_id.id
+
+            # Fetch related service contract (latest open contract)
+            contract = self.env['fleet.vehicle.log.contract'].search([
+                ('vehicle_id', '=', self.register_no.id),
+                ('state', '=', 'open')
+            ], order='id desc', limit=1)
+
+            if contract:
+                self.service_contract_id = contract.id
+                self.contract_status = 'incontract'
             else:
-                # Clear fields if no vehicle selected
-                rec.vehicle_make_id = False
-                rec.vin_sn = False
-                rec.engine_no = False
-                rec.register_no = False
-                rec.service_contract_id = False
-                rec.contract_status = 'outcontract'
+                self.service_contract_id = False
+                self.contract_status = 'outcontract'
+        else:
+            self.vehicle_make_id = False
+            self.engine_no = ''
+            self.vin_sn = ''
+            self.service_contract_id = False
+            self.contract_status = False
+
+
+
+
+    @api.onchange('phone')
+    def _onchange_phone(self):
+        if self.phone:
+            partner = self.env['res.partner'].search([('phone', '=', self.phone)], limit=1)
+            if partner:
+                self.partner_id = partner.id
+                self.email = partner.email
+                self.whatsapp_no = partner.whatsapp_no
+            else:
+                self.partner_id = False
+                self.email = False
+                self.whatsapp_no = False
+        else:
+            self.partner_id = False
+            self.email = False
+            self.whatsapp_no = False
+
+
+
+    @api.onchange('vin_sn')
+    def _onchange_vin_sn(self):
+        if self.vin_sn:
+            vehicle = self.env['fleet.vehicle'].search([('vin_sn', '=', self.vin_sn)], limit=1)
+            if vehicle:
+                self.vehicle_make_id = vehicle.brand_id.id
+                self.engine_no = vehicle.engine_no
+                self.register_no = vehicle.id
+               
+
 
 
 class JobCardLine(models.Model):
