@@ -6,7 +6,7 @@
     'summary': 'Atlabs Job Card Management',
     'description': 'job card',
     'depends': [
-        'contacts', 'fleet','product','stock','material_purchase_requisitions','hr','hr_timesheet','purchase','stock','project'
+        'contacts', 'fleet','product','stock','material_purchase_requisitions','hr','hr_timesheet','purchase','stock','project','board',
     ],
 'data': [
     'security/ir.model.access.csv',
@@ -16,6 +16,7 @@
     'report/tax_invoice_template.xml',
     'views/data.xml',
     'views/job_card_management.xml',
+    'views/job_card_estimate.xml',
     'views/fleet_vehicle.xml',
     'views/res_partner.xml',
     'views/product_template.xml',
@@ -24,6 +25,7 @@
     'views/hr_employee.xml',
     'views/job_categories.xml',
     'views/fleet_vehicle_log_contract_views.xml',
+    'views/job_card_dashboard.xml',
     'wizard/job_card_invoice_wizard.xml',
 
 ],

@@ -1,0 +1,198 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="view_vehicle_stock_book_list" model="ir.ui.view">
+        <field name="name">job.card.estimate.list</field>
+        <field name="model">job.card.estimate</field>
+        <field name="arch" type="xml">
+            <list string="Estimate" default_order="create_date desc">
+                <field name="name"/>
+                <field name="vehicle_make_id" optional="hide"/>
+                <field name="partner_id"/>
+                <field name="vin_sn" optional="hide"/>
+                <field name="is_insurance_claim" optional="hide"/>
+<!--                <field name="register_id" optional="hide"/>-->
+                 <field name="created_datetime"/>
+                <field name="total_amount" optional="hide"/>
+                <field name="state"/>
+
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+
+    <record id="view_job_estimate_form" model="ir.ui.view">
+        <field name="name">job.card.estimate.form</field>
+        <field name="model">job.card.estimate</field>
+        <field name="arch" type="xml">
+            <form string="Estimate">
+                <header>
+                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,memo,completed"/>
+                    <!-- Add this button -->
+                    <button name="action_create_job_card"
+                            type="object"
+                            string="Create Job Card"
+                            class="btn-primary"
+                            />
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+
+
+                        <h1 style="margin-bottom: 0px !important; padding-bottom: 0px !important; font-size: 16px;">
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group col="3" style="margin-top: -50px !important; padding-top: 0px !important;">
+                        <separator string="Customer Details" colspan="3"
+                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>
+
+
+                        <group class="small-fields-group">
+                            <field name="is_insurance_claim"/>
+                            <field name="partner_id"/>
+                            <field name="whatsapp_no"/>
+
+                        </group>
+
+
+                        <group class="small-fields-group">
+                            <field name="company_id"/>
+                            <field name="phone"/>
+                            <field name="vat"/>
+
+                        </group>
+
+                        <group class="small-fields-group">
+                            <field name="insurance_company_id" invisible="is_insurance_claim == False"/>
+                            <field name="email"/>
+                            <field name="created_datetime"/>
+
+                        </group>
+                    </group>
+                    <group col="3" style="margin-top: -30px !important; padding-top: 0px !important;">
+                        <separator string="Vehicle Details" colspan="3"
+                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>
+
+
+                        <group class="small-fields-group">
+                            <field name="register_no"/>
+<!--                            <field name="vehicle_id"/>-->
+                            <field name="vehicle_make_id"/>
+                            <field name="contract_status"/>
+                        </group>
+
+                        <!--                            <field name="vin_number"/>-->
+
+                        <group class="small-fields-group">
+                            <field name="vin_sn"/>
+                            <field name="engine_no"/>
+                            <field name="odoo_meter_reading"/>
+                            <field name="service_contract_id"/>
+                        </group>
+                        <group class="small-fields-group">
+                            <field name="fuel_level"/>
+                            <field name="vehicle_colour"/>
+                            <field name="vehicle_in_out" required="1"/>
+                        </group>
+                    </group>
+
+
+                    <notebook class="small-pages">
+                        <page string="Job Details" class="small-page">
+                            <field name="estimate_detail_line_ids">
+                                <list editable="bottom">
+                                    <field name="department"/>
+                                    <field name="product_template_id"/>
+                                    <field name="part_number"/>
+                                    <field name="job_category_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_amt"/>
+                                    <field name="discount"/>
+                                    <field name="after_discount"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="tax_amount"/>
+                                    <field name="total" readonly="1"/>
+                                    <field name="line_state" required="1"/>
+
+                                </list>
+                            </field>
+
+                            <group>
+                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">
+                                    <!-- Summary Totals -->
+                                    <div>
+                                        <group string="Summary" col="2">
+                                            <field name="total_labour" readonly="1"/>
+                                            <field name="total_parts" readonly="1"/>
+                                            <field name="total_material" readonly="1"/>
+                                            <field name="total_lubricant" readonly="1"/>
+                                            <field name="total_sublets" readonly="1"/>
+                                            <field name="total_paint_material" readonly="1"/>
+                                            <field name="total_tyre" readonly="1"/>
+                                        </group>
+                                    </div>
+
+                                    <div style="flex: 1; margin-left: 700px;margin-top: 75px;">
+                                        <group col="2" style="font-size: 14px; font-weight: 600;">
+                                            <field name="total_price_amt" readonly="1" widget="monetary"/>
+                                            <field name="total_discount" readonly="1" widget="monetary"/>
+                                            <field name="subtotal" readonly="1" widget="monetary"/>
+                                            <field name="vat_total" readonly="1" widget="monetary"/>
+                                            <field name="total_amount" readonly="1" widget="monetary"
+                                                   string="Grand Total"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_job_estimate_search" model="ir.ui.view">
+    <field name="name">job.card.estimate.search</field>
+    <field name="model">job.card.estimate</field>
+    <field name="arch" type="xml">
+        <search string="Search Estimates">
+            <field name="name" string="Estimate Number"/>
+            <field name="partner_id" string="Customer"/>
+            <field name="vin_sn" string="Chassis Number"/>
+            <!-- Optional filters -->
+            <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]" help="Draft Job Cards"/>
+            <filter name="filter_memo" string="Memo" domain="[('state','=','memo')]"/>
+            <filter name="filter_completed" string="Completed" domain="[('state','=','completed')]"/>
+        </search>
+    </field>
+</record>
+
+
+
+    <!--     Action-->
+    <record id="action_job_card_estimate" model="ir.actions.act_window">
+        <field name="name">Estimates</field>
+        <field name="res_model">job.card.estimate</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- Menu -->
+    <menuitem id="menu_job_card_estimate_root"
+              name="Estimate"
+              sequence="14"/>
+
+    <menuitem id="menu_job_card_estimate"
+              name="Manage Estimates"
+              parent="menu_job_card_estimate_root"
+              action="action_job_card_estimate"
+              sequence="21"/>
+
+
+</odoo>

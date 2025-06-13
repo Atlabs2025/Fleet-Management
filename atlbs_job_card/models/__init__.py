@@ -1,4 +1,5 @@
 from .import job_card_management
+from .import job_card_estimate
 from .import fleet_vehicle
 from .import res_partner
 from .import job_card_report

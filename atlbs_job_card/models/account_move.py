@@ -7,10 +7,7 @@ class AccountMove(models.Model):
     job_card_id = fields.Many2one('job.card.management', string="Job Card")
     excess_amount = fields.Float(string="Excess Amount")
 
-
-
-    
-
+    service_contract_id = fields.Many2one('fleet.vehicle.log.contract', string="Service Contract")
 
     # insurance_company_id = fields.Many2one('res.partner', string='Insurance Company')
 

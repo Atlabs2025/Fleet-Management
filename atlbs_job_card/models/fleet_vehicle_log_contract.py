@@ -11,6 +11,9 @@ class FleetVehicleLogContract(models.Model):
     job_card_count = fields.Integer(
         string="Job Card Count", compute="_compute_job_card_count"
     )
+
+    invoice_count = fields.Integer(string="Invoices Count", compute="_compute_invoice_count")
+
     contract_type = fields.Selection([
         ('reduce_by_service', 'Reduce Amount by Service'),
         ('fixed_services', 'Fixed Number of Services')
@@ -56,6 +59,9 @@ class FleetVehicleLogContract(models.Model):
                 ('service_contract_id', '=', rec.id)
             ])
 
+    def _compute_invoice_count(self):
+        for rec in self:
+            rec.invoice_count = self.env['account.move'].search_count([('service_contract_id', '=', rec.id)])
 
     def action_view_job_cards(self):
         return {
@@ -68,7 +74,11 @@ class FleetVehicleLogContract(models.Model):
             'target': 'current',
         }
 
-
+    def action_view_invoices(self):
+        self.ensure_one()
+        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        action['domain'] = [('service_contract_id', '=', self.id)]
+        return action
 
     def action_create_payment(self):
         self.ensure_one()
@@ -93,6 +103,7 @@ class FleetVehicleLogContract(models.Model):
             'partner_id': self.company_id.partner_id.id,
             'invoice_date': fields.Date.context_today(self),
             'invoice_line_ids': [(0, 0, line) for line in invoice_line_vals],
+            'service_contract_id': self.id,
         })
 
         # Mark selected services as used

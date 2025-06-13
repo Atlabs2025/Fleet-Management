@@ -136,7 +136,7 @@
                         </div>
 
 
-                        <t t-if="doc.job_detail_line_ids.filtered(lambda l: l.line_state != 'x_state')">
+                        <t t-if="doc.job_detail_line_ids.filtered(lambda l: l.line_state != 'x_state' and l.is_checked)">
                             <h4 style="margin-top: 30px;">Job Details</h4>
                             <table class="table table-sm table-bordered" style="width: 100%; margin-top: 10px;">
                                 <thead style="background-color:#cccccc;">
@@ -152,8 +152,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="doc.job_detail_line_ids.filtered(lambda l: l.line_state != 'x_state')"
-                                       t-as="line">
+                                    <t t-foreach="doc.job_detail_line_ids.filtered(lambda l: l.line_state != 'x_state' and l.is_checked)" t-as="line">
                                         <tr>
                                             <td>
                                                 <span t-esc="line.department"/>
@@ -184,60 +183,6 @@
                                 </tbody>
                             </table>
                         </t>
-
-
-<!--                        <div class="row mt32">-->
-<!--                            <div class="col-6">-->
-<!--                                <h4>Summary</h4>-->
-<!--                                <table class="table table-sm">-->
-<!--                                    <tbody>-->
-<!--                                        <tr t-if="doc.total_labour">-->
-<!--                                            <td>-->
-<!--                                                <strong>Labour Total:</strong>-->
-<!--                                            </td>-->
-<!--                                            <td t-esc="doc.total_labour"/>-->
-<!--                                        </tr>-->
-<!--                                        <tr t-if="doc.total_parts">-->
-<!--                                            <td>-->
-<!--                                                <strong>Parts Total:</strong>-->
-<!--                                            </td>-->
-<!--                                            <td t-esc="doc.total_parts"/>-->
-<!--                                        </tr>-->
-<!--                                        <tr t-if="doc.total_material">-->
-<!--                                            <td>-->
-<!--                                                <strong>Material Total:</strong>-->
-<!--                                            </td>-->
-<!--                                            <td t-esc="doc.total_material"/>-->
-<!--                                        </tr>-->
-<!--                                        <tr t-if="doc.total_lubricant">-->
-<!--                                            <td>-->
-<!--                                                <strong>Lubricant Total:</strong>-->
-<!--                                            </td>-->
-<!--                                            <td t-esc="doc.total_lubricant"/>-->
-<!--                                        </tr>-->
-<!--                                        <tr t-if="doc.total_sublets">-->
-<!--                                            <td>-->
-<!--                                                <strong>Sublets Total:</strong>-->
-<!--                                            </td>-->
-<!--                                            <td t-esc="doc.total_sublets"/>-->
-<!--                                        </tr>-->
-<!--                                        <tr t-if="doc.total_paint_material">-->
-<!--                                            <td>-->
-<!--                                                <strong>Paint Material Total:</strong>-->
-<!--                                            </td>-->
-<!--                                            <td t-esc="doc.total_paint_material"/>-->
-<!--                                        </tr>-->
-<!--                                        <tr t-if="doc.total_tyre">-->
-<!--                                            <td>-->
-<!--                                                <strong>Tyre Total:</strong>-->
-<!--                                            </td>-->
-<!--                                            <td t-esc="doc.total_tyre"/>-->
-<!--                                        </tr>-->
-<!--                                    </tbody>-->
-<!--                                </table>-->
-<!--                            </div>-->
-
-<!--                        </div>-->
 
 
                         <div class="row mt32">
