@@ -1,0 +1,105 @@
+<odoo>
+    <!-- Kanban View for job.card.dashboard -->
+    <record id="view_job_card_dashboard_kanban" model="ir.ui.view">
+        <field name="name">job.card.dashboard.kanban</field>
+        <field name="model">job.card.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-att-class="'oe_kanban_global_click o_kanban_record ' +
+                            ('red ' if record._name == 'vehicle_in_jobcards' else '') +
+                            ('green' if record._name == 'vehicle_out_jobcards' else '')">
+                            <field name="total_jobcards"/>
+                        </div>
+                    </t>
+                </templates>
+                <field name="total_jobcards"/>
+                <field name="vehicle_in_jobcards"/>
+                <field name="vehicle_out_jobcards"/>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- First Kanban View for job.card.management -->
+    <record id="view_job_card_kanban_dashboard" model="ir.ui.view">
+        <field name="name">job.card.management.kanban.dashboard</field>
+        <field name="model">job.card.management</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-att-class="'oe_kanban_global_click ' +
+                        (record.vehicle_in_out.raw_value === 'vehicle_in' ? 'red ' : '') +
+                        (record.vehicle_in_out.raw_value === 'vehicle_out' ? 'green ' : '')">
+                            <field name="name"/>
+                            <div>
+                                Vehicle Status:
+                                <t t-esc="record.vehicle_in_out.value"/>
+                            </div>
+                        </div>
+                    </t>                </templates>
+                <field name="name"/>
+                <field name="vehicle_in_out"/>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Assets for custom Kanban colors -->
+    <template id="job_card_dashboard_assets" name="Job Card Dashboard Assets">
+        <style>
+            .red {
+                background-color: #ffcccc !important;
+            }
+            .green {
+                background-color: #ccffcc !important;
+            }
+        </style>
+    </template>
+
+    <!-- Menu -->
+    <menuitem id="menu_job_card_dashboard" name="Job Card Dashboard" sequence="20"/>
+
+    <!-- Action -->
+    <record id="action_job_card_dashboard" model="ir.actions.act_window">
+        <field name="name">Job Card Dashboard</field>
+        <field name="res_model">job.card.management</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <menuitem id="menu_job_card_dashboard_action" name="Dashboard"
+              parent="menu_job_card_dashboard" action="action_job_card_dashboard"/>
+
+    <!-- Second Kanban View for job.card.management -->
+    <record id="view_job_card_kanban_dashboard_second" model="ir.ui.view">
+        <field name="name">job.card.management.kanban.dashboard.second</field>
+        <field name="model">job.card.management</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="vehicle_in_out"/>
+                <field name="name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-att-class="'oe_kanban_global_click ' +
+                            ('red ' if record.vehicle_in_out.raw_value == 'vehicle_in' else '') +
+                            ('green ' if record.vehicle_in_out.raw_value == 'vehicle_out' else '')">
+                            <div class="o_kanban_primary_bottom">
+                                <field name="name"/>
+                            </div>
+                            <div>
+                                Vehicle Status: <t t-esc="record.vehicle_in_out.value"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>
+
+
+
+
+
+
+

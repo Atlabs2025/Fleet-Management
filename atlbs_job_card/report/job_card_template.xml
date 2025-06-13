@@ -135,40 +135,11 @@
                             </div>
                         </div>
 
+
+
+
 <!--                        <t t-if="doc.job_detail_line_ids">-->
-<!--                            <h4 style="margin-top: 30px;">Job Details</h4>-->
-<!--                            <table class="table table-sm table-bordered" style="width: 100%; margin-top: 10px;">-->
-<!--                                <thead style="background-color: #eee;">-->
-<!--                                    <tr>-->
-<!--                                        <th>Department</th>-->
-<!--                                        <th>Description</th>-->
-<!--&lt;!&ndash;                                        <th>Product</th>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <th>Qty</th>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <th>Unit Price</th>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <th>Discount (%)</th>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <th>Total</th>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <th>State</th>&ndash;&gt;-->
-<!--                                    </tr>-->
-<!--                                </thead>-->
-<!--                                <tbody>-->
-<!--                                    <t t-foreach="doc.job_detail_line_ids" t-as="line">-->
-<!--                                        <tr>-->
-<!--                                            <td><span t-esc="line.department"/></td>-->
-<!--                                            <td><span t-esc="line.description"/></td>-->
-<!--&lt;!&ndash;                                            <td><span t-esc="line.product_template_id.name"/></td>&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <td><span t-esc="line.quantity"/></td>&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <td><span t-esc="line.price_unit"/></td>&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <td><span t-esc="line.discount"/></td>&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <td><span t-esc="line.total"/></td>&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <td><span t-esc="line.line_state"/></td>&ndash;&gt;-->
-<!--                                        </tr>-->
-<!--                                    </t>-->
-<!--                                </tbody>-->
-<!--                            </table>-->
-<!--                        </t>-->
-
-
-                        <t t-if="doc.job_detail_line_ids">
+                            <t t-if="doc.job_detail_line_ids.filtered(lambda l: l.is_checked)">
                             <h4 style="margin-top: 30px;">Job Details</h4>
                             <table style="width: 100%; margin-top: 10px; font-size: 14px; border-collapse: collapse;">
                                 <thead>
@@ -178,7 +149,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="doc.job_detail_line_ids" t-as="line">
+<!--                                    <t t-foreach="doc.job_detail_line_ids" t-as="line">-->
+                                         <t t-foreach="doc.job_detail_line_ids.filtered(lambda l: l.is_checked)" t-as="line">
                                         <tr>
                                             <td style="padding: 4px;">
                                                 <span t-esc="line.department"/>

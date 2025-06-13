@@ -243,6 +243,10 @@
                                     <field name="invoiced" column_invisible="1"/>
                                     <field name="is_request_pending" column_invisible="1"/>
                                     <field name="is_request_completed" column_invisible="1"/>
+
+                                    <field name="is_checked"/>
+
+
                                 </list>
                             </field>
 

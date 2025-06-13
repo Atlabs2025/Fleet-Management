@@ -93,6 +93,8 @@ class VehicleStockBook(models.Model):
 
     created_datetime = fields.Datetime(string="Created Date",default=fields.Datetime.now,readonly=True)
 
+
+
     def open_excess_invoice(self):
         self.ensure_one()
         return {
@@ -394,6 +396,11 @@ class JobCardLine(models.Model):
         comodel_name='job.categories',
         string='Categories'
     )
+
+    is_checked = fields.Boolean(string="Checked")
+
+
+
 
 
 
@@ -890,3 +897,68 @@ class JobCardTimeSheet(models.Model):
                     'date': rec.date,
                 })
         return res
+
+
+
+
+
+
+# class JobCardStage(models.Model):
+#     _name = "job.card.stage"
+#
+#     name = fields.Char(string="Name")
+#     value = fields.Char(string="Value")
+#     color = fields.Char(string="Color")
+#     job_card_id = fields.Many2one("job.card.management", string="Job Card")
+#     count_vehicle_in = fields.Integer(string="Vehicle In Count", compute="compute_stage_records")
+#     count_out = fields.Integer(string="Vehicle Out Count", compute="compute_stage_records")
+#     count_total = fields.Integer(string="Total Count", compute="compute_stage_records")
+#
+#     def compute_stage_records(self):
+#         """
+#         Compute job card having state of Vehicle In
+#         """
+#         self.count_vehicle_in = self.env['job.card.management'].search_count(
+#             [('vehicle_in_out', '=', 'vehicle_in')])
+#         self.count_out = self.env['job.card.management'].search_count([('vehicle_in_out', '=', 'vehicle_out')])
+#         self.count_total = self.env['job.card.management'].search_count([])
+#
+#     def get_action_job_card_ready(self):
+#         """
+#         Get action of job card
+#         """
+#         action_obj = self.env["ir.actions.actions"]
+#         # Vehicle In
+#         if self.value == 'vehicle_in':
+#             action = action_obj._for_xml_id('atlbs_job_card.open_vehicle_in_job_card')
+#
+#
+#         # Vehicle Out
+#         if self.value == 'vehicle_out':
+#             action = action_obj._for_xml_id('atlbs_job_card.open_out_job_card')
+#             action['domain'] = [('vehicle_in_out', '=', 'vehicle_out')]
+#
+#
+#         # Total
+#         if self.value == 'total':
+#             action = action_obj._for_xml_id('atlbs_job_card.open_total_job_card')
+#
+#         if action:
+#             return action
+#         return True
+
+
+class JobCardDashboard(models.TransientModel):
+    _name = 'job.card.dashboard'
+    _description = 'Job Card Dashboard'
+
+    total_jobcards = fields.Integer(string='Total Job Cards', compute='_compute_counts')
+    vehicle_in_jobcards = fields.Integer(string='Vehicle In Job Cards', compute='_compute_counts')
+    vehicle_out_jobcards = fields.Integer(string='Vehicle Out Job Cards', compute='_compute_counts')
+
+    @api.depends()
+    def _compute_counts(self):
+        job_card_obj = self.env['job.card.management']
+        self.total_jobcards = job_card_obj.search_count([])
+        self.vehicle_in_jobcards = job_card_obj.search_count([('vehicle_in_out', '=', 'vehicle_in')])
+        self.vehicle_out_jobcards = job_card_obj.search_count([('vehicle_in_out', '=', 'vehicle_out')])
