@@ -1,0 +1,54 @@
+<odoo>
+<record id="view_job_card_cost_analysis_report_list" model="ir.ui.view">
+    <field name="name">job.card.cost.analysis.report.list</field>
+    <field name="model">job.card.cost.analysis.report</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="job_card_id"/>
+            <field name="partner_id"/>
+            <field name="vin_sn"/>
+            <field name="department"/>
+            <field name="product_id"/>
+            <field name="revenue"/>
+            <field name="cost"/>
+            <field name="profit"/>
+        </list>
+    </field>
+</record>
+
+
+    <record id="action_job_card_cost_analysis_report" model="ir.actions.act_window">
+    <field name="name">Job Card Cost Report</field>
+    <field name="res_model">job.card.cost.analysis.report</field>
+    <field name="view_mode">list,form</field>
+    <field name="help" type="html">
+        <p>View cost and revenue breakdown by department for each Job Card.</p>
+    </field>
+</record>
+
+
+
+    <record id="view_job_card_cost_analysis_report_search" model="ir.ui.view">
+  <field name="name">job.card.cost.analysis.report.search</field>
+  <field name="model">job.card.cost.analysis.report</field>
+  <field name="arch" type="xml">
+    <search string="Job Card Cost Analysis">
+      <field name="job_card_id"/>
+      <field name="partner_id"/>
+      <field name="vin_sn"/>
+
+      <separator/>
+
+      <!-- Group By Filters -->
+      <filter string="Department" name="group_by_department" context="{'group_by': 'department'}"/>
+      <filter string="Product" name="group_by_product" context="{'group_by': 'product_id'}"/>
+      <filter string="Job Card" name="group_by_job_card" context="{'group_by': 'job_card_id'}"/>
+      <filter string="Customer" name="group_by_customer" context="{'group_by': 'partner_id'}"/>
+    </search>
+  </field>
+</record>
+
+
+<menuitem id="menu_job_card_cost_view_report" name="Cost Analysis Report View" parent="job_card_analysis_report_menu_root" action="action_job_card_cost_analysis_report"/>
+
+    </odoo>

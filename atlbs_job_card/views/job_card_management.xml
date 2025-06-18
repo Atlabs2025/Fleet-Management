@@ -384,4 +384,9 @@
               sequence="20"/>
 
 
+
+    <menuitem id="job_card_analysis_report_menu_root" name="Job Card Analysis Reports" parent="menu_job_card_root" sequence="54"/>
+     <menuitem id="menu_job_card_cost_report" name="Cost Analysis Report" parent="job_card_analysis_report_menu_root" action="action_report_job_card_cost_analysis"/>
+
+
 </odoo>

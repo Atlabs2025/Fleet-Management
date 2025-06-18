@@ -14,6 +14,7 @@
     'report/job_card_template.xml',
     'report/estimate_template.xml',
     'report/tax_invoice_template.xml',
+    'report/job_card_cost_analysis_template.xml',
     'views/data.xml',
     'views/job_card_management.xml',
     'views/job_card_estimate.xml',
@@ -26,6 +27,8 @@
     'views/job_categories.xml',
     'views/fleet_vehicle_log_contract_views.xml',
     'views/job_card_dashboard.xml',
+    'views/cost_analysis_view.xml',
+    'wizard/job_card_cost_analysis_wizard_view.xml',
     'wizard/job_card_invoice_wizard.xml',
 
 ],

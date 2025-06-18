@@ -9,3 +9,4 @@ from .import job_card_timesheet
 from .import hr_employee
 from .import job_categories
 from .import fleet_vehicle_log_contract
+from .import cost_analysis_report

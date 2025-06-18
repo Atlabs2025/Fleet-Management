@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_job_card_cost_analysis_wizard" model="ir.ui.view">
+        <field name="name">job.card.cost.analysis.wizard.form</field>
+        <field name="model">job.card.cost.analysis.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Job Card Cost Report">
+                <group>
+                    <field name="job_card_id"/>
+                     <field name="date_from"/>
+                     <field name="date_to"/>
+                </group>
+                <footer>
+                   <button name="action_print_report" type="object" string="Print Report" class="btn-primary"/>
+<!--                   <button name="action_view_report" type="object" string="View Report" class="btn-primary"/>-->
+
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_job_card_cost_analysis_wizard" model="ir.actions.act_window">
+        <field name="name">Job Card Cost Report</field>
+        <field name="res_model">job.card.cost.analysis.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_job_card_cost_report"
+              name="Job Card Cost Analysis Report"
+              parent="job_card_analysis_report_menu_root"
+              action="action_job_card_cost_analysis_wizard"/>
+</odoo>
