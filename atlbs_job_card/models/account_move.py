@@ -9,6 +9,10 @@ class AccountMove(models.Model):
 
     service_contract_id = fields.Many2one('fleet.vehicle.log.contract', string="Service Contract")
 
+    @api.onchange('job_card_id')
+    def _onchange_job_card_id(self):
+        if self.job_card_id:
+            self.partner_id = self.job_card_id.partner_id
     # insurance_company_id = fields.Many2one('res.partner', string='Insurance Company')
 
     # @api.onchange('job_card_id')
@@ -36,3 +40,20 @@ class AccountMove(models.Model):
     #
     #         # Set the invoice lines
     #         self.invoice_line_ids = lines
+
+
+
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    department = fields.Selection([
+        ('labour', 'Labour'),
+        ('parts', 'Parts'),
+        ('material', 'Material'),
+        ('lubricant', 'Lubricant'),
+        ('sublets', 'Sublets'),
+        ('paint_material', 'Paint Material'),
+        ('tyre', 'Tyre'),
+    ], string="Department")

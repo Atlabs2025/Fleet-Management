@@ -142,10 +142,6 @@ class JobCardEstimate(models.Model):
 
 
 
-    # def action_create_estimate(self):
-    #     return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self)
-    #
-    #
 
 
 # here field hiding context added

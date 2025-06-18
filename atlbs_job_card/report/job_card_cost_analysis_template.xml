@@ -1,0 +1,181 @@
+<odoo>
+<template id="report_job_card_cost_analysis">
+  <t t-call="web.html_container">
+    <t t-call="web.external_layout">
+      <div class="page">
+        <h2 style="text-align: center;">Job Card Cost Analysis</h2>
+        <p><strong>Job Card:</strong> <t t-esc="docs.name"/></p>
+        <p><strong>Customer Name:</strong> <t t-esc="docs.partner_id.name"/></p>
+        <p><strong>Vin No.:</strong> <t t-esc="docs.vin_sn"/></p>
+
+        <!-- Revenue Table -->
+        <div style="background-color:#f9f9dc; padding:10px; margin-top:20px;">
+          <h4><strong>Revenue (Income)</strong></h4>
+          <table class="table table-sm">
+            <thead>
+              <tr style="border: none;">
+                <th style="border: none;">Description</th>
+                <th style="border: none; text-align: right; padding-right: 200px;">Amount (AED)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="revenue_summary.items()" t-as="item">
+                <tr style="border: none;">
+                  <td style="border: none;"><t t-esc="item[0]"/></td>
+                  <td style="border: none; text-align: right; padding-right: 200px;"><t t-esc="item[1]"/></td>
+                </tr>
+              </t>
+              <tr style="border: none;">
+                <td style="border: none;"><strong>Total Revenue</strong></td>
+                <td style="border: none; text-align: right; padding-right: 200px;"><strong><t t-esc="total_revenue"/></strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cost Table -->
+        <div style="background-color:#dce9f9; padding:10px; margin-top:20px;">
+          <h4><strong>Expenses</strong></h4>
+          <table class="table table-sm">
+            <thead>
+              <tr style="border:none;">
+                <th style="border:none;">Description</th>
+                <th style="border:none; text-align: right; padding-right: 200px;">Amount (AED)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="cost_summary.items()" t-as="item">
+                <tr style="border:none;">
+                  <td style="border: none;"><t t-esc="item[0]"/></td>
+                  <td style="border: none; text-align: right; padding-right: 200px;"><t t-esc="item[1]"/></td>
+                </tr>
+              </t>
+              <tr style="border:none;">
+                <td style="border:none;"><strong>Total Cost</strong></td>
+                <td style="border:none; text-align: right; padding-right: 200px;"><strong><t t-esc="total_cost"/></strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Profit Summary -->
+        <div style="background-color:#e6e6e6; padding:10px; margin-top:20px;">
+          <h4><strong>Profit Summary</strong></h4>
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td style="border: none;">Total Revenue</td>
+                <td style="border: none; text-align: right; padding-right: 200px;"><t t-esc="total_revenue"/></td>
+              </tr>
+              <tr>
+                <td style="border: none;">Total Cost</td>
+                <td style="border: none; text-align: right; padding-right: 200px;"><t t-esc="total_cost"/></td>
+              </tr>
+              <tr>
+                <td style="border: none;"><strong>Net Profit</strong></td>
+                <td style="border: none; text-align: right; padding-right: 200px;"><strong><t t-esc="profit"/></strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </t>
+  </t>
+</template>
+
+<!--<template id="report_job_card_cost_analysis">-->
+<!--  <t t-call="web.html_container">-->
+<!--    <t t-call="web.external_layout">-->
+<!--      <div class="page">-->
+<!--        <h2 style="text-align: center;">Job Card Cost Analysis</h2>-->
+<!--        <p><strong>Job Card:</strong> <t t-esc="docs.name"/></p>-->
+
+<!--        &lt;!&ndash; Revenue Table &ndash;&gt;-->
+<!--        <div style="background-color:#f9f9dc; padding:10px; margin-top:20px;">-->
+<!--          <h4><strong>Revenue (Income)</strong></h4>-->
+<!--          <table class="table table-sm">-->
+<!--            <thead>-->
+<!--              <tr style="border: none;">-->
+<!--                <th style="border: none;">Description</th>-->
+<!--                <th style="border: none;">Amount (AED)</th>-->
+<!--              </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--              <t t-foreach="revenue_summary.items()" t-as="item">-->
+<!--                <tr style="border: none;">-->
+<!--                  <td style="border: none;"><t t-esc="item[0]"/></td>-->
+<!--                  <td style="border: none;"><t t-esc="item[1]"/></td>-->
+<!--                </tr>-->
+<!--              </t>-->
+<!--              <tr style="border: none;">-->
+<!--                <td style="border: none;"><strong>Total Revenue</strong></td>-->
+<!--                <td style="border: none;"><strong><t t-esc="total_revenue"/></strong></td>-->
+<!--              </tr>-->
+<!--            </tbody>-->
+<!--          </table>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Cost Table &ndash;&gt;-->
+<!--        <div style="background-color:#dce9f9; padding:10px; margin-top:20px;">-->
+<!--          <h4><strong>Expenses</strong></h4>-->
+<!--          <table class="table table-sm">-->
+<!--            <thead>-->
+<!--              <tr style="border:none;">-->
+<!--                <th style="border:none;">Description</th>-->
+<!--                <th style="border:none;padding-left:-20px;">Amount (AED)</th>-->
+<!--              </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--              <t t-foreach="cost_summary.items()" t-as="item">-->
+<!--                <tr style="border:none;">-->
+<!--                  <td style="border: none;"><t t-esc="item[0]"/></td>-->
+<!--                  <td style="border: none;padding-left:-20px"><t t-esc="item[1]"/></td>-->
+<!--                </tr>-->
+<!--              </t>-->
+<!--              <tr>-->
+<!--                <td style="border:none;"><strong>Total Cost</strong></td>-->
+<!--                <td style="border:none;"><strong><t t-esc="total_cost"/></strong></td>-->
+<!--              </tr>-->
+<!--            </tbody>-->
+<!--          </table>-->
+<!--        </div>-->
+
+
+
+
+<!--        &lt;!&ndash; Profit Summary &ndash;&gt;-->
+<!--        <div style="background-color:#e6e6e6; padding:10px; margin-top:20px;">-->
+<!--          <h4><strong>Profit Summary</strong></h4>-->
+<!--          <table class="table table-sm">-->
+<!--            <tbody>-->
+<!--              <tr>-->
+<!--                <td style="border: none;">Total Revenue</td>-->
+<!--                <td style="border: none;"><t t-esc="total_revenue"/></td>-->
+<!--              </tr>-->
+<!--              <tr>-->
+<!--                <td style="border: none;">Total Cost</td>-->
+<!--                <td style="border: none;"><t t-esc="total_cost"/></td>-->
+<!--              </tr>-->
+<!--              <tr>-->
+<!--                <td style="border: none;"><strong>Net Profit</strong></td>-->
+<!--                <td style="border: none;"><strong><t t-esc="profit"/></strong></td>-->
+<!--              </tr>-->
+<!--            </tbody>-->
+<!--          </table>-->
+<!--        </div>-->
+
+<!--&lt;!&ndash;        <p style="font-size:12px; color:gray; margin-top:15px;">VAT not Reflect in Report</p>&ndash;&gt;-->
+
+<!--      </div>-->
+<!--    </t>-->
+<!--  </t>-->
+<!--</template>-->
+</odoo>
+
+
+
+
+
+
+
