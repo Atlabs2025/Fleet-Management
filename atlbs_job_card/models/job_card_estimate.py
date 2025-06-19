@@ -328,7 +328,7 @@ class JobCardLine(models.Model):
         for line in self:
             # Step 1: Calculate Amount (Quantity * Price)
             amount = line.price_unit * line.quantity
-            line.price_amt = amount  # Update the price_amt field with the calculated amount
+            line.price_amt = amount
 
             # Step 2: Apply Discount
             discount_amount = amount * (line.discount / 100.0)
@@ -339,7 +339,7 @@ class JobCardLine(models.Model):
             vat_amount = 0.0
             if line.tax_ids:
                 for tax in line.tax_ids:
-                    if tax.amount:  # Check if there's a valid tax percentage
+                    if tax.amount:
                         vat_amount += after_discount_amount * (tax.amount / 100.0)
 
             line.tax_amount = vat_amount
