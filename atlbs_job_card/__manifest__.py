@@ -26,7 +26,7 @@
     'views/hr_employee.xml',
     'views/job_categories.xml',
     'views/fleet_vehicle_log_contract_views.xml',
-    'views/job_card_dashboard.xml',
+    # 'views/job_card_dashboard.xml',
     'views/cost_analysis_view.xml',
     'wizard/job_card_cost_analysis_wizard_view.xml',
     'wizard/job_card_invoice_wizard.xml',
@@ -35,7 +35,7 @@
     'assets': {
     'web.assets_backend': [
         'atlbs_job_card/static/src/css/custom_styles.css',
-        'atlbs_job_card/static/src/js/job_card_dashboard.js',
+        # 'atlbs_job_card/static/src/js/job_card_dashboard.js',
     ],
     },
     'license': 'LGPL-3',
