@@ -64,7 +64,9 @@
 
                     <group col="3" style="margin-top: -50px !important; padding-top: 0px !important;">
                         <separator string="Customer Details" colspan="3"
-                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>
+                                   style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
+<!--                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>-->
+
 
 
                         <group class="small-fields-group">
@@ -89,9 +91,11 @@
 
                         </group>
                     </group>
+                    <br/>
                     <group col="3" style="margin-top: -30px !important; padding-top: 0px !important;">
                         <separator string="Vehicle Details" colspan="3"
-                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>
+                                   style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
+<!--                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>-->
 
 
                         <group class="small-fields-group">
