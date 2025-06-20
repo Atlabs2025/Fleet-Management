@@ -35,6 +35,7 @@
     'assets': {
     'web.assets_backend': [
         'atlbs_job_card/static/src/css/custom_styles.css',
+        'atlbs_job_card/static/src/js/job_card_dashboard.js',
     ],
     },
     'license': 'LGPL-3',
