@@ -93,7 +93,7 @@ class VehicleStockBook(models.Model):
 
     created_datetime = fields.Datetime(string="Created Date",default=fields.Datetime.now,readonly=True)
 
-
+    complaint_ids = fields.One2many('job.card.complaint', 'job_card_id', string='Complaints')
 
     def open_excess_invoice(self):
         self.ensure_one()
@@ -962,3 +962,17 @@ class JobCardDashboard(models.TransientModel):
         self.total_jobcards = job_card_obj.search_count([])
         self.vehicle_in_jobcards = job_card_obj.search_count([('vehicle_in_out', '=', 'vehicle_in')])
         self.vehicle_out_jobcards = job_card_obj.search_count([('vehicle_in_out', '=', 'vehicle_out')])
+
+
+
+
+from odoo import models, fields
+
+class JobCardComplaint(models.Model):
+    _name = 'job.card.complaint'
+    _description = 'Job Card Complaint'
+
+    job_card_id = fields.Many2one('job.card.management', string='Job Card', ondelete='cascade')
+    service_requested = fields.Char(string='Service Requested')
+    description = fields.Text(string='Description')
+    remarks = fields.Text(string='Remarks')
