@@ -14,7 +14,6 @@
 
 
                             <div style="margin-top: 20px;">
-                                <!-- Title Row with lines above and below -->
                                 <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 0; text-align: center; font-weight: bold;">
                                     Customer Details
                                 </div>
@@ -193,101 +192,95 @@
                         </t>
 
 
-                        <div class="row mt32">
-                            <div class="col-6">
-                                <h4>Summary</h4>
-                                <table class="table table-sm">
-                                    <tbody>
-                                        <tr t-if="doc.total_labour">
-                                            <td>
-                                                <strong>Labour Total:</strong>
-                                            </td>
-                                            <td t-esc="doc.total_labour"/>
-                                        </tr>
-                                        <tr t-if="doc.total_parts">
-                                            <td>
-                                                <strong>Parts Total:</strong>
-                                            </td>
-                                            <td t-esc="doc.total_parts"/>
-                                        </tr>
-                                        <tr t-if="doc.total_material">
-                                            <td>
-                                                <strong>Material Total:</strong>
-                                            </td>
-                                            <td t-esc="doc.total_material"/>
-                                        </tr>
-                                        <tr t-if="doc.total_lubricant">
-                                            <td>
-                                                <strong>Lubricant Total:</strong>
-                                            </td>
-                                            <td t-esc="doc.total_lubricant"/>
-                                        </tr>
-                                        <tr t-if="doc.total_sublets">
-                                            <td>
-                                                <strong>Sublets Total:</strong>
-                                            </td>
-                                            <td t-esc="doc.total_sublets"/>
-                                        </tr>
-                                        <tr t-if="doc.total_paint_material">
-                                            <td>
-                                                <strong>Paint Material Total:</strong>
-                                            </td>
-                                            <td t-esc="doc.total_paint_material"/>
-                                        </tr>
-                                        <tr t-if="doc.total_tyre">
-                                            <td>
-                                                <strong>Tyre Total:</strong>
-                                            </td>
-                                            <td t-esc="doc.total_tyre"/>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+<!--                        <div class="row mt32">-->
+<!--                            <div class="col-6">-->
+<!--                                <h4>Summary</h4>-->
+<!--                                <table class="table table-sm">-->
+<!--                                    <tbody>-->
+<!--                                        <tr t-if="doc.total_labour">-->
+<!--                                            <td>-->
+<!--                                                <strong>Labour Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_labour"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_parts">-->
+<!--                                            <td>-->
+<!--                                                <strong>Parts Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_parts"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_material">-->
+<!--                                            <td>-->
+<!--                                                <strong>Material Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_material"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_lubricant">-->
+<!--                                            <td>-->
+<!--                                                <strong>Lubricant Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_lubricant"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_sublets">-->
+<!--                                            <td>-->
+<!--                                                <strong>Sublets Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_sublets"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_paint_material">-->
+<!--                                            <td>-->
+<!--                                                <strong>Paint Material Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_paint_material"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr t-if="doc.total_tyre">-->
+<!--                                            <td>-->
+<!--                                                <strong>Tyre Total:</strong>-->
+<!--                                            </td>-->
+<!--                                            <td t-esc="doc.total_tyre"/>-->
+<!--                                        </tr>-->
+<!--                                    </tbody>-->
+<!--                                </table>-->
+<!--                            </div>-->
 
-                            <div class="col-6">
-                                <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
-                                    <tbody>
-                                        <tr>
-                                            <td style="font-weight: bold; width: 50%; text-align: left; padding-left: 150px;">
-                                                Total :
-                                            </td>
-                                            <td style="text-align: right;" t-esc="doc.total_price_amt"/>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold; text-align: left; padding-left: 150px;">
-                                                Discount :
-                                            </td>
-                                            <td style="text-align: right;" t-esc="doc.total_discount"/>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold; text-align: left; padding-left: 150px;">
-                                                Subtotal :
-                                            </td>
-                                            <td style="text-align: right;" t-esc="doc.subtotal"/>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold; text-align: left; padding-left: 150px;">VAT
-                                                Total :
-                                            </td>
-                                            <td style="text-align: right;" t-esc="doc.vat_total"/>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold; font-size: 16px; text-align: left; padding-left: 150px;">
-                                                Grand Total :
-                                            </td>
-                                            <td style="text-align: right; font-weight: bold; font-size: 16px;"
-                                                t-esc="doc.total_amount"/>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-
-                        </div>
-
-
-
-
+<!--                            <div class="col-6">-->
+<!--                                <table style="width: 100%; font-size: 14px; border-collapse: collapse;">-->
+<!--                                    <tbody>-->
+<!--                                        <tr>-->
+<!--                                            <td style="font-weight: bold; width: 50%; text-align: left; padding-left: 150px;">-->
+<!--                                                Total :-->
+<!--                                            </td>-->
+<!--                                            <td style="text-align: right;" t-esc="doc.total_price_amt"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td style="font-weight: bold; text-align: left; padding-left: 150px;">-->
+<!--                                                Discount :-->
+<!--                                            </td>-->
+<!--                                            <td style="text-align: right;" t-esc="doc.total_discount"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td style="font-weight: bold; text-align: left; padding-left: 150px;">-->
+<!--                                                Subtotal :-->
+<!--                                            </td>-->
+<!--                                            <td style="text-align: right;" t-esc="doc.subtotal"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td style="font-weight: bold; text-align: left; padding-left: 150px;">VAT-->
+<!--                                                Total :-->
+<!--                                            </td>-->
+<!--                                            <td style="text-align: right;" t-esc="doc.vat_total"/>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td style="font-weight: bold; font-size: 16px; text-align: left; padding-left: 150px;">-->
+<!--                                                Grand Total :-->
+<!--                                            </td>-->
+<!--                                            <td style="text-align: right; font-weight: bold; font-size: 16px;"-->
+<!--                                                t-esc="doc.total_amount"/>-->
+<!--                                        </tr>-->
+<!--                                    </tbody>-->
+<!--                                </table>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                     </div>
                 </t>

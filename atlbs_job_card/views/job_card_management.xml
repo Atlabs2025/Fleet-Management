@@ -332,14 +332,16 @@
                             </field>
                         </page>
 
+                        <page string="Complaints">
+                            <field name="complaint_ids">
+                                <list editable="bottom">
+                                    <field name="service_requested"/>
+                                    <field name="description"/>
+                                    <field name="remarks"/>
+                                </list>
+                            </field>
+                        </page>
 
-                        <!--                            <field name="service_line_ids">-->
-<!--                                <list editable="bottom">-->
-<!--                                    <field name="menu_service"/>-->
-<!--                                    <field name="service_amount" readonly="1"/>-->
-<!--                                    <field name="product_template_ids" widget="many2many_tags"/>-->
-<!--                                </list>-->
-<!--                            </field>-->
 
                     </notebook>
 
