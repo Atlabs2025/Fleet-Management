@@ -57,6 +57,17 @@ class VehicleStockBook(models.Model):
 
     vehicle_in_out = fields.Selection([('vehicle_in', 'IN'),('vehicle_out', 'OUT')], string="Vehicle IN/OUT", default='', tracking=True)
 
+    job_card_stage = fields.Selection([
+        ('wip', 'Work in Progress'),
+        ('hold', 'Hold'),
+        ('no_action', 'No Action'),
+        ('awaiting_parts', 'Waiting For Parts'),
+        ('awaiting_approval', 'Waiting For Approval'),
+        ('ready', 'Ready For Delivery'),
+        ('delivered_not_invoiced', 'Delivered Not Invoiced'),
+        ('insurance', 'Insurance'),
+        ('cancelled', 'Cancelled')
+    ], string="Stage", store=True)
     # invoiced = fields.Boolean(string="Invoiced", default=False)
 
     total_amount = fields.Monetary(
@@ -94,6 +105,9 @@ class VehicleStockBook(models.Model):
     created_datetime = fields.Datetime(string="Created Date",default=fields.Datetime.now,readonly=True)
 
     complaint_ids = fields.One2many('job.card.complaint', 'job_card_id', string='Complaints')
+
+    is_estimate_printed = fields.Boolean(string='Estimate Printed', default=False)
+
 
     def open_excess_invoice(self):
         self.ensure_one()
@@ -204,9 +218,15 @@ class VehicleStockBook(models.Model):
 
 
 
-    def action_create_estimate(self):
-        return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self)
+    # def action_create_estimate(self):
+    #     return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self)
 
+# see here i have added the boolean field as true then the button became invisible
+
+    def action_create_estimate(self):
+        self.ensure_one()
+        self.is_estimate_printed = True
+        return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self)
 
 
 

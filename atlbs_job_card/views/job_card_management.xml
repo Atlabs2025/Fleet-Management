@@ -35,8 +35,9 @@
                             invisible="state != 'completed'" class="btn-success"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"
                             invisible="state  !='completed'"/>
-                    <button name="action_create_estimate" string="Create Estimate" type="object" class="btn-primary"
-                            invisible="state  !='memo'"/>
+                    <button name="action_create_estimate" string="Create Estimate" type="object" class="btn-primary" invisible="state != 'memo' or is_estimate_printed == True"/>
+<!--                    invisible="state  !='memo'"-->
+
                     <button name="action_preforma_invoice" string="Create Preforma Invoice" type="object"
                             class="btn-primary" invisible="state  !='memo'"/>
                     <button name="action_open_material_requisition_form" type="object"
@@ -117,6 +118,7 @@
                             <field name="fuel_level"/>
                             <field name="vehicle_colour"/>
                             <field name="vehicle_in_out" required="1"/>
+                            <field name="job_card_stage" required="1"/>
                         </group>
                     </group>
 
