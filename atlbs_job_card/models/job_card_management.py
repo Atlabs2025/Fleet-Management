@@ -14,7 +14,7 @@ class VehicleStockBook(models.Model):
 
     name = fields.Char(string='Job Card Number', required=True, copy=False, readonly=True, default='New')
     # vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
-    register_no = fields.Many2one('fleet.vehicle',string="Reg.No")
+    register_no = fields.Many2one('fleet.vehicle',string="Plate No.")
     # register_id = fields.Many2one('fleet.vehicle', string="Register Number")
 
     vehicle_make_id = fields.Many2one('fleet.vehicle.model.brand', string="Vehicle Model")
@@ -58,6 +58,7 @@ class VehicleStockBook(models.Model):
     vehicle_in_out = fields.Selection([('vehicle_in', 'IN'),('vehicle_out', 'OUT')], string="Vehicle IN/OUT", default='', tracking=True)
 
     job_card_stage = fields.Selection([
+        ('', ''),
         ('wip', 'Work in Progress'),
         ('hold', 'Hold'),
         ('no_action', 'No Action'),
@@ -66,7 +67,8 @@ class VehicleStockBook(models.Model):
         ('ready', 'Ready For Delivery'),
         ('delivered_not_invoiced', 'Delivered Not Invoiced'),
         ('insurance', 'Insurance'),
-        ('cancelled', 'Cancelled')
+        ('cancelled', 'Cancelled'),
+        ('completed', 'Completed'),
     ], string="Stage", store=True)
     # invoiced = fields.Boolean(string="Invoiced", default=False)
 
