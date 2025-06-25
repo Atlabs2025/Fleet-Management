@@ -6,6 +6,7 @@
             <div class="navbar navbar-expand-md navbar-light mb-4 navbar-style border-bottom"
                  role="navigation">
 <!--                style="display:none;"-->
+<!--                display none commented-->
                 <button class="navbar-toggler" id="dropdownNavbar" type="button"
                         data-toggle="collapse"
                         data-target="#navbarCollapse"
