@@ -118,7 +118,7 @@
                             <field name="fuel_level"/>
                             <field name="vehicle_colour"/>
                             <field name="vehicle_in_out" required="1"/>
-                            <field name="job_card_stage" required="1"/>
+                            <field name="job_card_stage"/>
                         </group>
                     </group>
 
