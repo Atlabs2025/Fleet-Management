@@ -6,8 +6,8 @@
             <form string="Job Card Cost Report">
                 <group>
                     <field name="job_card_id"/>
-                     <field name="date_from"/>
-                     <field name="date_to"/>
+<!--                     <field name="date_from"/>-->
+<!--                     <field name="date_to"/>-->
                 </group>
                 <footer>
                    <button name="action_print_report" type="object" string="Print Report" class="btn-primary"/>

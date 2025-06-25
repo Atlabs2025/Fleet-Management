@@ -10,8 +10,8 @@ class JobCardCostAnalysisWizard(models.TransientModel):
 
 
     job_card_id = fields.Many2one('job.card.management', string='Job Card', required=True)
-    date_from = fields.Date(string="Date From")
-    date_to = fields.Date(string="Date To")
+    # date_from = fields.Date(string="Date From")
+    # date_to = fields.Date(string="Date To")
 
     # def action_print_report(self):
     #     data = {'job_card_id': self.job_card_id.id}
@@ -20,8 +20,8 @@ class JobCardCostAnalysisWizard(models.TransientModel):
     def action_print_report(self):
         data = {
             'job_card_id': self.job_card_id.id,
-            'date_from': self.date_from.isoformat(),
-            'date_to': self.date_to.isoformat(),
+            # 'date_from': self.date_from.isoformat(),
+            # 'date_to': self.date_to.isoformat(),
         }
         return self.env.ref('atlbs_job_card.action_report_job_card_cost_analysis').report_action(self, data=data)
 
@@ -33,8 +33,8 @@ class ReportJobCardCostAnalysis(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         job_card_id = data.get('job_card_id')
-        date_from = data.get('date_from')
-        date_to = data.get('date_to')
+        # date_from = data.get('date_from')
+        # date_to = data.get('date_to')
 
         job_card = self.env['job.card.management'].browse(job_card_id)
 
@@ -53,8 +53,7 @@ class ReportJobCardCostAnalysis(models.AbstractModel):
             ('job_card_id', '=', job_card_id),
             ('move_type', '=', 'out_invoice'),
             ('state', 'in', ['draft', 'posted']),
-            ('invoice_date', '>=', date_from),
-            ('invoice_date', '<=', date_to),
+
         ])
 
         # Incoming vendor bills (costs)
@@ -62,8 +61,7 @@ class ReportJobCardCostAnalysis(models.AbstractModel):
             ('job_card_id', '=', job_card_id),
             ('move_type', '=', 'in_invoice'),
             ('state', 'in', ['draft', 'posted']),
-            ('invoice_date', '>=', date_from),
-            ('invoice_date', '<=', date_to),
+
         ])
 
         revenue = defaultdict(float)
@@ -91,8 +89,7 @@ class ReportJobCardCostAnalysis(models.AbstractModel):
             'total_revenue': total_revenue,
             'total_cost': total_cost,
             'profit': profit,
-            'date_from': date_from,
-            'date_to': date_to,
+
         }
 
 
