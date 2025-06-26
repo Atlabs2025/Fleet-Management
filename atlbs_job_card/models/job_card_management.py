@@ -110,6 +110,7 @@ class VehicleStockBook(models.Model):
 
     is_estimate_printed = fields.Boolean(string='Estimate Printed', default=False)
 
+    estimate_id = fields.Many2one('job.card.estimate', string="Estimate Reference")
 
     def open_excess_invoice(self):
         self.ensure_one()
@@ -220,19 +221,22 @@ class VehicleStockBook(models.Model):
 
 
 
-    # def action_create_estimate(self):
-    #     return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self)
+    # def action_print_estimate(self):
+    #     self.ensure_one()
+    #     if not self.estimate_id:
+    #         raise UserError("No estimate linked to this Job Card.")
+    #     return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self.estimate_id)
 
-# see here i have added the boolean field as true then the button became invisible
-
-    def action_create_estimate(self):
+    def action_print_estimate(self):
         self.ensure_one()
-        self.is_estimate_printed = True
-        return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self)
+        if not self.estimate_id:
+            raise UserError("No Estimate is linked to this Job Card.")
+
+        self.is_estimate_printed = True  # Mark as printed
+        return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self.estimate_id)
 
 
-
-# here field hiding context added
+    # here field hiding context added
     def action_open_material_requisition_form(self):
         self.ensure_one()
         employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -261,28 +265,7 @@ class VehicleStockBook(models.Model):
             rec.state = 'completed'
 
 
-    # @api.onchange('register_no')
-    # def _onchange_register_no(self):
-    #     if self.register_no:
-    #         self.vehicle_make_id = self.register_no.brand_id.id
-    #         self.engine_no = self.register_no.engine_no
-    #         self.vin_sn = self.register_no.vin_sn
-    #         self.partner_id = self.register_no.partner_id.id
-    #
-    #         # Fetch related service contract
-    #         contract = self.env['fleet.vehicle.log.contract'].search([
-    #             ('vehicle_id', '=', self.register_no.id)
-    #         ], order='id desc', limit=1)
-    #
-    #         if contract and contract.state == 'open':
-    #             self.contract_status = 'incontract'
-    #         else:
-    #             self.contract_status = 'outcontract'
-    #     else:
-    #         self.vehicle_make_id = False
-    #         self.engine_no = ''
-    #         self.vin_sn = ''
-    #         self.contract_status = False
+
 
     @api.onchange('register_no')
     def _onchange_register_no(self):
@@ -341,7 +324,108 @@ class VehicleStockBook(models.Model):
                 self.engine_no = vehicle.engine_no
                 self.register_no = vehicle.id
 
+    # def action_create_estimate(self):
+    #     self.ensure_one()
+    #
+    #     estimate = self.env['job.card.estimate']
+    #     if not self.job_estimate_id:
+    #         # Auto-create estimate from job card
+    #         estimate = estimate.create({
+    #             'register_no': self.register_no.id,
+    #             'vehicle_make_id': self.vehicle_make_id.id,
+    #             'engine_no': self.engine_no,
+    #             'odoo_meter_reading': self.odoo_meter_reading,
+    #             'fuel_level': self.fuel_level,
+    #             'vehicle_colour': self.vehicle_colour,
+    #             'vin_sn': self.vin_sn,
+    #             'partner_id': self.partner_id.id,
+    #             'phone': self.phone,
+    #             'email': self.email,
+    #             'vat': self.vat,
+    #             'whatsapp_no': self.whatsapp_no,
+    #             'company_id': self.company_id.id,
+    #             'vehicle_in_out': self.vehicle_in_out,
+    #             'estimate_detail_line_ids': [
+    #                 (0, 0, {
+    #                     'department': line.department,
+    #                     'description': line.description,
+    #                     'product_template_id': line.product_template_id.id,
+    #                     'price_unit': line.price_unit,
+    #                     'quantity': line.quantity,
+    #                     'tax_ids': [(6, 0, line.tax_ids.ids)],
+    #                     'discount': line.discount,
+    #                 }) for line in self.job_detail_line_ids if line.line_state != 'x_state'
+    #             ],
+    #         })
+    #
+    #         # Link back to job card
+    #         self.job_estimate_id = estimate.id
+    #     else:
+    #         estimate = self.job_estimate_id
+    #
+    #     self.is_estimate_printed = True
+    #     return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(estimate)
 
+    # def action_create_estimate(self):
+    #     self.ensure_one()
+    #
+    #     estimate = self.env['job.card.estimate'].create({
+    #         'partner_id': self.partner_id.id,
+    #         'register_no': self.register_no.id,
+    #         'vehicle_make_id': self.vehicle_make_id.id,
+    #         'engine_no': self.engine_no,
+    #         'odoo_meter_reading': self.odoo_meter_reading,
+    #         'fuel_level': self.fuel_level,
+    #         'vehicle_colour': self.vehicle_colour,
+    #         'vin_sn': self.vin_sn,
+    #         'phone': self.phone,
+    #         'email': self.email,
+    #         'vat': self.vat,
+    #         'whatsapp_no': self.whatsapp_no,
+    #         'vehicle_in_out': self.vehicle_in_out,
+    #         'company_id': self.company_id.id,
+    #         'estimate_detail_line_ids': [(0, 0, {
+    #             'description': line.description,
+    #             'product_template_id': line.product_template_id.id,
+    #             'quantity': line.quantity,
+    #             'price_unit': line.price_unit,
+    #             'department': line.department,
+    #         }) for line in self.job_detail_line_ids]
+    #     })
+    #
+    #     self.estimate_id = estimate.id  # create a Many2one field to link
+    #
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'job.card.estimate',
+    #         'res_id': estimate.id,
+    #         'view_mode': 'form',
+    #         'target': 'current',
+    #     }
+
+    def action_create_estimate(self):
+        self.ensure_one()
+        estimate = self.env['job.card.estimate'].create({
+            'register_no': self.register_no.id,
+            'partner_id': self.partner_id.id,
+            'vehicle_in_out': self.vehicle_in_out,
+            'job_card_id': self.id,  # Link back
+            'estimate_detail_line_ids': [(0, 0, {
+                'description': l.description,
+                'product_template_id': l.product_template_id.id,
+                'quantity': l.quantity,
+                'price_unit': l.price_unit,
+                'department': l.department,
+            }) for l in self.job_detail_line_ids]
+        })
+        self.estimate_id = estimate.id
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'job.card.estimate',
+            'res_id': estimate.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
 
 class JobCardLine(models.Model):

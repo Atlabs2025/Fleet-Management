@@ -1,19 +1,21 @@
 <odoo>
     <!-- Tree View -->
-    <record id="view_vehicle_stock_book_list" model="ir.ui.view">
+    <record id="view_job_card_list" model="ir.ui.view">
         <field name="name">job.card.management.list</field>
         <field name="model">job.card.management</field>
         <field name="arch" type="xml">
             <list string="Job Card" default_order="create_date desc">
                 <field name="name"/>
-                <field name="vehicle_make_id" optional="hide"/>
+                <field name="estimate_id"/>
+                 <field name="total_amount"/>
+                <field name="vehicle_make_id"/>
+                <field name="vin_sn"/>
+                <field name="register_no"/>
+                <field name="created_datetime"/>
                 <field name="partner_id"/>
-                <field name="vin_sn" optional="hide"/>
+                 <field name="state"/>
                 <field name="is_insurance_claim" optional="hide"/>
 <!--                <field name="register_id" optional="hide"/>-->
-                 <field name="created_datetime"/>
-                <field name="total_amount" optional="hide"/>
-                <field name="state"/>
 
             </list>
         </field>
@@ -28,15 +30,22 @@
             <form string="Job Card">
                 <header>
                     <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,memo,completed"/>
-                    <button name="action_create_job_card" string="Create Job Card" type="object"
+                    <button name="action_create_job_card" string="Submit" type="object"
                             invisible="state != 'draft'" class="btn-primary"/>
                     <!--                <button name="action_set_to_completed" string="Complete" type="object" invisible="state != 'memo'" class="btn-success"/>-->
                     <button name="action_reset_to_draft" string="Reset To Draft" type="object"
                             invisible="state != 'completed'" class="btn-success"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"
                             invisible="state  !='completed'"/>
-                    <button name="action_create_estimate" string="Create Estimate" type="object" class="btn-primary" invisible="state != 'memo' or is_estimate_printed == True"/>
+                    <button name="action_print_estimate" string="Print Estimate" type="object" class="btn-primary" invisible="state != 'memo' or is_estimate_printed == True or estimate_id == False"/>
 <!--                    invisible="state  !='memo'"-->
+
+
+                    <button name="action_create_estimate"
+                            string="Create Estimate"
+                            type="object"
+                            class="btn-primary" invisible="estimate_id != False or state != 'memo'"/>
+
 
                     <button name="action_preforma_invoice" string="Create Preforma Invoice" type="object"
                             class="btn-primary" invisible="state  !='memo'"/>

@@ -28,6 +28,7 @@ class JobCardEstimate(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('memo', 'Memo'),
+        ('approved', 'Approved'),
         ('completed', 'Completed'),
     ], string="Status", default='draft', tracking=True)
 
@@ -81,7 +82,21 @@ class JobCardEstimate(models.Model):
 
     created_datetime = fields.Datetime(string="Created Date",default=fields.Datetime.now,readonly=True)
 
+    job_card_id = fields.Many2one('job.card.management', string="Job Card")
 
+    job_card_stage = fields.Selection([
+        ('', ''),
+        ('wip', 'Work in Progress'),
+        ('hold', 'Hold'),
+        ('no_action', 'No Action'),
+        ('awaiting_parts', 'Waiting For Parts'),
+        ('awaiting_approval', 'Waiting For Approval'),
+        ('ready', 'Ready For Delivery'),
+        ('delivered_not_invoiced', 'Delivered Not Invoiced'),
+        ('insurance', 'Insurance'),
+        ('cancelled', 'Cancelled'),
+        ('completed', 'Completed'),
+    ], string="Stage", store=True)
 
     @api.depends('estimate_detail_line_ids.total')
     def _compute_total_amount(self):
@@ -229,37 +244,65 @@ class JobCardEstimate(models.Model):
                 self.engine_no = vehicle.engine_no
                 self.register_no = vehicle.id
 
+    # def action_create_job_card(self):
+    #     self.ensure_one()
+    #
+    #     # Create Job Card and optionally lines
+    #     job_card = self.env['job.card.management'].create({
+    #         'partner_id': self.partner_id.id,
+    #         'register_no': self.register_no.id,
+    #         'vehicle_in_out': self.vehicle_in_out,
+    #         'job_estimate_id': self.id,
+    #         # 'job_estimate_id': self.id,
+    #         'job_detail_line_ids': [(0, 0, {
+    #             'description': line.description,
+    #             'product_template_id': line.product_template_id.id,
+    #             'quantity': line.quantity,
+    #             'price_unit': line.price_unit,
+    #             'department': line.department,
+    #         }) for line in self.estimate_detail_line_ids],
+    #     })
+    #
+    #     # self.job_card_id = job_card.id
+    #
+    #
+    #     # Optionally redirect to the Job Card
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Job Card',
+    #         'res_model': 'job.card.management',
+    #         'res_id': job_card.id,
+    #         'view_mode': 'form',
+    #         'target': 'current',
+    #     }
+
     def action_create_job_card(self):
         self.ensure_one()
-
-        # Create Job Card and optionally lines
         job_card = self.env['job.card.management'].create({
-            'partner_id': self.partner_id.id,
             'register_no': self.register_no.id,
+            'partner_id': self.partner_id.id,
             'vehicle_in_out': self.vehicle_in_out,
-            # 'job_estimate_id': self.id,
+            'estimate_id': self.id,
             'job_detail_line_ids': [(0, 0, {
-                'description': line.description,
-                'product_template_id': line.product_template_id.id,
-                'quantity': line.quantity,
-                'price_unit': line.price_unit,
-                'department': line.department,
-            }) for line in self.estimate_detail_line_ids],
+                'description': l.description,
+                'product_template_id': l.product_template_id.id,
+                'quantity': l.quantity,
+                'price_unit': l.price_unit,
+                'department': l.department,
+            }) for l in self.estimate_detail_line_ids]
         })
-
-        # self.job_card_id = job_card.id
-
-
-        # Optionally redirect to the Job Card
+        self.job_card_id = job_card.id
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Job Card',
             'res_model': 'job.card.management',
             'res_id': job_card.id,
             'view_mode': 'form',
             'target': 'current',
         }
 
+    def action_approve_estimate(self):
+        for rec in self:
+            rec.state = 'approved'
 
 class JobCardLine(models.Model):
     _name = 'job.estimate.line'
