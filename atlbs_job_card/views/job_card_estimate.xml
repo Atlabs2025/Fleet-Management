@@ -27,13 +27,17 @@
         <field name="arch" type="xml">
             <form string="Estimate">
                 <header>
-                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,memo,completed"/>
+                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,memo,approved,completed"/>
                     <!-- Add this button -->
                     <button name="action_create_job_card"
                             type="object"
                             string="Create Job Card"
                             class="btn-primary"
-                            />
+                             invisible="state != 'approved' or job_card_id != False"/>
+
+                    <button name="action_approve_estimate" string="Approve" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+
                 </header>
 
                 <sheet>
@@ -46,8 +50,9 @@
                     </div>
 
                     <group col="3" style="margin-top: -50px !important; padding-top: 0px !important;">
-                        <separator string="Customer Details" colspan="3"
-                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>
+                        <separator string="Customer Details" colspan="3" style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
+
+<!--                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>-->
 
 
                         <group class="small-fields-group">
@@ -73,8 +78,8 @@
                         </group>
                     </group>
                     <group col="3" style="margin-top: -30px !important; padding-top: 0px !important;">
-                        <separator string="Vehicle Details" colspan="3"
-                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>
+                        <separator string="Vehicle Details" colspan="3" style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
+<!--                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>-->
 
 
                         <group class="small-fields-group">
@@ -96,6 +101,7 @@
                             <field name="fuel_level"/>
                             <field name="vehicle_colour"/>
                             <field name="vehicle_in_out" required="1"/>
+                            <field name="job_card_stage"/>
                         </group>
                     </group>
 
