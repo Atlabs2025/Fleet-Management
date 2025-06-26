@@ -82,7 +82,7 @@ DynamicDashboardTile.template = xml `
                 <div class="status-container__figures d-flex flex-wrap align-items-baseline">
                     <h3 class="mb-0 mb-md-1 mb-lg-0 mr-1"
                         t-att-style="this.props.widget.val_color">
-                        <t t-esc="this.props.widget.value"/>
+                        <t t-esc="Math.floor(this.props.widget.value || 0)"/>
                     </h3>
                 </div>
             </div>
