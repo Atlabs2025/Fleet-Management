@@ -131,112 +131,6 @@
                         </group>
                     </group>
 
-<!--                    <notebook>-->
-<!--                    <notebook>-->
-
-<!--                        <page string="Job Details">-->
-<!--                            <field name="job_detail_line_ids">-->
-<!--                                <list editable="bottom">-->
-<!--                                    <field name="department"/>-->
-<!--                                    <field name="product_template_id"/>-->
-<!--                                    <field name="part_number"/>-->
-<!--                                    <field name="description"/>-->
-<!--                                    <field name="quantity"/>-->
-<!--                                    <field name="price_unit"/>-->
-<!--                                    <field name="price_amt"/>-->
-<!--                                    <field name="discount"/>-->
-<!--                                    <field name="after_discount"/>-->
-<!--                                    &lt;!&ndash;                                    <field name="vat_percentage"/>&ndash;&gt;-->
-
-<!--                                    <field name="tax_ids" widget="many2many_tags"/>-->
-<!--                                    <field name="tax_amount"/>-->
-
-<!--                                    &lt;!&ndash;                                 readonly="context.get('invoiced', True)"&ndash;&gt;-->
-<!--                                    <field name="total" readonly="1"/>-->
-<!--                                    <field name="line_state" required="1"/>-->
-<!--                                    <field name="invoiced" column_invisible="1"/>-->
-<!--                                    <field name="is_request_pending" column_invisible="1"/>-->
-<!--                                    <field name="is_request_completed" column_invisible="1"/>-->
-<!--                                    &lt;!&ndash;                                    <field name="is_request_pending"/>&ndash;&gt;-->
-<!--                                </list>-->
-<!--                            </field>-->
-
-<!--                            <group>-->
-<!--                                <div style="display: flex; justify-content: space-between; margin-top: 10px; gap: 30px;">-->
-
-<!--                                    &lt;!&ndash; Left Side: Summary Totals &ndash;&gt;-->
-<!--                                    <div>-->
-<!--                                        <group string="Summary" col="2">-->
-<!--                                            <field name="total_labour" readonly="1"/>-->
-<!--                                            <field name="total_parts" readonly="1"/>-->
-<!--                                            <field name="total_material" readonly="1"/>-->
-<!--                                            <field name="total_lubricant" readonly="1"/>-->
-<!--                                            <field name="total_sublets" readonly="1"/>-->
-<!--                                            <field name="total_paint_material" readonly="1"/>-->
-<!--                                            <field name="total_tyre" readonly="1"/>-->
-<!--                                        </group>-->
-<!--                                    </div>-->
-
-<!--                                    <div style="flex: 1; margin-left: 700px;">-->
-<!--                                        <group string="" col="2"-->
-<!--                                               style="font-size: 16px; font-weight: 600; color: black;">-->
-<!--                                            <field name="total_price_amt"-->
-<!--                                                   readonly="1"-->
-<!--                                                   widget="monetary"-->
-<!--                                                   style="font-size: 16px; font-weight: 600; color: black;"/>-->
-<!--                                            <field name="total_discount"-->
-<!--                                                   readonly="1"-->
-<!--                                                   widget="monetary"-->
-<!--                                                   style="font-size: 16px; font-weight: 600; color: black;"/>-->
-<!--                                            <field name="subtotal"-->
-<!--                                                   readonly="1"-->
-<!--                                                   widget="monetary"-->
-<!--                                                   style="font-size: 16px; font-weight: 600; color: black;"/>-->
-<!--                                            <field name="vat_total"-->
-<!--                                                   readonly="1"-->
-<!--                                                   widget="monetary"-->
-<!--                                                   style="font-size: 16px; font-weight: 600; color: black;"/>-->
-<!--                                            <field name="total_amount"-->
-<!--                                                   readonly="1"-->
-<!--                                                   widget="monetary"-->
-<!--                                                   string="Grand Total"-->
-<!--                                                   style="font-size: 20px; font-weight: bold; color: black;"/>-->
-<!--                                        </group>-->
-<!--                                    </div>-->
-
-<!--                                </div>-->
-<!--                            </group>-->
-
-
-<!--                        </page>-->
-<!--                        <page string="Requisition Lines">-->
-<!--                            <field name="material_request_ids">-->
-<!--                                <list editable="bottom">-->
-<!--                                    <field name="employee_id"/>-->
-<!--                                    <field name="request_date"/>-->
-<!--                                    &lt;!&ndash;                                    <field name="requisition_type"/>&ndash;&gt;-->
-<!--                                    <field name="product_id"/>-->
-<!--                                    &lt;!&ndash;                                    <field name="descriptiois_request_completedn"/>&ndash;&gt;-->
-<!--                                    <field name="qty"/>-->
-<!--                                    <field name="uom"/>-->
-<!--                                    <field name="state"/>-->
-<!--                                </list>-->
-<!--                            </field>-->
-<!--                        </page>-->
-
-<!--                        <page string="Services">-->
-<!--                            <field name="service_line_ids">-->
-<!--                                <list editable="bottom">-->
-<!--                                    <field name="menu_service"/>-->
-<!--                                    <field name="service_amount" readonly="1"/>-->
-<!--                                    <field name="product_template_ids" widget="many2many_tags"/>-->
-<!--                                </list>-->
-<!--                            </field>-->
-<!--                        </page>-->
-
-
-<!--                    </notebook>-->
-
                     <notebook class="small-pages">
                         <page string="Job Details" class="small-page">
                             <field name="job_detail_line_ids">
@@ -378,6 +272,48 @@
     </field>
 </record>
 
+    <record id="view_job_card_search" model="ir.ui.view">
+        <field name="name">job.card.management.search</field>
+        <field name="model">job.card.management</field>
+        <field name="arch" type="xml">
+            <search string="Search Job Cards">
+                <!-- Searchable fields -->
+                <field name="name" string="Job Card Number"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="vin_sn" string="Chassis Number"/>
+                <field name="register_no" string="Register Number"/>
+                <field name="vehicle_make_id" string="Vehicle Make"/>
+                <field name="estimate_id" string="Estimate"/>
+                <field name="state" string="State"/>
+                <field name="created_datetime"/>
+                <field name="is_insurance_claim"/>
+                <field name="service_contract_id"/>
+                <field name="vehicle_in_out"/>
+                <field name="insurance_company_id"/>
+                <field name="company_id"/>
+
+                <!-- Optional filters -->
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]" help="Draft Job Cards"/>
+                <filter name="filter_memo" string="Memo" domain="[('state','=','memo')]" help="Memo Job Cards"/>
+                <filter name="filter_completed" string="Completed" domain="[('state','=','completed')]"
+                        help="Completed Job Cards"/>
+                <filter name="filter_insurance" string="Insurance Claims" domain="[('is_insurance_claim','=',True)]"/>
+                <filter name="filter_vehicle_in" string="Vehicle IN" domain="[('vehicle_in_out','=','vehicle_in')]"/>
+                <filter name="filter_vehicle_out" string="Vehicle OUT" domain="[('vehicle_in_out','=','vehicle_out')]"/>
+
+                <!-- Group by options -->
+                <group expand="1" string="Group By">
+                    <filter name="group_by_customer" string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter name="group_by_make" string="Vehicle Make" domain="[]"
+                            context="{'group_by':'vehicle_make_id'}"/>
+                    <filter name="group_by_insurance" string="Insurance Company" domain="[]"
+                            context="{'group_by':'insurance_company_id'}"/>
+                    <filter name="group_by_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+                    <filter name="group_by_state" string="State" domain="[]" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
 
     <!--     Action-->
