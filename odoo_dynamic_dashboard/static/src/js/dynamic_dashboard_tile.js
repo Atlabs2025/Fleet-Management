@@ -63,12 +63,7 @@ DynamicDashboardTile.template = xml `
         t-att-style="this.props.widget.color+this.props.widget.text_color+ 'height:'+this.props.widget.height+';width:'+this.props.widget.width + '; transform: translate('+ this.props.widget.translate_x +', '+ this.props.widget.translate_y +');'">
         <div t-att-style="this.props.widget.color+this.props.widget.text_color"
             class="d-flex align-items-center  w-100  my-3">
-            <a class="block_setting tile_edit tile-container__setting-icon" style="color:black;" t-on-click="(ev) => this.getConfiguration(ev)" >
-                <i class="fa fa-edit"/>
-            </a>
-            <a class="block_delete tile_edit tile-container__delete-icon" style="color:black;" t-on-click="(ev) => this.removeTile(ev)">
-                <i class="fa fa-times"/>
-            </a>
+            
             <div t-att-style="this.props.widget.icon_color"
                  class="tile-container__icon-container bg-white d-flex justify-content-center align-items-center">
                 <i t-att-class="this.props.widget.icon"/>
