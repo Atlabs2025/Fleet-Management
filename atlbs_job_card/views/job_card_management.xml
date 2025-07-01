@@ -1,25 +1,30 @@
 <odoo>
-    <!-- Tree View -->
     <record id="view_job_card_list" model="ir.ui.view">
         <field name="name">job.card.management.list</field>
         <field name="model">job.card.management</field>
         <field name="arch" type="xml">
-            <list string="Job Card" default_order="create_date desc">
+            <list string="Job Card" default_order="create_date desc" decoration-bf="True"
+                  decoration-danger="due_days &gt; 10"
+                  decoration-warning="due_days &gt; 5 and due_days &lt;= 10"
+                  decoration-success="due_days &lt;= 5">
+                <!--            decoration-info="True"-->
                 <field name="name"/>
                 <field name="estimate_id"/>
-                 <field name="total_amount"/>
+                <field name="total_amount"/>
                 <field name="vehicle_make_id"/>
                 <field name="vin_sn"/>
                 <field name="register_no"/>
                 <field name="created_datetime"/>
                 <field name="partner_id"/>
-                 <field name="state"/>
+                <field name="state"/>
                 <field name="is_insurance_claim" optional="hide"/>
-<!--                <field name="register_id" optional="hide"/>-->
+                <field name="due_days_label"/>
 
             </list>
+
         </field>
     </record>
+
 
     <!-- Form View -->
 
@@ -37,8 +42,9 @@
                             invisible="state != 'completed'" class="btn-success"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"
                             invisible="state  !='completed'"/>
-                    <button name="action_print_estimate" string="Print Estimate" type="object" class="btn-primary" invisible="state != 'memo' or is_estimate_printed == True or estimate_id == False"/>
-<!--                    invisible="state  !='memo'"-->
+                    <button name="action_print_estimate" string="Print Estimate" type="object" class="btn-primary"
+                            invisible="state != 'memo' or is_estimate_printed == True or estimate_id == False"/>
+                    <!--                    invisible="state  !='memo'"-->
 
 
                     <button name="action_create_estimate"
@@ -75,8 +81,7 @@
                     <group col="3" style="margin-top: -50px !important; padding-top: 0px !important;">
                         <separator string="Customer Details" colspan="3"
                                    style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
-<!--                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>-->
-
+                        <!--                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>-->
 
 
                         <group class="small-fields-group">
@@ -105,12 +110,12 @@
                     <group col="3" style="margin-top: -30px !important; padding-top: 0px !important;">
                         <separator string="Vehicle Details" colspan="3"
                                    style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
-<!--                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>-->
+                        <!--                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>-->
 
 
                         <group class="small-fields-group">
                             <field name="register_no"/>
-<!--                            <field name="vehicle_id"/>-->
+                            <!--                            <field name="vehicle_id"/>-->
                             <field name="vehicle_make_id"/>
                             <field name="contract_status"/>
                         </group>
@@ -218,11 +223,14 @@
                                     <field name="date" readonly="1"/>
                                     <field name="job_category_id"/>
                                     <field name="name"/>
-                                    <button name="action_start" type="object" class="fa fa-play" string="Start" column_invisible="status not in 'new'"/>
-                                    <button name="action_pause" type="object" string="Pause" class="fa fa-pause" column_invisible="status in 'new'"/>
-                                    <button name="action_resume" type="object" string="Resume" class="fa fa-play-circle" column_invisible="status in 'new'"/>
+                                    <button name="action_start" type="object" class="fa fa-play" string="Start"
+                                            column_invisible="status not in 'new'"/>
+                                    <button name="action_pause" type="object" string="Pause" class="fa fa-pause"
+                                            column_invisible="status in 'new'"/>
+                                    <button name="action_resume" type="object" string="Resume" class="fa fa-play-circle"
+                                            column_invisible="status in 'new'"/>
                                     <button name="action_end" type="object" string="End" class="fa fa-stop"/>
-<!--                                    <field name="employee_id"/>-->
+                                    <!--                                    <field name="employee_id"/>-->
                                     <field name="employee_id" domain="[('employee_status', '=', 'available')]"/>
                                     <field name="status"/>
                                     <field name="start_time" widget="float_time"/>
@@ -257,20 +265,21 @@
     </record>
 
     <record id="view_job_card_search" model="ir.ui.view">
-    <field name="name">job.card.management.search</field>
-    <field name="model">job.card.management</field>
-    <field name="arch" type="xml">
-        <search string="Search Job Cards">
-            <field name="name" string="Job Card Number"/>
-            <field name="partner_id" string="Customer"/>
-            <field name="vin_sn" string="Chassis Number"/>
-            <!-- Optional filters -->
-            <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]" help="Draft Job Cards"/>
-            <filter name="filter_memo" string="Memo" domain="[('state','=','memo')]" help="Memo Job Cards"/>
-            <filter name="filter_completed" string="Completed" domain="[('state','=','completed')]" help="Completed Job Cards"/>
-        </search>
-    </field>
-</record>
+        <field name="name">job.card.management.search</field>
+        <field name="model">job.card.management</field>
+        <field name="arch" type="xml">
+            <search string="Search Job Cards">
+                <field name="name" string="Job Card Number"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="vin_sn" string="Chassis Number"/>
+                <!-- Optional filters -->
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]" help="Draft Job Cards"/>
+                <filter name="filter_memo" string="Memo" domain="[('state','=','memo')]" help="Memo Job Cards"/>
+                <filter name="filter_completed" string="Completed" domain="[('state','=','completed')]"
+                        help="Completed Job Cards"/>
+            </search>
+        </field>
+    </record>
 
     <record id="view_job_card_search" model="ir.ui.view">
         <field name="name">job.card.management.search</field>
@@ -328,7 +337,7 @@
     <menuitem id="menu_job_card_root"
               name="Job Cards"
               sequence="10"
-    web_icon="atlbs_job_card,static/src/job_card_management.png"/>
+              web_icon="atlbs_job_card,static/src/job_card_management.png"/>
 
     <menuitem id="menu_job_card_management"
               name="Manage Job Cards"
@@ -337,9 +346,10 @@
               sequence="20"/>
 
 
-
-    <menuitem id="job_card_analysis_report_menu_root" name="Job Card Analysis Reports" parent="menu_job_card_root" sequence="54"/>
-     <menuitem id="menu_job_card_cost_report" name="Cost Analysis Report" parent="job_card_analysis_report_menu_root" action="action_report_job_card_cost_analysis"/>
+    <menuitem id="job_card_analysis_report_menu_root" name="Job Card Analysis Reports" parent="menu_job_card_root"
+              sequence="54"/>
+    <menuitem id="menu_job_card_cost_report" name="Cost Analysis Report" parent="job_card_analysis_report_menu_root"
+              action="action_report_job_card_cost_analysis"/>
 
 
 </odoo>
