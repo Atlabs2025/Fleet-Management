@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, date
+
 datetime.now()
 from importlib.resources._common import _
 from xml import etree
@@ -106,11 +107,28 @@ class VehicleStockBook(models.Model):
 
     created_datetime = fields.Datetime(string="Created Date",default=fields.Datetime.now,readonly=True)
 
+
+    due_days = fields.Integer(string='Due Days', compute='_compute_due_days', store=True)
+    due_days_label = fields.Char(string='Due In', compute='_compute_due_days', store=True)
+
     complaint_ids = fields.One2many('job.card.complaint', 'job_card_id', string='Complaints')
 
     is_estimate_printed = fields.Boolean(string='Estimate Printed', default=False)
 
     estimate_id = fields.Many2one('job.card.estimate', string="Estimate Reference")
+
+    @api.depends('created_datetime')
+    def _compute_due_days(self):
+        for record in self:
+            if record.created_datetime:
+                diff = (fields.Date.today() - record.created_datetime.date()).days
+                record.due_days = diff
+                record.due_days_label = f"{diff} days"
+            else:
+                record.due_days = 0
+                record.due_days_label = "0 days"
+
+
 
     def open_excess_invoice(self):
         self.ensure_one()
