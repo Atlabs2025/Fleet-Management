@@ -268,10 +268,10 @@ class BankBookReport(models.TransientModel):
                     sheet.merge_range(row, col + 9, row, col + 10, ' ',
                                       txt_name)
                     sheet.merge_range(row, col + 11, row, col + 12,
-                                      data['total'][move_line]['total_debit'],
+                                      data['total'][move_line]['total_debit_display'],
                                       txt_name)
                     sheet.merge_range(row, col + 13, row, col + 14,
-                                      data['total'][move_line]['total_credit'],
+                                      data['total'][move_line]['total_credit_display'],
                                       txt_name)
                     sheet.merge_range(row, col + 15, row, col + 16,
                                       data['total'][move_line]['total_debit'] -
@@ -298,18 +298,18 @@ class BankBookReport(models.TransientModel):
                                           rec['name'],
                                           txt_name)
                         sheet.merge_range(row, col + 11, row, col + 12,
-                                          rec['debit'], txt_name)
+                                          rec['debit_display'], txt_name)
                         sheet.merge_range(row, col + 13, row, col + 14,
-                                          rec['credit'], txt_name)
+                                          rec['credit_display'], txt_name)
                         sheet.merge_range(row, col + 15, row, col + 16, ' ',
                                           txt_name)
                 sheet.merge_range(row + 1, col, row + 1, col + 10, 'Total',
                                   filter_head)
                 sheet.merge_range(row + 1, col + 11, row + 1, col + 12,
-                                  data['grand_total']['total_debit'],
+                                  data['grand_total']['total_debit_display'],
                                   filter_head)
                 sheet.merge_range(row + 1, col + 13, row + 1, col + 14,
-                                  data['grand_total']['total_credit'],
+                                  data['grand_total']['total_credit_display'],
                                   filter_head)
                 sheet.merge_range(row + 1, col + 15, row + 1, col + 16,
                                   float(data['grand_total']['total_debit']) -

@@ -77,14 +77,13 @@ class AccountTrialBalance(models.TransientModel):
             data = {
                 'account': account_id.display_name,
                 'account_id': account_id.id,
-                'journal_ids': self.env['account.journal'].search_read([], [
-                    'name']),
-                'initial_total_debit': initial_total_debit,
-                'initial_total_credit': initial_total_credit,
+                'journal_ids': self.env['account.journal'].search_read([], ['name']),
+                'initial_total_debit': "{:,.2f}".format(initial_total_debit),
+                'initial_total_credit': "{:,.2f}".format(initial_total_credit),
                 'total_debit': total_debit,
                 'total_credit': total_credit,
-                'end_total_debit': end_total_debit,
-                'end_total_credit': end_total_credit
+                'end_total_debit': "{:,.2f}".format(end_total_debit),
+                'end_total_credit': "{:,.2f}".format(end_total_credit)
             }
             move_line_list.append(data)
         journal = {
@@ -422,7 +421,7 @@ class AccountTrialBalance(models.TransientModel):
         if data:
             if report_action == 'dynamic_accounts_report.action_trial_balance':
                 row = 11
-                for move_line in data['data']:
+                for move_line in data['data'][0]:
                     sheet.write(row, col, move_line['account'],
                                 side_heading_sub)
                     sheet.write(row, col + 1, move_line['initial_total_debit'],

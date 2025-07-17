@@ -32,7 +32,7 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': "https://www.cybrosys.com",
-    'depends': ['web','atlbs_job_card'],
+    'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',
         'data/dashboard_theme_data.xml',

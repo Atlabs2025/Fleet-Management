@@ -131,7 +131,6 @@
                                 <div class="dropdown-menu" role="menu">
                                     <div class="list-group">
                                         <t t-if="state.accounts">
-                                            <t t-log="state.accounts"/>
                                             <t t-foreach="state.accounts"
                                                t-as="account"
                                                t-key="account.id">

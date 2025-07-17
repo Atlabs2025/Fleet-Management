@@ -276,53 +276,53 @@ class AccountGeneralLedger(models.TransientModel):
                 sheet.merge_range('J9:K9', 'Credit', sub_heading)
                 sheet.merge_range('L9:M9', 'Balance', sub_heading)
                 row = 8
-                for account in data['account']:
-                    row += 1
-                    sheet.write(row, col, account, txt_name)
-                    sheet.write(row, col + 1, ' ', txt_name)
-                    sheet.merge_range(row, col + 2, row, col + 4, ' ', txt_name)
-                    sheet.merge_range(row, col + 5, row, col + 6, ' ',
-                                      txt_name)
-                    sheet.merge_range(row, col + 7, row, col + 8,
-                                      data['total'][account]['total_debit'],
-                                      txt_name)
-                    sheet.merge_range(row, col + 9, row, col + 10,
-                                      data['total'][account]['total_credit'],
-                                      txt_name)
-                    sheet.merge_range(row, col + 11, row, col + 12,
-                                      data['total'][account]['total_debit'] -
-                                      data['total'][account]['total_credit'],
-                                      txt_name)
-                    for rec in data['data'][account]:
+                if data['account']:
+                    for account in data['account']:
                         row += 1
-                        partner = rec[0]['partner_id']
-                        name = partner[1] if partner else None
-                        sheet.write(row, col, rec[0]['move_name'], txt_name)
-                        sheet.write(row, col + 1, rec[0]['date'], txt_name)
-                        sheet.merge_range(row, col + 2, row, col + 4,
-                                          rec[0]['name'], txt_name)
-                        sheet.merge_range(row, col + 5, row, col + 6, name,
+                        sheet.write(row, col, account, txt_name)
+                        sheet.write(row, col + 1, ' ', txt_name)
+                        sheet.merge_range(row, col + 2, row, col + 4, ' ', txt_name)
+                        sheet.merge_range(row, col + 5, row, col + 6, ' ',
                                           txt_name)
                         sheet.merge_range(row, col + 7, row, col + 8,
-                                          rec[0]['debit'],
+                                          data['total'][account]['total_debit_display'],
                                           txt_name)
                         sheet.merge_range(row, col + 9, row, col + 10,
-                                          rec[0]['credit'], txt_name)
-                        sheet.merge_range(row, col + 11, row, col + 12, ' ',
+                                          data['total'][account]['total_credit_display'],
                                           txt_name)
-                row += 1
-                sheet.merge_range(row, col, row, col + 6, 'Total',
-                                  filter_head)
-                sheet.merge_range(row, col + 7, row, col + 8,
-                                  data['grand_total']['total_debit'],
-                                  filter_head)
-                sheet.merge_range(row, col + 9, row, col + 10,
-                                  data['grand_total']['total_credit'],
-                                  filter_head)
-                sheet.merge_range(row, col + 11, row, col + 12,
-                                  float(data['grand_total']['total_debit']) -
-                                  float(data['grand_total']['total_credit']),
-                                  filter_head)
+                        sheet.merge_range(row, col + 11, row, col + 12,
+                                          data['total'][account]['balance_display'],
+                                          txt_name)
+                        for rec in data['data'][account]:
+                            row += 1
+                            partner = rec[0]['partner_id']
+                            name = partner[1] if partner else None
+                            sheet.write(row, col, rec[0]['move_name'], txt_name)
+                            sheet.write(row, col + 1, rec[0]['date'], txt_name)
+                            sheet.merge_range(row, col + 2, row, col + 4,
+                                              rec[0]['name'], txt_name)
+                            sheet.merge_range(row, col + 5, row, col + 6, name,
+                                              txt_name)
+                            sheet.merge_range(row, col + 7, row, col + 8,
+                                              rec[0]['debit'],
+                                              txt_name)
+                            sheet.merge_range(row, col + 9, row, col + 10,
+                                              rec[0]['credit'], txt_name)
+                            sheet.merge_range(row, col + 11, row, col + 12, ' ',
+                                              txt_name)
+                    row += 1
+                    sheet.merge_range(row, col, row, col + 6, 'Total',
+                                      filter_head)
+                    sheet.merge_range(row, col + 7, row, col + 8,
+                                      data['grand_total']['total_debit_display'],
+                                      filter_head)
+                    sheet.merge_range(row, col + 9, row, col + 10,
+                                      data['grand_total']['total_credit_display'],
+                                      filter_head)
+                    sheet.merge_range(row, col + 11, row, col + 12,
+                                      float(data['grand_total']['total_debit']) -
+                                      float(data['grand_total']['total_credit']),
+                                      filter_head)
         workbook.close()
         output.seek(0)
         response.stream.write(output.read())

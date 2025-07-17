@@ -26,6 +26,7 @@ class TrialBalance extends owl.Component {
             data: null,
             total: null,
             journals: null,
+            accounts: null,
             selected_analytic: [],
             analytic_account: null,
             selected_journal_list: [],
@@ -61,6 +62,7 @@ class TrialBalance extends owl.Component {
             self.end_date.el.value = endOfMonth.getFullYear() + '-' + String(endOfMonth.getMonth() + 1).padStart(2, '0') + '-' + String(endOfMonth.getDate()).padStart(2, '0');
             self.state.date_viewed.push(monthNamesShort[today.getMonth()] + '  ' + today.getFullYear())
             self.state.journals = self.state.data[1]['journal_ids']
+            self.state.accounts = self.state.data[0]
             $.each(self.state.data, function (index, value) {
                 self.state.journals = value.journal_ids
             })
@@ -242,20 +244,22 @@ class TrialBalance extends owl.Component {
         }
         this.state.data = await this.orm.call("account.trial.balance", "get_filter_values", [this.start_date.el.value, this.end_date.el.value, this.state.comparison_number, this.state.comparison_type, this.state.selected_journal_list, this.state.selected_analytic, this.state.options,this.state.method,]);
         var date_viewed = []
-        this.state.data.forEach((value, index) => {
-            if (index == 'journal_ids') {
-                this.state.journals = value
-            }
-            if (value.dynamic_date_num) {
-            let iterable = Array.isArray(value.dynamic_date_num) ? value.dynamic_date_num
-               : Object.values(value.dynamic_date_num);
-                for (const date_num of iterable) {
-                     if (!date_viewed.includes(date_num)) {
-                         date_viewed.push(date_num);
-                     }
-                }
-            }
-        })
+//        this.state.data.forEach((value, index) => {
+//        console.log(index)
+//            if (index == 'journal_ids') {
+//                this.state.journals = value
+//                console.log(this.state.journals)
+//            }
+//            if (value.dynamic_date_num) {
+//            let iterable = Array.isArray(value.dynamic_date_num) ? value.dynamic_date_num
+//               : Object.values(value.dynamic_date_num);
+//                for (const date_num of iterable) {
+//                     if (!date_viewed.includes(date_num)) {
+//                         date_viewed.push(date_num);
+//                     }
+//                }
+//            }
+//        })
         if (date_viewed.length !== 0) {
             this.state.date_viewed = date_viewed.reverse()
         }
@@ -307,14 +311,15 @@ class TrialBalance extends owl.Component {
         this.applyFilter(null, ev)
     }
     sumByKey(data, key) {
-        /**
-         * Calculates the sum of values in an array of objects by a specified key.
-         *
-         * @param {Array} data - Array of objects containing numeric values.
-         * @param {string} key - The key to access the numeric value in each object.
-         * @returns {number} The sum of the numeric values.
-         */
-        return data.reduce((acc, item) => acc + (item[key] || 0), 0);
+        if (!Array.isArray(data)) return 0;
+        return data.reduce((acc, item) => {
+            let raw = item[key];
+            if (typeof raw === 'string') {
+                raw = raw.replace(/,/g, ''); // remove commas
+            }
+            const val = parseFloat(raw);
+            return acc + (isNaN(val) ? 0 : val);
+        }, 0);
     }
     get comparison_number_range() {
         /**

@@ -30,6 +30,7 @@
         'wizard/tax_report.xml',
         'wizard/aged_partner.xml',
         'wizard/journal_audit.xml',
+        # 'wizard/general_ledger_wiz.xml',
         'report/report.xml',
         'report/report_partner_ledger.xml',
         'report/report_general_ledger.xml',
@@ -43,3 +44,8 @@
     'pre_init_hook': '_pre_init_clean_m2m_models',
     'images': ['static/description/banner.gif'],
 }
+
+
+
+
+

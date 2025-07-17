@@ -23,6 +23,7 @@ import calendar
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
+from odoo.fields import Date
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, float_is_zero
 from odoo.exceptions import UserError, ValidationError
 
@@ -323,13 +324,17 @@ class AccountAssetAsset(models.Model):
                 year = depreciation_date.year
 
         self.write({'depreciation_line_ids': commands})
-
+        last_depr_date = None
+        if self.depreciation_line_ids:
+            last_depr_date = max(self.depreciation_line_ids.mapped('depreciation_date'))
+        if last_depr_date:
+            self._compute_entries(date=last_depr_date)
         return True
 
     def validate(self):
         """Update the state to 'open' and track specific fields based on the asset's method."""
         self.write({'state': 'open'})
-        fields = [
+        field = [
             'method',
             'method_number',
             'method_period',
@@ -339,7 +344,7 @@ class AccountAssetAsset(models.Model):
             'salvage_value',
             'invoice_id',
         ]
-        ref_tracked_fields = self.env['account.asset.asset'].fields_get(fields)
+        ref_tracked_fields = self.env['account.asset.asset'].fields_get(field)
         for asset in self:
             tracked_fields = ref_tracked_fields.copy()
             if asset.method == 'linear':
@@ -350,9 +355,29 @@ class AccountAssetAsset(models.Model):
                 del (tracked_fields['method_number'])
             dummy, tracking_value_ids = asset._mail_track(tracked_fields,
                                                           dict.fromkeys(
-                                                              fields))
+                                                              field))
             asset.message_post(subject=_('Asset created'),
                                tracking_value_ids=tracking_value_ids)
+
+            today_date = fields.Date.context_today(self)
+
+            # Split lines based on depreciation_date
+            draft_lines = asset.depreciation_line_ids.filtered(lambda l: l.move_id and l.move_id.state == 'draft')
+
+            #Post only entries before today
+            lines_to_post_now = draft_lines.filtered(lambda l: l.depreciation_date < today_date)
+            moves_to_post_now = lines_to_post_now.mapped('move_id')
+            if moves_to_post_now:
+                moves_to_post_now._post()
+
+            #Set auto_post='at_date' for entries today or later
+            future_lines = draft_lines.filtered(lambda l: l.depreciation_date >= today_date)
+            future_moves = future_lines.mapped('move_id')
+            if future_moves:
+                future_moves.write({'auto_post': 'at_date'})
+
+        return True
+
 
     def _get_disposal_moves(self):
         """Get the disposal moves for the asset."""
@@ -531,6 +556,7 @@ class AccountAssetAsset(models.Model):
             'name': _('Journal Entries'),
             'view_mode': 'list,form',
             'res_model': 'account.move',
+            'views': [(self.env.ref('account.view_move_tree').id, 'list'), (False, 'form')],
             'view_id': False,
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', move_ids)],

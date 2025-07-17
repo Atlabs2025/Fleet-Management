@@ -93,7 +93,7 @@
                                                 <t t-if="total[move_line]['diff0_sum']"
                                                    t-esc="total[move_line]['currency_id']"/>
                                                 <t t-if="total[move_line]['diff0_sum']"
-                                                   t-esc="total[move_line]['diff0_sum']"/>
+                                                   t-esc="total[move_line]['diff0_sum_display']"/>
                                             </span>
                                         </th>
                                         <th style="border:0px solid transparent;font-size:11px;font-weight:100;">
@@ -101,7 +101,7 @@
                                                 <t t-if="total[move_line]['diff1_sum']"
                                                    t-esc="total[move_line]['currency_id']"/>
                                                 <t t-if="total[move_line]['diff1_sum']"
-                                                   t-esc="total[move_line]['diff1_sum']"/>
+                                                   t-esc="total[move_line]['diff1_sum_display']"/>
                                             </span>
                                         </th>
                                         <th style="border:0px solid transparent;font-size:11px;font-weight:100;">
@@ -141,7 +141,7 @@
                                                 <t t-if="total[move_line]['debit_sum']"
                                                    t-esc="total[move_line]['currency_id']"/>
                                                 <t t-if="total[move_line]['debit_sum']"
-                                                   t-esc="total[move_line]['debit_sum']"/>
+                                                   t-esc="total[move_line]['debit_sum_display']"/>
                                             </span>
                                         </th>
                                     </tr>
@@ -243,31 +243,31 @@
                                 <th style="width:60%;">Total</th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['diff0_sum']"/>
+                                    <t t-out="grand_total['diff0_sum_display']"/>
                                 </th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['diff1_sum']"/>
+                                    <t t-out="grand_total['diff1_sum_display']"/>
                                 </th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['diff2_sum']"/>
+                                    <t t-out="grand_total['diff2_sum_display']"/>
                                 </th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['diff3_sum']"/>
+                                    <t t-out="grand_total['diff3_sum_display']"/>
                                 </th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['diff4_sum']"/>
+                                    <t t-out="grand_total['diff4_sum_display']"/>
                                 </th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['diff5_sum']"/>
+                                    <t t-out="grand_total['diff5_sum_display']"/>
                                 </th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['total_debit']"/>
+                                    <t t-out="grand_total['total_debit_display']"/>
                                 </th>
                             </tr>
                         </tbody>

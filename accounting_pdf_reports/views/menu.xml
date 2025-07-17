@@ -16,9 +16,27 @@
               sequence="30"
               parent="account.menu_finance_reports"/>
 
-    <record id="account.account_reports_management_menu" model="ir.ui.menu">
+
+
+
+     <record id="account.account_reports_management_menu" model="ir.ui.menu">
         <field name="sequence" eval="40"/>
     </record>
+
+
+
+
+<!--    from here starting the wizards and report of mine-->
+
+
+
+
+
+
+
+
+
+
 
 </odoo>
 

@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useRef, useState } from "@odoo/owl";
 import { BlockUI } from "@web/core/ui/block_ui";
 import { download } from "@web/core/network/download";
+import { formatFloat } from "@web/core/utils/numbers";
 const actionRegistry = registry.category("actions");
 const today = luxon.DateTime.now();
 
@@ -38,8 +39,8 @@ class AgedReceivable extends owl.Component {
         /**
          * Loads the data for the bank book report.
          */
-        let move_line_list = []
-        let move_lines_total = ''
+        let move_line_list = [];
+        let move_lines_total = '';
         let diff0Sum = 0;
         let diff1Sum = 0;
         let diff2Sum = 0;
@@ -51,7 +52,6 @@ class AgedReceivable extends owl.Component {
         var self = this;
         var action_title = self.props.action.display_name;
         try {
-            var self = this;
             self.state.data = await self.orm.call("age.receivable.report", "view_report", []);
             for (const index in self.state.data) {
                 const value = self.state.data[index];
@@ -61,6 +61,7 @@ class AgedReceivable extends owl.Component {
                     move_lines_total = value;
                     for (const moveLine of Object.values(move_lines_total)) {
                         currency = moveLine.currency_id;
+                        // Use raw values for summation
                         diff0Sum += moveLine.diff0_sum || 0;
                         diff1Sum += moveLine.diff1_sum || 0;
                         diff2Sum += moveLine.diff2_sum || 0;
@@ -71,18 +72,25 @@ class AgedReceivable extends owl.Component {
                     }
                 }
             }
-            self.state.move_line = move_line_list
-            self.state.total = move_lines_total
-            self.state.currency = currency
-            self.state.total_debit = TotalDebit
-            self.state.diff0_sum = diff0Sum
-            self.state.diff1_sum = diff1Sum
-            self.state.diff2_sum = diff2Sum
-            self.state.diff3_sum = diff3Sum
-            self.state.diff4_sum = diff4Sum
-            self.state.diff5_sum = diff5Sum
-        }
-        catch (el) {
+            self.state.move_line = move_line_list;
+            self.state.total = move_lines_total;
+            self.state.currency = currency;
+            self.state.total_debit = TotalDebit;
+            self.state.diff0_sum = diff0Sum;
+            self.state.diff1_sum = diff1Sum;
+            self.state.diff2_sum = diff2Sum;
+            self.state.diff3_sum = diff3Sum;
+            self.state.diff4_sum = diff4Sum;
+            self.state.diff5_sum = diff5Sum;
+            // Format totals for display
+            self.state.total_debit_display = formatFloat(TotalDebit, { digits: [0, 2] });
+            self.state.diff0_sum_display = formatFloat(diff0Sum, { digits: [0, 2] });
+            self.state.diff1_sum_display = formatFloat(diff1Sum, { digits: [0, 2] });
+            self.state.diff2_sum_display = formatFloat(diff2Sum, { digits: [0, 2] });
+            self.state.diff3_sum_display = formatFloat(diff3Sum, { digits: [0, 2] });
+            self.state.diff4_sum_display = formatFloat(diff4Sum, { digits: [0, 2] });
+            self.state.diff5_sum_display = formatFloat(diff5Sum, { digits: [0, 2] });
+        } catch (el) {
             window.location.href;
         }
     }
@@ -163,12 +171,19 @@ class AgedReceivable extends owl.Component {
         var action_title = self.props.action.display_name;
         let totals = {
             'diff0_sum':this.state.diff0_sum,
+            'diff0_sum_display':this.state.diff0_sum_display,
             'diff1_sum':this.state.diff1_sum,
+            'diff1_sum_display':this.state.diff1_sum_display,
             'diff2_sum':this.state.diff2_sum,
+            'diff2_sum_display':this.state.diff2_sum_display,
             'diff3_sum':this.state.diff3_sum,
+            'diff3_sum_display':this.state.diff3_sum_display,
             'diff4_sum':this.state.diff4_sum,
+            'diff4_sum_display':this.state.diff4_sum_display,
             'diff5_sum':this.state.diff5_sum,
+            'diff5_sum_display':this.state.diff5_sum_display,
             'total_debit':this.state.total_debit,
+            'total_debit_display':this.state.total_debit_display,
             'currency':this.state.currency,
         }
         return self.action.doAction({
