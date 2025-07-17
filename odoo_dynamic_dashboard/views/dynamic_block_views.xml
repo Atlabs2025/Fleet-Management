@@ -80,7 +80,7 @@
         <field name="view_mode">list,form</field>
         <field name="context">{'default_edit_mode' : True}</field>
     </record>
-    <!--Menu Item for the model Dashboard Blocksnewwww-->
+    <!--Menu Item for the model Dashboard Blocks-->
     <menuitem name="Dashboard Blocks" id="dashboard_block_menu"
               parent="odoo_dynamic_dashboard.menu_dashboard"
               sequence="5" action="dashboard_block_action"/>
