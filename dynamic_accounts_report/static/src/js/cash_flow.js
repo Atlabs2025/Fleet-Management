@@ -103,7 +103,7 @@ class CashBook extends owl.Component {
         let totals = {
             'total_debit':this.state.total_debit,
             'total_credit':this.state.total_credit,
-            'currency':this.state.currency,
+            'currency':this.state.currency || false,
         }
         return self.action.doAction({
             'type': 'ir.actions.report',

@@ -14,3 +14,8 @@
 #### Version 18.0.1.1.2
 #### UPDT
 - Fixed the errors in the filters.
+
+#### 16.05.2025
+#### Version 18.0.1.2.3
+#### UPDT
+- Bug Fixing and added thousand seperators

@@ -264,9 +264,11 @@
                                     </tr>
                                 </thead>
                                 <tbody t-ref="tbody">
-                                    <t t-if="state.account">
+
+                                    <t t-if="state.account_data">
+
                                         <t t-set="i" t-value="0"/>
-                                        <t t-foreach="state.account"
+                                        <t t-foreach="state.account_data.account_totals"
                                            t-as="account"
                                            t-key="account_index">
                                             <t t-set="i" t-value="i + 1"/>
@@ -293,7 +295,7 @@
                                                     </div>
                                                 </th>
                                                 <th colspan="5">
-                                                    <button t-att-data-id="state.account_total[account]['account_id']"
+                                                    <button t-att-data-id="state.account_data.account_totals[account]['account_id']"
                                                             class="btn bg-secondary"
                                                             style="margin-left: 3px"
                                                             t-on-click="gotoJournalItem">
@@ -306,27 +308,28 @@
                                                 <th/>
                                                 <th>
                                                     <span>
-                                                        <t t-if="state.account_total[account]['total_debit']"
-                                                           t-esc="state.account_total[account]['currency_id']"/>
-                                                        <t t-if="state.account_total[account]['total_debit']"
-                                                           t-esc="state.account_total[account]['total_debit']"/>
+                                                        <t t-if="state.account_data.account_totals[account]['total_debit']"
+                                                           t-esc="state.account_data.account_totals[account]['currency_id']"/>
+                                                        <t t-if="state.account_data.account_totals[account]['total_debit']"
+                                                           t-esc="state.account_data.account_totals[account]['total_debit_display']"/>
                                                     </span>
                                                 </th>
                                                 <th>
                                                     <span>
-                                                        <t t-if="state.account_total[account]['total_credit']"
-                                                           t-esc="state.account_total[account]['currency_id']"/>
-                                                        <t t-if="state.account_total[account]['total_credit']"
-                                                           t-esc="state.account_total[account]['total_credit']"/>
+                                                        <t t-if="state.account_data.account_totals[account]['total_credit']"
+                                                           t-esc="state.account_data.account_totals[account]['currency_id']"/>
+                                                        <t t-if="state.account_data.account_totals[account]['total_credit']"
+                                                           t-esc="state.account_data.account_totals[account]['total_credit_display']"/>
                                                     </span>
                                                 </th>
                                                 <th>
                                                     <span class="fw-bolder">
-                                                        <t t-esc="state.account_total[account]['currency_id']"/>
-                                                        <t t-esc="(state.account_total[account]['total_debit'] - state.account_total[account]['total_credit']).toFixed(2)"/>
+                                                        <t t-esc="state.account_data.account_totals[account]['currency_id']"/>
+                                                        <t t-esc="state.account_data.account_totals[account]['balance_display']"/>
                                                     </span>
                                                 </th>
                                             </tr>
+
                                             <t t-foreach="state.account_data[account]"
                                                t-as="valuelist"
                                                t-key="valuelist_index">
@@ -375,7 +378,7 @@
                                                     <th>
                                                         <span>
                                                             <t t-if="valuelist[0]['debit']"
-                                                               t-esc="state.account_total[account]['currency_id']"/>
+                                                               t-esc="state.account_data.account_totals[account]['currency_id']"/>
                                                             <t t-if="valuelist[0]['debit']"
                                                                t-esc="valuelist[0]['debit']"/>
                                                         </span>
@@ -383,7 +386,7 @@
                                                     <th>
                                                         <span>
                                                             <t t-if="valuelist[0]['credit']"
-                                                               t-esc="state.account_total[account]['currency_id']"/>
+                                                               t-esc="state.account_data.account_totals[account]['currency_id']"/>
                                                             <t t-if="valuelist[0]['credit']"
                                                                t-esc="valuelist[0]['credit']"/>
                                                         </span>
@@ -400,11 +403,11 @@
                                         </th>
                                         <th class="o_heading">
                                             <t t-esc="state.currency"/>
-                                            <t t-out="state.total_debit"/>
+                                            <t t-out="state.total_debit_display"/>
                                         </th>
                                         <th class="o_heading">
                                             <t t-esc="state.currency"/>
-                                            <t t-out="state.total_credit"/>
+                                            <t t-out="state.total_credit_display"/>
                                         </th>
                                         <th class="o_heading">
                                             <t t-esc="state.currency"/>

@@ -21,6 +21,8 @@ class GeneralLedger extends owl.Component {
             account_data_list: null,
             account_total: null,
             total_debit: null,
+            total_debit_display : null,
+            total_credit_display : null,
             total_credit: null,
             currency: null,
             journals: null,
@@ -39,6 +41,16 @@ class GeneralLedger extends owl.Component {
         });
         this.load_data(self.initial_render = true);
     }
+    formatNumberWithSeparators(number) {
+        const parsedNumber = parseFloat(number);
+        if (isNaN(parsedNumber)) {
+            return "0.00"; // Fallback to 0.00 if the input is invalid
+        }
+        return parsedNumber.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
     async load_data() {
         let account_list = []
         let account_totals = ''
@@ -54,7 +66,7 @@ class GeneralLedger extends owl.Component {
             self.state.analytics = filtered_data['analytic_ids']
             account_totals = filtered_data['account_totals']
             self.state.account_data = await self.orm.call("account.general.ledger", "view_report", [self.wizard_id, action_title,]);
-            $.each(self.state.account_data, function (index, value) {
+            for (const [index, value] of Object.entries(self.state.account_data)){
                 if (index !== 'account_totals' && index !== 'journal_ids' && index !== 'analytic_ids') {
                     account_list.push(index)
                 } else if (index == 'journal_ids') {
@@ -68,10 +80,14 @@ class GeneralLedger extends owl.Component {
                     Object.values(account_totals).forEach(account_list => {
                         currency = account_list.currency_id
                         totalDebitSum += account_list.total_debit || 0;
+                        account_list.total_debit_display = this.formatNumberWithSeparators(account_list.total_debit || 0);
                         totalCreditSum += account_list.total_credit || 0;
+                        account_list.total_credit_display = this.formatNumberWithSeparators(account_list.total_credit || 0);
+                        let balance = account_list.total_debit - account_list.total_credit;
+                        account_list.balance_display = this.formatNumberWithSeparators(balance);
                     });
                 }
-            })
+            }
             self.state.account = account_list
             self.state.account_list = account_list
             self.state.account_data_list = self.state.account_data
@@ -79,7 +95,9 @@ class GeneralLedger extends owl.Component {
             self.state.account_total = account_totals
             self.state.currency = currency
             self.state.total_debit = totalDebitSum.toFixed(2)
+            self.state.total_debit_display = this.formatNumberWithSeparators(self.state.total_debit)
             self.state.total_credit = totalCreditSum.toFixed(2)
+            self.state.total_credit_display = this.formatNumberWithSeparators(self.state.total_credit)
             self.state.title = action_title
         }
         catch (el) {
@@ -90,9 +108,11 @@ class GeneralLedger extends owl.Component {
         ev.preventDefault();
         var self = this;
         let totals = {
-            'total_debit':this.state.total_debit,
-            'total_credit':this.state.total_credit,
-            'currency':this.state.currency,
+            'total_debit':this.state.total_debit || false,
+            'total_debit_display':this.state.total_debit_display || false,
+            'total_credit':this.state.total_credit || false,
+            'total_credit_display':this.state.total_credit_display || false,
+            'currency':this.state.currency  || false,
         }
         var action_title = self.props.action.display_name;
         return self.action.doAction({
@@ -102,7 +122,7 @@ class GeneralLedger extends owl.Component {
             'report_file': 'dynamic_accounts_report.general_ledger',
             'data': {
                 'account': self.state.account,
-                'data': self.state.account_data,
+                'account_data': self.state.account_data,
                 'total': self.state.account_total,
                 'title': action_title,
                 'filters': this.filter(),
@@ -116,7 +136,9 @@ class GeneralLedger extends owl.Component {
         var self = this;
         let totals = {
             'total_debit':this.state.total_debit,
+            'total_debit_display':this.state.total_debit_display || false,
             'total_credit':this.state.total_credit,
+            'total_credit_display':this.state.total_credit_display || false,
             'currency':this.state.currency,
         }
         var action_title = self.props.action.display_name;

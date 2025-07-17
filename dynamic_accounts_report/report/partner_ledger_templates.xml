@@ -118,7 +118,7 @@
                                                     <t t-if="total[partner]['total_debit']"
                                                        t-esc="total[partner]['currency_id']"/>
                                                     <t t-if="total[partner]['total_debit']"
-                                                       t-esc="total[partner]['total_debit']"/>
+                                                       t-esc="total[partner]['total_debit_display']"/>
                                                 </span>
                                             </strong>
                                         </th>
@@ -128,7 +128,7 @@
                                                     <t t-if="total[partner]['total_credit']"
                                                        t-esc="total[partner]['currency_id']"/>
                                                     <t t-if="total[partner]['total_credit']"
-                                                       t-esc="total[partner]['total_credit']"/>
+                                                       t-esc="total[partner]['total_credit_display']"/>
                                                 </span>
                                             </strong>
                                         </th>
@@ -228,7 +228,7 @@
                                                     <t t-if="valuelist[0]['debit']"
                                                        t-esc="total[partner]['currency_id']"/>
                                                     <t t-if="valuelist[0]['debit']"
-                                                       t-esc="valuelist[0]['debit']"/>
+                                                       t-esc="valuelist[0]['debit_display']"/>
                                                 </span>
                                             </th>
                                             <th style="width:10%">
@@ -236,7 +236,7 @@
                                                     <t t-if="valuelist[0]['credit']"
                                                        t-esc="total[partner]['currency_id']"/>
                                                     <t t-if="valuelist[0]['credit']"
-                                                       t-esc="valuelist[0]['credit']"/>
+                                                       t-esc="valuelist[0]['credit_display']"/>
                                                 </span>
                                             </th>
                                             <th style="width:10%">
@@ -244,7 +244,7 @@
                                                     <t t-if="valuelist[0]['amount_currency']"
                                                        t-esc="total[partner]['currency_id']"/>
                                                     <t t-if="valuelist[0]['amount_currency']"
-                                                       t-esc="valuelist[0]['amount_currency']"/>
+                                                       t-esc="valuelist[0]['amount_currency_display']"/>
                                                 </span>
                                             </th>
                                             <th style="width:10%"/>
@@ -260,16 +260,18 @@
                                 <th style="width:60%;">Total</th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['total_debit']"/>
+                                    <t t-out="grand_total['total_debit_display']"/>
                                 </th>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
-                                    <t t-out="grand_total['total_credit']"/>
+                                    <t t-out="grand_total['total_credit_display']"/>
                                 </th>
                                 <th style="width:10%"/>
                                 <th style="width:10%">
                                     <t t-out="grand_total['currency']"/>
+                                    <t t-if="grand_total['total_debit'] and grand_total['total_credit']">
                                     <t t-out="grand_total['total_debit'] - grand_total['total_credit']"/>
+                                    </t>
                                 </th>
                             </tr>
                         </tbody>

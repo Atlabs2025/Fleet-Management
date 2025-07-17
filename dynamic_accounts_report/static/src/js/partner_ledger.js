@@ -26,6 +26,7 @@ class PartnerLedger extends owl.Component {
             selected_partner: [],
             selected_partner_rec: [],
             total_debit: null,
+            total_debit_display:null,
             total_credit: null,
             partner_list: null,
             total_list: null,
@@ -35,8 +36,19 @@ class PartnerLedger extends owl.Component {
             message_list : [],
         });
         this.load_data(self.initial_render = true);
-
     }
+
+    formatNumberWithSeparators(number) {
+        const parsedNumber = parseFloat(number);
+        if (isNaN(parsedNumber)) {
+            return "0.00"; // Fallback to 0.00 if the input is invalid
+        }
+        return parsedNumber.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
     async load_data() {
         /**
          * Loads the data for the partner ledger report.
@@ -51,27 +63,35 @@ class PartnerLedger extends owl.Component {
         try {
             var self = this;
             self.state.data = await self.orm.call("account.partner.ledger", "view_report", [[this.wizard_id], action_title,]);
-            // Extract partner information from the data
-            $.each(self.state.data, function (index, value) {
-                if (index !== 'partner_totals') {
-                    partner_list.push(index)
-                }
-                else {
-                    partner_totals = value
-                    Object.values(partner_totals).forEach(partner_list => {
-                        currency = partner_list.currency_id
-                        totalDebitSum += partner_list.total_debit || 0;
-                        totalCreditSum += partner_list.total_credit || 0;
-                    });
-                }
-            })
+            const dataArray = self.state.data;
+             Object.entries(dataArray).forEach(([key, value]) => {
+            if (key !== 'partner_totals') {
+                partner_list.push(key);
+                value.forEach(entry => {
+                    entry[0].debit_display = this.formatNumberWithSeparators(entry[0].debit || 0);
+                    entry[0].credit_display = this.formatNumberWithSeparators(entry[0].credit || 0);
+                    entry[0].amount_currency_display = this.formatNumberWithSeparators(entry[0].amount_currency || 0);
+        });
+            } else {
+                partner_totals = value;
+            }
+            });
+            Object.values(partner_totals).forEach(partner => {
+                currency = partner.currency_id;
+                totalDebitSum += partner.total_debit || 0;
+                totalCreditSum += partner.total_credit || 0;
+                partner.total_debit_display = this.formatNumberWithSeparators(partner.total_debit || 0)
+                partner.total_credit_display = this.formatNumberWithSeparators(partner.total_credit || 0)
+            });
             self.state.partners = partner_list
             self.state.partner_list = partner_list
             self.state.total_list = partner_totals
             self.state.total = partner_totals
             self.state.currency = currency
             self.state.total_debit = totalDebitSum
+            self.state.total_debit_display = this.formatNumberWithSeparators(self.state.total_debit || 0)
             self.state.total_credit = totalCreditSum
+            self.state.total_credit_display = this.formatNumberWithSeparators(self.state.total_credit || 0)
             self.state.title = action_title
         }
         catch (el) {
@@ -91,7 +111,9 @@ class PartnerLedger extends owl.Component {
         let partner_totals = ''
         let totals = {
             'total_debit':this.state.total_debit,
+            'total_debit_display':this.state.total_debit_display,
             'total_credit':this.state.total_credit,
+            'total_credit_display':this.state.total_credit_display,
             'currency':this.state.currency,
         }
         var action_title = this.props.action.display_name;

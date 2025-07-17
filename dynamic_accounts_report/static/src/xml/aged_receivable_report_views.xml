@@ -191,7 +191,7 @@
                                                             <t t-if="state.total[move_line]['diff0_sum']"
                                                                t-esc="state.total[move_line]['currency_id']"/>
                                                             <t t-if="state.total[move_line]['diff0_sum']"
-                                                               t-esc="state.total[move_line]['diff0_sum']"/>
+                                                               t-esc="state.total[move_line]['diff0_sum_display']"/>
                                                         </span>
                                                     </th>
                                                     <th>
@@ -199,7 +199,7 @@
                                                             <t t-if="state.total[move_line]['diff1_sum']"
                                                                t-esc="state.total[move_line]['currency_id']"/>
                                                             <t t-if="state.total[move_line]['diff1_sum']"
-                                                               t-esc="state.total[move_line]['diff1_sum']"/>
+                                                               t-esc="state.total[move_line]['diff1_sum_display']"/>
                                                         </span>
                                                     </th>
                                                     <th>
@@ -207,7 +207,7 @@
                                                             <t t-if="state.total[move_line]['diff2_sum']"
                                                                t-esc="state.total[move_line]['currency_id']"/>
                                                             <t t-if="state.total[move_line]['diff2_sum']"
-                                                               t-esc="state.total[move_line]['diff2_sum']"/>
+                                                               t-esc="state.total[move_line]['diff2_sum_display']"/>
                                                         </span>
                                                     </th>
                                                     <th>
@@ -215,7 +215,7 @@
                                                             <t t-if="state.total[move_line]['diff3_sum']"
                                                                t-esc="state.total[move_line]['currency_id']"/>
                                                             <t t-if="state.total[move_line]['diff3_sum']"
-                                                               t-esc="state.total[move_line]['diff3_sum']"/>
+                                                               t-esc="state.total[move_line]['diff3_sum_display']"/>
                                                         </span>
                                                     </th>
                                                     <th>
@@ -223,7 +223,7 @@
                                                             <t t-if="state.total[move_line]['diff4_sum']"
                                                                t-esc="state.total[move_line]['currency_id']"/>
                                                             <t t-if="state.total[move_line]['diff4_sum']"
-                                                               t-esc="state.total[move_line]['diff4_sum']"/>
+                                                               t-esc="state.total[move_line]['diff4_sum_display']"/>
                                                         </span>
                                                     </th>
                                                     <th>
@@ -231,7 +231,7 @@
                                                             <t t-if="state.total[move_line]['diff5_sum']"
                                                                t-esc="state.total[move_line]['currency_id']"/>
                                                             <t t-if="state.total[move_line]['diff5_sum']"
-                                                               t-esc="state.total[move_line]['diff5_sum']"/>
+                                                               t-esc="state.total[move_line]['diff5_sum_display']"/>
                                                         </span>
                                                     </th>
                                                     <th>
@@ -239,7 +239,7 @@
                                                             <t t-if="state.total[move_line]['debit_sum']"
                                                                t-esc="state.total[move_line]['currency_id']"/>
                                                             <t t-if="state.total[move_line]['debit_sum']"
-                                                               t-esc="state.total[move_line]['debit_sum']"/>
+                                                               t-esc="state.total[move_line]['debit_sum_display']"/>
                                                         </span>
                                                     </th>
                                                 </tr>
@@ -250,8 +250,13 @@
                                                         t-attf-id="move_line-{{i}}">
                                                         <th colspan="6">
                                                             <span style="gap: 12px;display: flex;">
+
+                                                                <t t-if="valuelist['move_name']">
                                                                 <t t-esc="valuelist['move_name']"/>
-                                                                <t t-esc="valuelist['name']"/>
+                                                                </t>
+<!--                                                                <t t-if="valuelist['name']">-->
+<!--                                                                <t t-esc="valuelist['name']"/>-->
+<!--                                                                </t>-->
                                                                 <a type="button"
                                                                    class="dropdown-toggle"
                                                                    data-bs-toggle="dropdown">
@@ -359,31 +364,31 @@
                                             </th>
                                             <th class="o_heading">
                                                 <t t-esc="state.currency"/>
-                                                <t t-out="state.diff0_sum"/>
+                                                <t t-out="state.diff0_sum_display"/>
                                             </th>
                                             <th class="o_heading">
                                                 <t t-esc="state.currency"/>
-                                                <t t-out="state.diff1_sum"/>
+                                                <t t-out="state.diff1_sum_display"/>
                                             </th>
                                             <th class="o_heading">
                                                 <t t-esc="state.currency"/>
-                                                <t t-out="state.diff2_sum"/>
+                                                <t t-out="state.diff2_sum_display"/>
                                             </th>
                                             <th class="o_heading">
                                                 <t t-esc="state.currency"/>
-                                                <t t-out="state.diff3_sum"/>
+                                                <t t-out="state.diff3_sum_display"/>
                                             </th>
                                             <th class="o_heading">
                                                 <t t-esc="state.currency"/>
-                                                <t t-out="state.diff4_sum"/>
+                                                <t t-out="state.diff4_sum_display"/>
                                             </th>
                                             <th class="o_heading">
                                                 <t t-esc="state.currency"/>
-                                                <t t-out="state.diff5_sum"/>
+                                                <t t-out="state.diff5_sum_display"/>
                                             </th>
                                             <th class="o_heading">
                                                 <t t-esc="state.currency"/>
-                                                <t t-out="state.total_debit"/>
+                                                <t t-out="state.total_debit_display"/>
                                             </th>
                                         </tr>
                                     </tbody>

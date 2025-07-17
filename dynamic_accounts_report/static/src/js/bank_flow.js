@@ -28,12 +28,24 @@ class BankBook extends owl.Component {
             options: null,
             selected_account_list: [],
             total_debit: null,
+            total_debit_display: null,
             total_credit: null,
+            total_credit_display: null,
             currency: null,
             message_list : [],
         });
         this.load_data(self.initial_render = true);
 
+    }
+    formatNumberWithSeparators(number) {
+        const parsedNumber = parseFloat(number);
+        if (isNaN(parsedNumber)) {
+            return "0.00"; // Fallback to 0.00 if the input is invalid
+        }
+        return parsedNumber.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
     }
     async load_data() {
         /**
@@ -50,6 +62,8 @@ class BankBook extends owl.Component {
         try {
             var self = this;
             self.state.data = await self.orm.call("bank.book.report", "view_report", []);
+
+
             for (const index in self.state.data) {
                 const value = self.state.data[index];
                 if (index !== 'move_lines_total' && index !== 'accounts') {
@@ -62,14 +76,36 @@ class BankBook extends owl.Component {
                         currency = moveLine.currency_id;
                         totalDebitSum += moveLine.total_debit || 0;
                         totalCreditSum += moveLine.total_credit || 0;
+                        moveLine.total_debit_display = this.formatNumberWithSeparators(moveLine.total_debit || 0);
+                        moveLine.total_credit_display = this.formatNumberWithSeparators(moveLine.total_credit || 0);
+                        moveLine.balance = this.formatNumberWithSeparators(moveLine.total_debit - moveLine.total_credit || 0);
+                    }
+
+                }
+            }
+
+
+
+            self.state.move_line = move_line_list
+            for (const key of move_line_list) {
+                for (const line of self.state.data[key]) {
+                    if (line.debit !== undefined) {
+                        line.debit_display = this.formatNumberWithSeparators(line.debit || 0);
+                    }
+                    if (line.credit !== undefined) {
+                        line.credit_display = this.formatNumberWithSeparators(line.credit || 0);
+                    }
+                    if (line.balance !== undefined) {
+                        line.balance_display = this.formatNumberWithSeparators(line.balance || 0);
                     }
                 }
             }
-            self.state.move_line = move_line_list
             self.state.total = move_lines_total
             self.state.currency = currency
             self.state.total_debit = totalDebitSum.toFixed(2)
+            self.state.total_debit_display = this.formatNumberWithSeparators(self.state.total_debit)
             self.state.total_credit = totalCreditSum.toFixed(2)
+            self.state.total_credit_display = this.formatNumberWithSeparators(self.state.total_credit)
         }
         catch (el) {
             window.location.href;
@@ -104,7 +140,9 @@ class BankBook extends owl.Component {
         var self = this;
         let totals = {
             'total_debit':this.state.total_debit,
+            'total_debit_display':this.state.total_debit_display,
             'total_credit':this.state.total_credit,
+            'total_credit_display':this.state.total_credit_display,
             'currency':this.state.currency,
         }
         var action_title = self.props.action.display_name;
@@ -196,7 +234,9 @@ class BankBook extends owl.Component {
         var action_title = self.props.action.display_name;
         let totals = {
             'total_debit':this.state.total_debit,
+            'total_debit_display':this.state.total_debit_display,
             'total_credit':this.state.total_credit,
+            'total_credit_display':this.state.total_credit_display,
             'currency':this.state.currency,
         }
         var datas = {
