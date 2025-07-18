@@ -11,6 +11,7 @@ class JobCardEstimate(models.Model):
     _name = 'job.card.estimate'
     _description = 'Job Card Estimate'
     _rec_name = 'name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Estimate Number', required=True, copy=False, readonly=True, default='New')
     # vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
@@ -40,8 +41,7 @@ class JobCardEstimate(models.Model):
     vat = fields.Char(string="VAT")
     whatsapp_no = fields.Char(string="Whatsapp Number")
     estimate_detail_line_ids = fields.One2many('job.estimate.line', 'job_estimate_id', string="Job Details")
-
-
+    complaint_ids = fields.One2many('job.estimate.complaint', 'job_estimate_id', string='Concerns')
     total_labour = fields.Float(string="Total Labour", compute="_compute_totals")
     total_parts = fields.Float(string="Total Parts", compute="_compute_totals")
     total_material = fields.Float(string="Total Material", compute="_compute_totals")
@@ -77,6 +77,9 @@ class JobCardEstimate(models.Model):
         ('incontract', 'In Contract'),
         ('outcontract', 'Out of Contract'),
     ], string='Contract Status')
+
+    service_advisor_id = fields.Many2one('res.users', string='Service Advisor', readonly=True,default=lambda self: self.env.user)
+
     service_contract_id = fields.Many2one('fleet.vehicle.log.contract', string='Service Contract', store=True)
     # contract_invoice_status = fields.Boolean('Contract Invoice Status')
 
@@ -97,6 +100,8 @@ class JobCardEstimate(models.Model):
         ('cancelled', 'Cancelled'),
         ('completed', 'Completed'),
     ], string="Stage", store=True)
+
+
 
     @api.depends('estimate_detail_line_ids.total')
     def _compute_total_amount(self):
@@ -244,32 +249,25 @@ class JobCardEstimate(models.Model):
                 self.engine_no = vehicle.engine_no
                 self.register_no = vehicle.id
 
+
     # def action_create_job_card(self):
     #     self.ensure_one()
-    #
-    #     # Create Job Card and optionally lines
     #     job_card = self.env['job.card.management'].create({
-    #         'partner_id': self.partner_id.id,
     #         'register_no': self.register_no.id,
+    #         'partner_id': self.partner_id.id,
     #         'vehicle_in_out': self.vehicle_in_out,
-    #         'job_estimate_id': self.id,
-    #         # 'job_estimate_id': self.id,
+    #         'estimate_id': self.id,
     #         'job_detail_line_ids': [(0, 0, {
-    #             'description': line.description,
-    #             'product_template_id': line.product_template_id.id,
-    #             'quantity': line.quantity,
-    #             'price_unit': line.price_unit,
-    #             'department': line.department,
-    #         }) for line in self.estimate_detail_line_ids],
+    #             'description': l.description,
+    #             'product_template_id': l.product_template_id.id,
+    #             'quantity': l.quantity,
+    #             'price_unit': l.price_unit,
+    #             'department': l.department,
+    #         }) for l in self.estimate_detail_line_ids]
     #     })
-    #
-    #     # self.job_card_id = job_card.id
-    #
-    #
-    #     # Optionally redirect to the Job Card
+    #     self.job_card_id = job_card.id
     #     return {
     #         'type': 'ir.actions.act_window',
-    #         'name': 'Job Card',
     #         'res_model': 'job.card.management',
     #         'res_id': job_card.id,
     #         'view_mode': 'form',
@@ -289,7 +287,13 @@ class JobCardEstimate(models.Model):
                 'quantity': l.quantity,
                 'price_unit': l.price_unit,
                 'department': l.department,
-            }) for l in self.estimate_detail_line_ids]
+            }) for l in self.estimate_detail_line_ids],
+            'complaint_ids': [(0, 0, {
+                'service_requested':c.service_requested,
+                'description': c.description,
+                'remarks':c.remarks,
+                # Add any other fields from complaint model you want to copy
+            }) for c in self.complaint_ids],
         })
         self.job_card_id = job_card.id
         return {
@@ -424,7 +428,14 @@ class JobCardLine(models.Model):
 
 
 
+class JobEstimateComplaint(models.Model):
+    _name = 'job.estimate.complaint'
+    _description = 'Job Estimate Complaint'
 
+    job_estimate_id = fields.Many2one('job.card.estimate', string="Estimate")
+    service_requested = fields.Char(string='Service Requested')
+    description = fields.Text(string='Description')
+    remarks = fields.Text(string='Remarks')
 
 
 

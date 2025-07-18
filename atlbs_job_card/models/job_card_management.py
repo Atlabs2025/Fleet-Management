@@ -12,8 +12,9 @@ class VehicleStockBook(models.Model):
     _name = 'job.card.management'
     _description = 'Job Card Management'
     _rec_name = 'name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string='Job Card Number', required=True, copy=False, readonly=True, default='New')
+    name = fields.Char(string='Job Card Number', required=True, copy=False, readonly=True, default='New',tracking=True)
     # vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
     register_no = fields.Many2one('fleet.vehicle',string="Plate No.")
     # register_id = fields.Many2one('fleet.vehicle', string="Register Number")
@@ -104,6 +105,8 @@ class VehicleStockBook(models.Model):
     ], string='Contract Status')
     service_contract_id = fields.Many2one('fleet.vehicle.log.contract', string='Service Contract', store=True)
     # contract_invoice_status = fields.Boolean('Contract Invoice Status')
+
+    service_advisor_id = fields.Many2one('res.users',string='Service Advisor',readonly=True,default=lambda self: self.env.user)
 
     created_datetime = fields.Datetime(string="Created Date",default=fields.Datetime.now,readonly=True)
 
@@ -1083,26 +1086,6 @@ class JobCardTimeSheet(models.Model):
 #             return action
 #         return True
 
-
-class JobCardDashboard(models.TransientModel):
-    _name = 'job.card.dashboard'
-    _description = 'Job Card Dashboard'
-
-    total_jobcards = fields.Integer(string='Total Job Cards', compute='_compute_counts')
-    vehicle_in_jobcards = fields.Integer(string='Vehicle In Job Cards', compute='_compute_counts')
-    vehicle_out_jobcards = fields.Integer(string='Vehicle Out Job Cards', compute='_compute_counts')
-
-    @api.depends()
-    def _compute_counts(self):
-        job_card_obj = self.env['job.card.management']
-        self.total_jobcards = job_card_obj.search_count([])
-        self.vehicle_in_jobcards = job_card_obj.search_count([('vehicle_in_out', '=', 'vehicle_in')])
-        self.vehicle_out_jobcards = job_card_obj.search_count([('vehicle_in_out', '=', 'vehicle_out')])
-
-
-
-
-from odoo import models, fields
 
 class JobCardComplaint(models.Model):
     _name = 'job.card.complaint'
