@@ -1,0 +1,10 @@
+<odoo>
+
+
+    <menuitem id="account_reports_wiz" sequence="30"
+                      name="Dynamic Reports(Wiz)" parent="account.menu_finance_reports"/>
+
+<!--    <menuitem id="account_report_pandl" sequence="50" action="action_ins_profit_and_loss_report"-->
+<!--              name="Profit and Loss" parent="account_reports_ins" groups="account.group_account_user"/>-->
+
+</odoo>

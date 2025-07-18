@@ -48,7 +48,6 @@
         <field name="view_mode">list,form</field>
     </record>
     <!--Menu Item for the model Dashboard Blocks-->
-<!--    menus-->
     <menuitem name="Configuration" id="odoo_dynamic_configuration"
               parent="odoo_dynamic_dashboard.menu_dashboard"/>
     <menuitem name="Dashboard Theme" id="dashboard_theme_menu"
