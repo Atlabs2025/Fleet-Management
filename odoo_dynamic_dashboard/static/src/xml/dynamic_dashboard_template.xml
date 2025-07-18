@@ -4,7 +4,9 @@
     <t t-name="owl.OdooDynamicDashboard" owl="1">
         <div class="container" style="min-height:-webkit-fill-available;">
             <div class="navbar navbar-expand-md navbar-light mb-4 navbar-style border-bottom"
-                 role="navigation">
+                 role="navigation" style="display:none;">
+<!--                style="display:none;"-->
+<!--                display none commented-->
                 <button class="navbar-toggler" id="dropdownNavbar" type="button"
                         data-toggle="collapse"
                         data-target="#navbarCollapse"
@@ -78,7 +80,7 @@
                 </label>
 
                 <div class="search-group" style="margin-right: 30px;padding-top:20px;">
-                    <!-- Search Bar -->
+                     Search Bar
                     <div class="navbar-items btn-group search-box">
                         <input class="form-control mr-sm-2" type="text" placeholder="Search" id="search-input-chart" aria-label="Search"/>
                         <span id="searchclear" t-on-click="clearSearch">

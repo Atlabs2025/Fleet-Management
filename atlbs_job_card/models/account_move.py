@@ -41,8 +41,60 @@ class AccountMove(models.Model):
     #         # Set the invoice lines
     #         self.invoice_line_ids = lines
 
+    # def action_group_pay_now(self):
+    #     for move in self:
+    #         if move.state == 'draft':
+    #             move.action_post()
+    #         if move.payment_state != 'paid':
+    #             payment_vals = {
+    #                 'payment_type': 'inbound' if move.move_type == 'out_invoice' else 'outbound',
+    #                 'partner_type': 'customer' if move.move_type == 'out_invoice' else 'supplier',
+    #                 'partner_id': move.partner_id.id,
+    #                 'amount': move.amount_total,
+    #                 # 'payment_method_line_id': self.env.ref('account.account_payment_method_manual_in').id,
+    #                 'journal_id': move.journal_id.id,
+    #                 # 'payment_date': fields.Date.today(),
+    #                 # 'communication': move.name,
+    #                 'invoice_ids': [(6, 0, [move.id])],
+    #             }
+    #             payment = self.env['account.payment'].create(payment_vals)
+    #             payment.action_post()
 
+    def action_group_pay_now(self):
+        for move in self:
+            if move.move_type != 'out_invoice':
+                continue  # only apply to customer invoices
 
+            if move.state == 'draft':
+                move.action_post()
+
+            if move.payment_state != 'paid':
+                # Get the manual payment method (cash)
+                manual_payment_method = self.env.ref('account.account_payment_method_manual_in',
+                                                     raise_if_not_found=False)
+                if not manual_payment_method:
+                    raise UserError(
+                        "Manual Payment (Cash) method not found. Please configure it in Accounting settings.")
+
+                payment_vals = {
+                    'payment_type': 'inbound',  # for customer invoice
+                    'partner_type': 'customer',
+                    'partner_id': move.partner_id.id,
+                    'amount': move.amount_residual,
+                    'payment_method_line_id': manual_payment_method.id,
+                    'journal_id': move.journal_id.id,
+                    'payment_date': fields.Date.today(),
+                    'ref': move.name,
+                    'communication': move.name,
+                    'currency_id': move.currency_id.id,
+                    'destination_account_id':
+                        move.line_ids.filtered(lambda l: l.account_id.user_type_id.type == 'receivable')[
+                            0].account_id.id,
+                }
+
+                payment = self.env['account.payment'].create(payment_vals)
+                payment.action_post()
+                payment.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable').reconcile()
 
 
 class AccountMoveLine(models.Model):

@@ -623,6 +623,13 @@ class JobCardLine(models.Model):
             if rec.department == 'parts' and not rec.product_template_id:
                 raise ValidationError("Please choose a product for Parts department.")
 
+# removed this onchange and new one given for added tax
+    # @api.onchange('product_template_id')
+    # def _onchange_product_template_id(self):
+    #     for line in self:
+    #         if line.department == 'parts' and line.product_template_id:
+    #             line.price_unit = line.product_template_id.list_price
+    #             line.part_number = line.product_template_id.id
 
     @api.onchange('product_template_id')
     def _onchange_product_template_id(self):
@@ -630,6 +637,11 @@ class JobCardLine(models.Model):
             if line.department == 'parts' and line.product_template_id:
                 line.price_unit = line.product_template_id.list_price
                 line.part_number = line.product_template_id.id
+
+                # Set tax_ids to 5%DB tax if found
+                tax = self.env['account.tax'].search([('name', '=', '5% DB')], limit=1)
+                if tax:
+                    line.tax_ids = [(6, 0, [tax.id])]
 
 
 
