@@ -52,6 +52,7 @@
                                             <div><strong>Register No:</strong> <span t-esc="doc.register_no.license_plate"/></div>
                                             <div><strong>Vehicle Make:</strong> <span t-esc="doc.vehicle_make_id.name"/></div>
                                             <div><strong>VIN SN:</strong> <span t-esc="doc.vin_sn"/></div>
+                                            <div><strong>Service Advisor</strong><span t-esc="doc.service_advisor_id.name"/></div>
                                         </div>
                                     </td>
                                     <td style="width: 50%; vertical-align: top;">

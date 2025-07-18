@@ -7,6 +7,8 @@ class AccountMove(models.Model):
     job_card_id = fields.Many2one('job.card.management', string="Job Card")
     excess_amount = fields.Float(string="Excess Amount")
 
+    service_advisor_id = fields.Many2one('res.users', string='Service Adviser', readonly=True,default=lambda self: self.env.user)
+
     service_contract_id = fields.Many2one('fleet.vehicle.log.contract', string="Service Contract")
 
     @api.onchange('job_card_id')

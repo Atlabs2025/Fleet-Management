@@ -87,6 +87,8 @@
 <!--                            <field name="vehicle_id"/>-->
                             <field name="vehicle_make_id"/>
                             <field name="contract_status"/>
+                            <field name="service_advisor_id" readonly="1"/>
+                            <field name="job_card_id" readonly="1"/>
                         </group>
 
                         <!--                            <field name="vin_number"/>-->
@@ -107,6 +109,15 @@
 
 
                     <notebook class="small-pages">
+                        <page string="Concerns">
+                            <field name="complaint_ids">
+                                <list editable="bottom">
+                                    <field name="service_requested"/>
+                                    <field name="description"/>
+                                    <field name="remarks"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Job Details" class="small-page">
                             <field name="estimate_detail_line_ids">
                                 <list editable="bottom">
@@ -159,6 +170,7 @@
                     </notebook>
 
                 </sheet>
+                <chatter/>
             </form>
         </field>
     </record>
