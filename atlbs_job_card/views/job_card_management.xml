@@ -154,18 +154,18 @@
                         <page string="Job Details" class="small-page">
                             <field name="job_detail_line_ids">
                                 <list editable="bottom">
-                                    <field name="department" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="product_template_id" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="part_number" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="job_category_id" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="description" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="quantity" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="price_unit" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="price_amt" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="discount" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="after_discount" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="tax_ids" widget="many2many_tags" readonly="parent.estimate_id != 'False'"/>
-                                    <field name="tax_amount" readonly="parent.estimate_id != 'False'"/>
+                                    <field name="department" readonly="parent.estimate_id"/>
+                                    <field name="product_template_id" readonly="parent.estimate_id"/>
+                                    <field name="part_number" readonly="parent.estimate_id"/>
+                                    <field name="job_category_id" readonly="parent.estimate_id"/>
+                                    <field name="description" readonly="parent.estimate_id"/>
+                                    <field name="quantity" readonly="parent.estimate_id"/>
+                                    <field name="price_unit" readonly="parent.estimate_id"/>
+                                    <field name="price_amt" readonly="parent.estimate_id"/>
+                                    <field name="discount" readonly="parent.estimate_id"/>
+                                    <field name="after_discount" readonly="parent.estimate_id"/>
+                                    <field name="tax_ids" widget="many2many_tags" readonly="parent.estimate_id"/>
+                                    <field name="tax_amount" readonly="parent.estimate_id"/>
                                     <field name="total" readonly="1" />
                                     <field name="line_state" required="1"/>
                                     <field name="invoiced" column_invisible="1"/>

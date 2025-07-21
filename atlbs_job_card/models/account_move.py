@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -10,6 +11,40 @@ class AccountMove(models.Model):
     service_advisor_id = fields.Many2one('res.users', string='Service Adviser', readonly=True,default=lambda self: self.env.user)
 
     service_contract_id = fields.Many2one('fleet.vehicle.log.contract', string="Service Contract")
+
+
+
+# new fields  and functions added recently
+#     discount_percent = fields.Float(string="Discount (%)", compute='_compute_discount_info', store=True)
+#     amount_discount = fields.Monetary(string="Discount Amount", compute='_compute_discount_info', store=True)
+#     amount_total_tax = fields.Monetary(string="Tax", compute='_compute_discount_info', store=True)
+#     amount_grand_total = fields.Monetary(string="Grand Total", compute='_compute_discount_info', store=True)
+#
+#     @api.depends('invoice_line_ids.price_unit', 'invoice_line_ids.quantity',
+#                  'invoice_line_ids.discount', 'invoice_line_ids.tax_ids', 'invoice_line_ids.price_subtotal')
+#     def _compute_discount_info(self):
+#         for move in self:
+#             total = 0.0
+#             discount_total = 0.0
+#             tax_total = sum(move.amount_by_group and sum(t[1] for t in move.amount_by_group) or 0.0)
+#             for line in move.invoice_line_ids:
+#                 line_total = line.price_unit * line.quantity
+#                 line_discount = line_total * (line.discount / 100.0)
+#                 total += line_total
+#                 discount_total += line_discount
+#
+#             move.amount_discount = discount_total
+#             move.amount_total_tax = tax_total
+#             move.amount_grand_total = move.amount_untaxed + tax_total - discount_total
+#
+#             if total:
+#                 move.discount_percent = (discount_total / total) * 100
+#             else:
+#                 move.discount_percent = 0.0
+
+
+    ##########################################
+
 
     @api.onchange('job_card_id')
     def _onchange_job_card_id(self):
