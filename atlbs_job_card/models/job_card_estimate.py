@@ -132,10 +132,19 @@ class JobCardEstimate(models.Model):
             rec.vat_total = sum(line.tax_amount for line in rec.estimate_detail_line_ids)
             # rec.total_amount = rec.subtotal + rec.vat_total
 
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get('name', 'New') == 'New':
+    #         vals['name'] = self.env['ir.sequence'].next_by_code('job.card.estimate') or 'New'
+    #     return super(JobCardEstimate, self).create(vals)
+
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('job.card.estimate') or 'New'
+            sequence = self.env['ir.sequence'].search([('code', '=', 'job.card.estimate')], limit=1)
+            vals['name'] = sequence.next_by_id() if sequence else self.env['ir.sequence'].next_by_code(
+                'JobCardEstimate'
+                '++-22-') or '/'
         return super(JobCardEstimate, self).create(vals)
 
     @api.onchange('partner_id')
@@ -274,9 +283,40 @@ class JobCardEstimate(models.Model):
     #         'target': 'current',
     #     }
 
+    # def action_create_job_card(self):
+    #     self.ensure_one()
+    #     job_card = self.env['job.card.management'].create({
+    #         'register_no': self.register_no.id,
+    #         'partner_id': self.partner_id.id,
+    #         'vehicle_in_out': self.vehicle_in_out,
+    #         'estimate_id': self.id,
+    #         'job_detail_line_ids': [(0, 0, {
+    #             'description': l.description,
+    #             'product_template_id': l.product_template_id.id,
+    #             'quantity': l.quantity,
+    #             'price_unit': l.price_unit,
+    #             'department': l.department,
+    #         }) for l in self.estimate_detail_line_ids],
+    #         'complaint_ids': [(0, 0, {
+    #             'service_requested':c.service_requested,
+    #             'description': c.description,
+    #             'remarks':c.remarks,
+    #             # Add any other fields from complaint model you want to copy
+    #         }) for c in self.complaint_ids],
+    #     })
+    #     self.job_card_id = job_card.id
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'job.card.management',
+    #         'res_id': job_card.id,
+    #         'view_mode': 'form',
+    #         'target': 'current',
+    #     }
+
     def action_create_job_card(self):
         self.ensure_one()
         job_card = self.env['job.card.management'].create({
+            'name': 'New',  # 👈 Add this line to trigger the sequence
             'register_no': self.register_no.id,
             'partner_id': self.partner_id.id,
             'vehicle_in_out': self.vehicle_in_out,
@@ -289,10 +329,9 @@ class JobCardEstimate(models.Model):
                 'department': l.department,
             }) for l in self.estimate_detail_line_ids],
             'complaint_ids': [(0, 0, {
-                'service_requested':c.service_requested,
+                'service_requested': c.service_requested,
                 'description': c.description,
-                'remarks':c.remarks,
-                # Add any other fields from complaint model you want to copy
+                'remarks': c.remarks,
             }) for c in self.complaint_ids],
         })
         self.job_card_id = job_card.id

@@ -8,7 +8,7 @@ from odoo import models, fields, api
 from odoo.exceptions import UserError, ValidationError
 
 
-class VehicleStockBook(models.Model):
+class JobCardManagement(models.Model):
     _name = 'job.card.management'
     _description = 'Job Card Management'
     _rec_name = 'name'
@@ -191,11 +191,22 @@ class VehicleStockBook(models.Model):
             rec.vat_total = sum(line.tax_amount for line in rec.job_detail_line_ids)
             # rec.total_amount = rec.subtotal + rec.vat_total
 
+    # @api.model
+    # def create(self, vals):
+    #     if vals.get('name', 'New') == 'New':
+    #         vals['name'] = self.env['ir.sequence'].next_by_code('job.card.management') or 'New'
+    #     return super(JobCardManagement, self).create(vals)
+
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('job.card.management') or 'New'
-        return super(VehicleStockBook, self).create(vals)
+            sequence = self.env['ir.sequence'].search([('code', '=', 'job.card.management')], limit=1)
+            vals['name'] = sequence.next_by_id() if sequence else self.env['ir.sequence'].next_by_code(
+                'job.card.management') or '/'
+        return super(JobCardManagement, self).create(vals)
+
+
+
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
