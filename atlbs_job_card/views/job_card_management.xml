@@ -164,7 +164,9 @@
                                     <field name="price_amt" readonly="parent.estimate_id"/>
                                     <field name="discount" readonly="parent.estimate_id"/>
                                     <field name="after_discount" readonly="parent.estimate_id"/>
-                                    <field name="tax_ids" widget="many2many_tags" readonly="parent.estimate_id"/>
+<!--                                    <field name="tax_ids" widget="many2many_tags" readonly="parent.estimate_id"/>-->
+                                    <field name="tax_ids" domain="[('type_tax_use','=','sale'), ('amount','=',5.0)]" widget="many2many_tags" readonly="parent.estimate_id"/>
+
                                     <field name="tax_amount" readonly="parent.estimate_id"/>
                                     <field name="total" readonly="1" />
                                     <field name="line_state" required="1"/>

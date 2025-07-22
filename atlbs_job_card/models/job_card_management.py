@@ -176,15 +176,27 @@ class JobCardManagement(models.Model):
 
     def _compute_totals(self):
         for rec in self:
-            rec.total_labour = sum(line.total for line in rec.job_detail_line_ids if line.department == 'labour')
-            rec.total_parts = sum(line.total for line in rec.job_detail_line_ids if line.department == 'parts')
-            rec.total_material = sum(line.total for line in rec.job_detail_line_ids if line.department == 'material')
-            rec.total_lubricant = sum(line.total for line in rec.job_detail_line_ids if line.department == 'lubricant')
-            rec.total_sublets = sum(line.total for line in rec.job_detail_line_ids if line.department == 'sublets')
+            rec.total_labour = sum(
+                line.after_discount for line in rec.job_detail_line_ids if line.department == 'labour'
+            )
+            rec.total_parts = sum(
+                line.after_discount for line in rec.job_detail_line_ids if line.department == 'parts'
+            )
+            rec.total_material = sum(
+                line.after_discount for line in rec.job_detail_line_ids if line.department == 'material'
+            )
+            rec.total_lubricant = sum(
+                line.after_discount for line in rec.job_detail_line_ids if line.department == 'lubricant'
+            )
+            rec.total_sublets = sum(
+                line.after_discount for line in rec.job_detail_line_ids if line.department == 'sublets'
+            )
             rec.total_paint_material = sum(
-                line.total for line in rec.job_detail_line_ids if line.department == 'paint_material')
-            rec.total_tyre = sum(line.total for line in rec.job_detail_line_ids if line.department == 'tyre')
-
+                line.after_discount for line in rec.job_detail_line_ids if line.department == 'paint_material'
+            )
+            rec.total_tyre = sum(
+                line.after_discount for line in rec.job_detail_line_ids if line.department == 'tyre'
+            )
             rec.total_price_amt = sum(line.price_amt for line in rec.job_detail_line_ids)
             rec.total_discount = sum((line.price_amt - line.after_discount) for line in rec.job_detail_line_ids)
             rec.subtotal = sum(line.after_discount for line in rec.job_detail_line_ids)
