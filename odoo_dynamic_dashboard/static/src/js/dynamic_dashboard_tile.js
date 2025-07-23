@@ -47,8 +47,8 @@ export class DynamicDashboardTile extends Component {
             await this.doAction({
               type: 'ir.actions.act_window',
               res_model: model_name,
-              view_mode: 'list,form',
-              views: [[false, "list"],[false, "form"]],
+              view_mode: 'list',
+              views: [[false, "list"]],
               domain: this.props.widget.domain,
           });
         }
@@ -63,7 +63,12 @@ DynamicDashboardTile.template = xml `
         t-att-style="this.props.widget.color+this.props.widget.text_color+ 'height:'+this.props.widget.height+';width:'+this.props.widget.width + '; transform: translate('+ this.props.widget.translate_x +', '+ this.props.widget.translate_y +');'">
         <div t-att-style="this.props.widget.color+this.props.widget.text_color"
             class="d-flex align-items-center  w-100  my-3">
-            
+            <a class="block_setting tile_edit tile-container__setting-icon" style="color:black;" t-on-click="(ev) => this.getConfiguration(ev)" >
+                <i class="fa fa-edit"/>
+            </a>
+            <a class="block_delete tile_edit tile-container__delete-icon" style="color:black;" t-on-click="(ev) => this.removeTile(ev)">
+                <i class="fa fa-times"/>
+            </a>
             <div t-att-style="this.props.widget.icon_color"
                  class="tile-container__icon-container bg-white d-flex justify-content-center align-items-center">
                 <i t-att-class="this.props.widget.icon"/>
@@ -77,7 +82,7 @@ DynamicDashboardTile.template = xml `
                 <div class="status-container__figures d-flex flex-wrap align-items-baseline">
                     <h3 class="mb-0 mb-md-1 mb-lg-0 mr-1"
                         t-att-style="this.props.widget.val_color">
-                        <t t-esc="Math.floor(this.props.widget.value || 0)"/>
+                        <t t-esc="this.props.widget.value"/>
                     </h3>
                 </div>
             </div>
