@@ -11,6 +11,7 @@
     ],
 'data': [
     'security/ir.model.access.csv',
+    'security/job_card_security.xml',
     'report/report_action.xml',
     'report/job_card_template.xml',
     'report/estimate_template.xml',
