@@ -35,14 +35,27 @@ class JobCardManagement(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Customer', required=1)
     # company_id = fields.Many2one('res.company',string="Company")
+    # company_id = fields.Many2one(
+    #     'res.company',
+    #     string='Company',
+    #     required=True,
+    #     default=lambda self: self.env.company,
+    #     index=True,
+    #     tracking=True,
+    # )
     company_id = fields.Many2one(
         'res.company',
         string='Company',
-        required=True,
-        default=lambda self: self.env.company,
         index=True,
         tracking=True,
     )
+    # new field added as cust type
+    cust_type = fields.Selection(
+        selection=[('individual', 'Individual'), ('company', 'Company')],
+        string='Customer Type',
+        required=True
+    )
+
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
     phone = fields.Char(string="Phone")
     email = fields.Char(string="Email")
@@ -65,7 +78,7 @@ class JobCardManagement(models.Model):
     vat_total = fields.Float(string="VAT 5%", compute="_compute_totals")
     total_amount = fields.Float(string="Grand Total", compute="_compute_totals")
 
-    vehicle_in_out = fields.Selection([('vehicle_in', 'IN'),('vehicle_out', 'OUT')], string="Vehicle IN/OUT", default='', tracking=True)
+    vehicle_in_out = fields.Selection([('vehicle_in', 'IN'),('vehicle_out', 'OUT')], string="Vehicle IN/OUT", default='vehicle_in', tracking=True)
 
     job_card_stage = fields.Selection([
         ('', ''),
@@ -211,10 +224,13 @@ class JobCardManagement(models.Model):
             rec.vat_total = sum(line.tax_amount for line in rec.job_detail_line_ids)
             # rec.total_amount = rec.subtotal + rec.vat_total
 
+
     # @api.model
     # def create(self, vals):
     #     if vals.get('name', 'New') == 'New':
-    #         vals['name'] = self.env['ir.sequence'].next_by_code('job.card.management') or 'New'
+    #         sequence = self.env['ir.sequence'].search([('code', '=', 'job.card.management')], limit=1)
+    #         vals['name'] = sequence.next_by_id() if sequence else self.env['ir.sequence'].next_by_code(
+    #             'job.card.management') or '/'
     #     return super(JobCardManagement, self).create(vals)
 
     @api.model
@@ -223,9 +239,12 @@ class JobCardManagement(models.Model):
             sequence = self.env['ir.sequence'].search([('code', '=', 'job.card.management')], limit=1)
             vals['name'] = sequence.next_by_id() if sequence else self.env['ir.sequence'].next_by_code(
                 'job.card.management') or '/'
+
+        # Set company_id to current user's company if not provided
+        if not vals.get('company_id'):
+            vals['company_id'] = self.env.company.id
+
         return super(JobCardManagement, self).create(vals)
-
-
 
 
     @api.onchange('partner_id')
@@ -478,6 +497,27 @@ class JobCardManagement(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+
+    # @api.onchange('cust_type')
+    # def _onchange_cust_type(self):
+    #     if self.cust_type == 'individual':
+    #         return {
+    #             'domain': {
+    #                 'partner_id': [('is_company', '=', False)]
+    #             }
+    #         }
+    #     elif self.cust_type == 'company':
+    #         return {
+    #             'domain': {
+    #                 'partner_id': [('is_company', '=', True)]
+    #             }
+    #         }
+    #     else:
+    #         return {
+    #             'domain': {
+    #                 'partner_id': []
+    #             }
+    #         }
 
 
 class JobCardLine(models.Model):
