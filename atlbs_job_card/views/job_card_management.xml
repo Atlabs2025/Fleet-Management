@@ -86,14 +86,15 @@
 
                         <group class="small-fields-group">
                             <field name="is_insurance_claim"/>
+                             <field name="cust_type"/>
                             <field name="partner_id"/>
-                            <field name="whatsapp_no"/>
 
                         </group>
 
 
                         <group class="small-fields-group">
-                            <field name="company_id"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="whatsapp_no"/>
                             <field name="phone"/>
                             <field name="vat"/>
 
@@ -133,7 +134,7 @@
                         <group class="small-fields-group">
                             <field name="fuel_level"/>
                             <field name="vehicle_colour"/>
-                            <field name="vehicle_in_out" required="1"/>
+                            <field name="vehicle_in_out"/>
                             <field name="job_card_stage"/>
                         </group>
                     </group>
@@ -315,7 +316,7 @@
                 <field name="service_contract_id"/>
                 <field name="vehicle_in_out"/>
                 <field name="insurance_company_id"/>
-                <field name="company_id"/>
+<!--                <field name="company_id"/>-->
 
                 <!-- Optional filters -->
                 <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]" help="Draft Job Cards"/>
@@ -333,7 +334,7 @@
                             context="{'group_by':'vehicle_make_id'}"/>
                     <filter name="group_by_insurance" string="Insurance Company" domain="[]"
                             context="{'group_by':'insurance_company_id'}"/>
-                    <filter name="group_by_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+<!--                    <filter name="group_by_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>-->
                     <filter name="group_by_state" string="State" domain="[]" context="{'group_by':'state'}"/>
                 </group>
             </search>
