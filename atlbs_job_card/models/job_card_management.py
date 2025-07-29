@@ -34,7 +34,15 @@ class JobCardManagement(models.Model):
     ], string="Status", default='draft', tracking=True)
 
     partner_id = fields.Many2one('res.partner', string='Customer', required=1)
-    company_id = fields.Many2one('res.company',string="Company")
+    # company_id = fields.Many2one('res.company',string="Company")
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company,
+        index=True,
+        tracking=True,
+    )
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
     phone = fields.Char(string="Phone")
     email = fields.Char(string="Email")
