@@ -22,6 +22,7 @@
 from ast import literal_eval
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools.convert import safe_eval, _logger
 
 
 class DashboardBlock(models.Model):
@@ -92,75 +93,264 @@ class DashboardBlock(models.Model):
             self.measured_field_id = False
             self.group_by_id = False
 
+    # def get_dashboard_vals(self, action_id, start_date=None, end_date=None):
+    #     """Fetch block values from js and create chart"""
+    #     block_id = []
+    #     for rec in self.env['dashboard.block'].sudo().search(
+    #             [('client_action_id', '=', int(action_id))]):
+    #         if rec.filter is False:
+    #             rec.filter = "[]"
+    #         filter_list = literal_eval(rec.filter)
+    #         filter_list = [filter_item for filter_item in filter_list if not (
+    #                 isinstance(filter_item, tuple) and filter_item[
+    #             0] == 'create_date')]
+    #         rec.filter = repr(filter_list)
+    #         vals = {'id': rec.id, 'name': rec.name, 'type': rec.type,
+    #                 'graph_type': rec.graph_type, 'icon': rec.fa_icon,
+    #                 'model_name': rec.model_name,
+    #                 'color': f'background-color: {rec.tile_color};' if rec.tile_color else '#1f6abb;',
+    #                 'text_color': f'color: {rec.text_color};' if rec.text_color else '#FFFFFF;',
+    #                 'val_color': f'color: {rec.val_color};' if rec.val_color else '#FFFFFF;',
+    #                 'icon_color': f'color: {rec.tile_color};' if rec.tile_color else '#1f6abb;',
+    #                 'height': rec.height,
+    #                 'width': rec.width,
+    #                 'translate_x': rec.translate_x,
+    #                 'translate_y': rec.translate_y,
+    #                 'data_x': rec.data_x,
+    #                 'data_y': rec.data_y,
+    #                 'domain': filter_list,
+    #                 }
+    #         domain = []
+    #         if rec.filter:
+    #             domain = expression.AND([literal_eval(rec.filter)])
+    #         if rec.model_name:
+    #             if rec.type == 'graph':
+    #                 self._cr.execute(self.env[rec.model_name].get_query(domain,
+    #                                                                     rec.operation,
+    #                                                                     rec.measured_field_id,
+    #                                                                     start_date,
+    #                                                                     end_date,
+    #                                                                     group_by=rec.group_by_id))
+    #                 records = self._cr.dictfetchall()
+    #                 x_axis = []
+    #                 for record in records:
+    #                     if record.get('name') and type(
+    #                             record.get('name')) == dict:
+    #                         x_axis.append(record.get('name')[self._context.get(
+    #                             'lang') or 'en_US'])
+    #                     else:
+    #                         x_axis.append(record.get(rec.group_by_id.name))
+    #                 y_axis = []
+    #                 for record in records:
+    #                     y_axis.append(record.get('value'))
+    #                 vals.update({'x_axis': x_axis, 'y_axis': y_axis})
+    #             else:
+    #                 self._cr.execute(self.env[rec.model_name].get_query(domain,
+    #                                                                     rec.operation,
+    #                                                                     rec.measured_field_id,
+    #                                                                     start_date,
+    #                                                                     end_date))
+    #                 records = self._cr.dictfetchall()
+    #                 magnitude = 0
+    #                 total = records[0].get('value')
+    #                 while abs(total) >= 1000:
+    #                     magnitude += 1
+    #                     total /= 1000.0
+    #                 val = '%.2f%s' % (
+    #                     total, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+    #                 records[0]['value'] = val
+    #                 vals.update(records[0])
+    #         block_id.append(vals)
+    #     return block_id
+
+    # def get_dashboard_vals(self, action_id, start_date=None, end_date=None):
+    #     """Fetch block values from js and create chart"""
+    #     block_id = []
+    #     user_company_id = self.env.user.company_id.id  # Logged-in user's company
+    #
+    #     for rec in self.env['dashboard.block'].sudo().search(
+    #             [('client_action_id', '=', int(action_id))]):
+    #
+    #         # Step 1: Handle placeholder for company
+    #         filter_str = rec.filter or "[]"
+    #         filter_str = filter_str.replace('uid_company_id', str(user_company_id))
+    #
+    #         try:
+    #             filter_list = safe_eval(filter_str)
+    #         except Exception:
+    #             filter_list = []
+    #
+    #         # Step 2: Remove 'create_date' domain if exists
+    #         filter_list = [
+    #             f for f in filter_list
+    #             if not (isinstance(f, tuple) and f[0] == 'create_date')
+    #         ]
+    #
+    #         rec.filter = repr(filter_list)  # Optional, if UI should see cleaned filter
+    #
+    #         vals = {
+    #             'id': rec.id,
+    #             'name': rec.name,
+    #             'type': rec.type,
+    #             'graph_type': rec.graph_type,
+    #             'icon': rec.fa_icon,
+    #             'model_name': rec.model_name,
+    #             'color': f'background-color: {rec.tile_color};' if rec.tile_color else '#1f6abb;',
+    #             'text_color': f'color: {rec.text_color};' if rec.text_color else '#FFFFFF;',
+    #             'val_color': f'color: {rec.val_color};' if rec.val_color else '#FFFFFF;',
+    #             'icon_color': f'color: {rec.tile_color};' if rec.tile_color else '#1f6abb;',
+    #             'height': rec.height,
+    #             'width': rec.width,
+    #             'translate_x': rec.translate_x,
+    #             'translate_y': rec.translate_y,
+    #             'data_x': rec.data_x,
+    #             'data_y': rec.data_y,
+    #             'domain': filter_list,
+    #         }
+    #
+    #         domain = []
+    #         if filter_list:
+    #             domain = expression.AND([filter_list])
+    #
+    #         if rec.model_name:
+    #             if rec.type == 'graph':
+    #                 self._cr.execute(self.env[rec.model_name].get_query(
+    #                     domain,
+    #                     rec.operation,
+    #                     rec.measured_field_id,
+    #                     start_date,
+    #                     end_date,
+    #                     group_by=rec.group_by_id))
+    #                 records = self._cr.dictfetchall()
+    #                 x_axis = []
+    #                 for record in records:
+    #                     if record.get('name') and isinstance(record.get('name'), dict):
+    #                         x_axis.append(record.get('name')[self._context.get('lang') or 'en_US'])
+    #                     else:
+    #                         x_axis.append(record.get(rec.group_by_id.name))
+    #                 y_axis = [record.get('value') for record in records]
+    #                 vals.update({'x_axis': x_axis, 'y_axis': y_axis})
+    #             else:
+    #                 self._cr.execute(self.env[rec.model_name].get_query(
+    #                     domain,
+    #                     rec.operation,
+    #                     rec.measured_field_id,
+    #                     start_date,
+    #                     end_date))
+    #                 records = self._cr.dictfetchall()
+    #                 magnitude = 0
+    #                 total = records[0].get('value')
+    #                 while abs(total) >= 1000:
+    #                     magnitude += 1
+    #                     total /= 1000.0
+    #                 val = '%.2f%s' % (total, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+    #                 records[0]['value'] = val
+    #                 vals.update(records[0])
+    #
+    #         block_id.append(vals)
+    #
+    #     return block_id
+
+
+
+# automatically give the job cards against the logined company
     def get_dashboard_vals(self, action_id, start_date=None, end_date=None):
         """Fetch block values from js and create chart"""
         block_id = []
+        user_company_id = self.env.user.company_id.id  # Logged-in user's company
+
         for rec in self.env['dashboard.block'].sudo().search(
                 [('client_action_id', '=', int(action_id))]):
-            if rec.filter is False:
-                rec.filter = "[]"
-            filter_list = literal_eval(rec.filter)
-            filter_list = [filter_item for filter_item in filter_list if not (
-                    isinstance(filter_item, tuple) and filter_item[
-                0] == 'create_date')]
+
+            # Step 1: Handle placeholder for company in filter string
+            filter_str = rec.filter or "[]"
+            filter_str = filter_str.replace('uid_company_id', str(user_company_id))
+
+            try:
+                filter_list = safe_eval(filter_str)
+            except Exception as e:
+                _logger.error("Error parsing filter for dashboard block %s: %s", rec.name, e)
+                filter_list = []
+
+            # Remove create_date domain if present
+            filter_list = [
+                f for f in filter_list
+                if not (isinstance(f, tuple) and f[0] == 'create_date')
+            ]
+
+            # Optional: update the filter field with cleaned domain
             rec.filter = repr(filter_list)
-            vals = {'id': rec.id, 'name': rec.name, 'type': rec.type,
-                    'graph_type': rec.graph_type, 'icon': rec.fa_icon,
-                    'model_name': rec.model_name,
-                    'color': f'background-color: {rec.tile_color};' if rec.tile_color else '#1f6abb;',
-                    'text_color': f'color: {rec.text_color};' if rec.text_color else '#FFFFFF;',
-                    'val_color': f'color: {rec.val_color};' if rec.val_color else '#FFFFFF;',
-                    'icon_color': f'color: {rec.tile_color};' if rec.tile_color else '#1f6abb;',
-                    'height': rec.height,
-                    'width': rec.width,
-                    'translate_x': rec.translate_x,
-                    'translate_y': rec.translate_y,
-                    'data_x': rec.data_x,
-                    'data_y': rec.data_y,
-                    'domain': filter_list,
-                    }
-            domain = []
-            if rec.filter:
-                domain = expression.AND([literal_eval(rec.filter)])
+
+            # Build domain ensuring company filter is present
+            domain = expression.AND([filter_list]) if filter_list else []
+            if not any(d[0] == 'company_id' for d in domain):
+                domain.append(('company_id', '=', user_company_id))
+
+            vals = {
+                'id': rec.id,
+                'name': rec.name,
+                'type': rec.type,
+                'graph_type': rec.graph_type,
+                'icon': rec.fa_icon,
+                'model_name': rec.model_name,
+                'color': f'background-color: {rec.tile_color};' if rec.tile_color else '#1f6abb;',
+                'text_color': f'color: {rec.text_color};' if rec.text_color else '#FFFFFF;',
+                'val_color': f'color: {rec.val_color};' if rec.val_color else '#FFFFFF;',
+                'icon_color': f'color: {rec.tile_color};' if rec.tile_color else '#1f6abb;',
+                'height': rec.height,
+                'width': rec.width,
+                'translate_x': rec.translate_x,
+                'translate_y': rec.translate_y,
+                'data_x': rec.data_x,
+                'data_y': rec.data_y,
+                'domain': filter_list,
+            }
+
             if rec.model_name:
                 if rec.type == 'graph':
-                    self._cr.execute(self.env[rec.model_name].get_query(domain,
-                                                                        rec.operation,
-                                                                        rec.measured_field_id,
-                                                                        start_date,
-                                                                        end_date,
-                                                                        group_by=rec.group_by_id))
+                    self._cr.execute(self.env[rec.model_name].get_query(
+                        domain,
+                        rec.operation,
+                        rec.measured_field_id,
+                        start_date,
+                        end_date,
+                        group_by=rec.group_by_id))
                     records = self._cr.dictfetchall()
                     x_axis = []
                     for record in records:
-                        if record.get('name') and type(
-                                record.get('name')) == dict:
-                            x_axis.append(record.get('name')[self._context.get(
-                                'lang') or 'en_US'])
+                        if record.get('name') and isinstance(record.get('name'), dict):
+                            x_axis.append(record.get('name')[self._context.get('lang') or 'en_US'])
                         else:
                             x_axis.append(record.get(rec.group_by_id.name))
-                    y_axis = []
-                    for record in records:
-                        y_axis.append(record.get('value'))
+                    y_axis = [record.get('value') for record in records]
                     vals.update({'x_axis': x_axis, 'y_axis': y_axis})
                 else:
-                    self._cr.execute(self.env[rec.model_name].get_query(domain,
-                                                                        rec.operation,
-                                                                        rec.measured_field_id,
-                                                                        start_date,
-                                                                        end_date))
+                    self._cr.execute(self.env[rec.model_name].get_query(
+                        domain,
+                        rec.operation,
+                        rec.measured_field_id,
+                        start_date,
+                        end_date))
                     records = self._cr.dictfetchall()
                     magnitude = 0
                     total = records[0].get('value')
                     while abs(total) >= 1000:
                         magnitude += 1
                         total /= 1000.0
-                    val = '%.2f%s' % (
-                        total, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+                    val = '%.2f%s' % (total, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
                     records[0]['value'] = val
                     vals.update(records[0])
+
             block_id.append(vals)
+
         return block_id
+
+
+
+
+
+
+
 
     def get_save_layout(self, grid_data_list):
         """Function fetch edited values while edit layout of the chart or tile
