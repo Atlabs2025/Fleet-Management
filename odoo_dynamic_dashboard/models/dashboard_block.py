@@ -84,7 +84,7 @@ class DashboardBlock(models.Model):
     model_name = fields.Char(related='model_id.model', string="Model Name",
                              help="Added model_id model")
     edit_mode = fields.Boolean(string="Edit Mode",
-                               help="Enable to edit chart and tile",)
+                               help="Enable to edit chart and tile", )
 
     @api.onchange('model_id')
     def _onchange_model_id(self):
@@ -251,9 +251,7 @@ class DashboardBlock(models.Model):
     #
     #     return block_id
 
-
-
-# automatically give the job cards against the logined company
+    # automatically give the job cards against the logined company
     def get_dashboard_vals(self, action_id, start_date=None, end_date=None):
         """Fetch block values from js and create chart"""
         block_id = []
@@ -344,13 +342,6 @@ class DashboardBlock(models.Model):
             block_id.append(vals)
 
         return block_id
-
-
-
-
-
-
-
 
     def get_save_layout(self, grid_data_list):
         """Function fetch edited values while edit layout of the chart or tile
