@@ -53,7 +53,6 @@ class JobCardManagement(models.Model):
     cust_type = fields.Selection(
         selection=[('individual', 'Individual'), ('company', 'Company')],
         string='Customer Type',
-        required=True
     )
 
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
@@ -500,6 +499,7 @@ class JobCardManagement(models.Model):
 
     # @api.onchange('cust_type')
     # def _onchange_cust_type(self):
+    #
     #     if self.cust_type == 'individual':
     #         return {
     #             'domain': {
@@ -720,6 +720,27 @@ class JobCardLine(models.Model):
 
 
 # added this funtion for fetching the labour line into time sheet
+#     @api.model
+#     def create(self, vals):
+#         print(">>> CREATE CALLED with vals:", vals)
+#         record = super().create(vals)
+#
+#         if record.department == 'labour':
+#             print(">>> Creating time sheet for labour line")
+#             timesheet_vals = {
+#                 'name': record.description,
+#                 'assigned_hours': record.quantity,
+#                 'job_category_id':record.job_category_id.id,
+#                 'date': fields.Date.today(),
+#                 'job_card_id': record.job_card_id.id,  # <-- ADD THIS
+#             }
+#             ts = self.env['job.card.time.sheet'].create(timesheet_vals)
+#             print(">>> Created timesheet ID:", ts.id)
+#
+#         return record
+
+   # added this function because of validation error you can use the above function if needed
+
     @api.model
     def create(self, vals):
         print(">>> CREATE CALLED with vals:", vals)
@@ -730,12 +751,17 @@ class JobCardLine(models.Model):
             timesheet_vals = {
                 'name': record.description,
                 'assigned_hours': record.quantity,
-                'job_category_id':record.job_category_id.id,
+                'job_category_id': record.job_category_id.id,
                 'date': fields.Date.today(),
-                'job_card_id': record.job_card_id.id,  # <-- ADD THIS
+                'job_card_id': record.job_card_id.id,
+                # No employee_id here
             }
-            ts = self.env['job.card.time.sheet'].create(timesheet_vals)
-            print(">>> Created timesheet ID:", ts.id)
+            try:
+                ts = self.env['job.card.time.sheet'].create(timesheet_vals)
+                print(">>> Created timesheet ID:", ts.id)
+            except ValidationError:
+                # Ignore the validation error about missing employee
+                pass
 
         return record
 
