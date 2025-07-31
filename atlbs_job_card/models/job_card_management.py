@@ -711,6 +711,7 @@ class JobCardLine(models.Model):
             if line.department == 'parts' and line.product_template_id:
                 line.price_unit = line.product_template_id.list_price
                 line.part_number = line.product_template_id.id
+                line.description = line.product_template_id.name
 
                 # Set tax_ids to 5%DB tax if found
                 tax = self.env['account.tax'].search([('name', '=', '5% DB')], limit=1)

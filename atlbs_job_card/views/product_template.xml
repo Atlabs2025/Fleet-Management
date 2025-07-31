@@ -11,6 +11,30 @@
         </xpath>
 
 
+<!--         <xpath expr="//div[hasclass('oe_title')]" position="inside">-->
+<!--                <field name="part_no" placeholder="e.g. Part No"/>-->
+<!--            </xpath>-->
+
+
+        <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                <div class="o_form_label o_td_label">
+                    <label for="part_no"/>
+                </div>
+                <div>
+                    <field name="part_no"/>
+                </div>
+            </xpath>
+
+
+
+
+
+
+        <xpath expr="//field[@name='default_code']" position="attributes">
+            <attribute name="string">Internal Reference</attribute>
+        </xpath>
+
+
     </field>
 </record>
 

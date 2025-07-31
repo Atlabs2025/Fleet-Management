@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_job_card_management,access_job_card_management,model_job_card_management,base.group_user,1,1,1,1
+
 access_job_card_line,access_job_card_line,model_job_card_line,base.group_user,1,1,1,1
 access_job_card_invoice_wizard,access_job_card_invoice_wizard,model_job_card_invoice_wizard,base.group_user,1,1,1,1
 access_job_card_invoice_wizard_line,access_job_card_invoice_wizard_line,model_job_card_invoice_wizard_line,base.group_user,1,1,1,1
