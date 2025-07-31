@@ -158,7 +158,8 @@
                                     <field name="department" readonly="parent.estimate_id"/>
                                     <field name="product_template_id" readonly="parent.estimate_id"/>
                                     <field name="part_number" readonly="parent.estimate_id"/>
-                                    <field name="job_category_id" readonly="parent.estimate_id"/>
+<!--                                    removed category temporarily-->
+<!--                                    <field name="job_category_id" readonly="parent.estimate_id"/>-->
                                     <field name="description" readonly="parent.estimate_id"/>
                                     <field name="quantity" readonly="parent.estimate_id"/>
                                     <field name="price_unit" readonly="parent.estimate_id"/>

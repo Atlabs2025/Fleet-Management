@@ -16,8 +16,7 @@ class ProductTemplate(models.Model):
 
     service_amount = fields.Float(string="Service Amount")
 
-
-
+    part_no = fields.Char(string="Part.No")
 
     @api.onchange('menu_service')
     def _onchange_menu_service(self):
@@ -33,5 +32,14 @@ class ProductTemplate(models.Model):
             else:
                 rec.service_amount = 0.0
 
+    @api.onchange('part_no')
+    def _onchange_part_no(self):
+        if self.part_no != self.default_code:
+            self.default_code = self.part_no
 
 
+
+    @api.onchange('default_code')
+    def _onchange_default_code(self):
+        if self.default_code != self.part_no:
+            self.part_no = self.default_code

@@ -552,13 +552,25 @@ class MaterialPurchaseRequisition(models.Model):
         return res
         
     #@api.multi
+    # def action_show_po(self):
+    #     # for rec in self:
+    #     #     purchase_action = self.env.ref('purchase.purchase_rfq')
+    #     #     purchase_action = purchase_action.sudo().read()[0]
+    #     self.ensure_one()
+    #     purchase_action = self.env['ir.actions.act_window']._for_xml_id('purchase.purchase_rfq')
+    #     purchase_action['domain'] = str([('custom_requisition_id','=',self.id)])
+    #     return purchase_action
+
+    # function added on july31 for fetching details from material purchase
+
     def action_show_po(self):
-        # for rec in self:
-        #     purchase_action = self.env.ref('purchase.purchase_rfq')
-        #     purchase_action = purchase_action.sudo().read()[0]
         self.ensure_one()
         purchase_action = self.env['ir.actions.act_window']._for_xml_id('purchase.purchase_rfq')
-        purchase_action['domain'] = str([('custom_requisition_id','=',self.id)])
+        purchase_action['domain'] = [('custom_requisition_id', '=', self.id)]
+        purchase_action['context'] = {
+            'default_custom_requisition_id': self.id,
+            'default_origin': self.name,
+        }
         return purchase_action
 
     # @api.model
