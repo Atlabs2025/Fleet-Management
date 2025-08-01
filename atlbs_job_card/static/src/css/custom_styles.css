@@ -119,6 +119,7 @@
 /* Shrink row height without expanding columns */
 .small-pages .o_list_view tbody tr {
     height: 24px !important;  /* Compact rows */
+
 }
 
 /* Tighten padding and font size inside list cells */
