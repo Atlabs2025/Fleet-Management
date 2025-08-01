@@ -10,8 +10,8 @@
                 <field name="partner_id"/>
                 <field name="vin_sn" optional="hide"/>
                 <field name="is_insurance_claim" optional="hide"/>
-<!--                <field name="register_id" optional="hide"/>-->
-                 <field name="created_datetime"/>
+                <!--                <field name="register_id" optional="hide"/>-->
+                <field name="created_datetime"/>
                 <field name="total_amount" optional="hide"/>
                 <field name="state"/>
 
@@ -27,13 +27,14 @@
         <field name="arch" type="xml">
             <form string="Estimate">
                 <header>
-                    <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,memo,approved,completed"/>
+                    <field name="state" readonly="1" widget="statusbar"
+                           statusbar_visible="draft,memo,approved,completed"/>
                     <!-- Add this button -->
                     <button name="action_create_job_card"
                             type="object"
                             string="Create Job Card"
                             class="btn-primary"
-                             invisible="state != 'approved' or job_card_id != False"/>
+                            invisible="state != 'approved' or job_card_id != False"/>
 
                     <button name="action_approve_estimate" string="Approve" type="object"
                             class="btn-primary" invisible="state != 'draft'"/>
@@ -50,9 +51,10 @@
                     </div>
 
                     <group col="3" style="margin-top: -50px !important; padding-top: 0px !important;">
-                        <separator string="Customer Details" colspan="3" style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
+                        <separator string="Customer Details" colspan="3"
+                                   style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
 
-<!--                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>-->
+                        <!--                                   style="margin-bottom: 2px !important;color: #7A9598; font-size: 13px !important;"/>-->
 
 
                         <group class="small-fields-group">
@@ -78,13 +80,14 @@
                         </group>
                     </group>
                     <group col="3" style="margin-top: -30px !important; padding-top: 0px !important;">
-                        <separator string="Vehicle Details" colspan="3" style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
-<!--                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>-->
+                        <separator string="Vehicle Details" colspan="3"
+                                   style="background-color: #88A3B5; color: #FFFFFF; padding: 6px 10px;font-size: 13px !important; font-weight: bold; border-radius: 4px;margin-bottom: 8px !important;"/>
+                        <!--                                   style="margin-bottom: 2px !important; color:  #7A9598;font-size: 13px !important;"/>-->
 
 
                         <group class="small-fields-group">
                             <field name="register_no"/>
-<!--                            <field name="vehicle_id"/>-->
+                            <!--                            <field name="vehicle_id"/>-->
                             <field name="vehicle_make_id"/>
                             <field name="contract_status"/>
                             <field name="service_advisor_id" readonly="1"/>
@@ -118,29 +121,84 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Job Details" class="small-page">
-                            <field name="estimate_detail_line_ids">
-                                <list editable="bottom">
-                                    <field name="department"/>
-                                    <field name="product_template_id"/>
-                                    <field name="part_number"/>
-                                    <field name="job_category_id"/>
-                                    <field name="description"/>
-                                    <field name="quantity"/>
-                                    <field name="price_unit"/>
-                                    <field name="price_amt"/>
-                                    <field name="discount"/>
-                                    <field name="after_discount"/>
-                                    <field name="tax_ids" widget="many2many_tags"/>
-                                    <field name="tax_amount"/>
-                                    <field name="total" readonly="1"/>
-                                    <field name="line_state" required="1"/>
+                        <!--                        <page string="Job Details" class="small-page">-->
+                        <!--&lt;!&ndash;                             <div style="min-height: 200px;overflow: auto; width: 100%; margin-bottom: 15px; border: 1px solid #ccc; padding: 15px;">&ndash;&gt;-->
+                        <!--&lt;!&ndash;                            <div style="overflow-x: auto; overflow-y: visible; width: 100%;">&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                <div style="min-height: 200px;overflow: auto; width: 100%; margin-bottom: 15px; border: 1px solid #ccc; padding: 15px;">&ndash;&gt;-->
+                        <!--                            <field name="estimate_detail_line_ids">-->
+                        <!--                                <list editable="bottom">-->
+                        <!--                                    <field name="department"/>-->
+                        <!--                                    <field name="product_template_id"/>-->
+                        <!--                                    <field name="part_number"/>-->
+                        <!--                                    <field name="job_category_id"/>-->
+                        <!--                                    <field name="description"/>-->
+                        <!--                                    <field name="quantity"/>-->
+                        <!--                                    <field name="price_unit"/>-->
+                        <!--                                    <field name="price_amt"/>-->
+                        <!--                                    <field name="discount"/>-->
+                        <!--                                    <field name="after_discount"/>-->
+                        <!--                                    <field name="tax_ids" widget="many2many_tags"/>-->
+                        <!--                                    <field name="tax_amount"/>-->
+                        <!--                                    <field name="total" readonly="1"/>-->
+                        <!--                                    <field name="line_state" required="1"/>-->
 
-                                </list>
-                            </field>
+                        <!--                                </list>-->
+                        <!--                            </field>-->
+                        <!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+
+                        <!--                            <group>-->
+                        <!--                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">-->
+                        <!--                                    &lt;!&ndash; Summary Totals &ndash;&gt;-->
+                        <!--                                    <div>-->
+                        <!--                                        <group string="Summary" col="2">-->
+                        <!--                                            <field name="total_labour" readonly="1"/>-->
+                        <!--                                            <field name="total_parts" readonly="1"/>-->
+                        <!--                                            <field name="total_material" readonly="1"/>-->
+                        <!--                                            <field name="total_lubricant" readonly="1"/>-->
+                        <!--                                            <field name="total_sublets" readonly="1"/>-->
+                        <!--                                            <field name="total_paint_material" readonly="1"/>-->
+                        <!--                                            <field name="total_tyre" readonly="1"/>-->
+                        <!--                                        </group>-->
+                        <!--                                    </div>-->
+
+                        <!--                                    <div style="flex: 1; margin-left: 700px;margin-top: 75px;">-->
+                        <!--                                        <group col="2" style="font-size: 14px; font-weight: 600;">-->
+                        <!--                                            <field name="total_price_amt" readonly="1" widget="monetary"/>-->
+                        <!--                                            <field name="total_discount" readonly="1" widget="monetary"/>-->
+                        <!--                                            <field name="subtotal" readonly="1" widget="monetary"/>-->
+                        <!--                                            <field name="vat_total" readonly="1" widget="monetary"/>-->
+                        <!--                                            <field name="total_amount" readonly="1" widget="monetary"-->
+                        <!--                                                   string="Grand Total"/>-->
+                        <!--                                        </group>-->
+                        <!--                                    </div>-->
+                        <!--                                </div>-->
+                        <!--                            </group>-->
+                        <!--                        </page>-->
+<!--                        changes added for lines expanding-->
+                        <page string="Job Details" class="small-page">
+                            <div style="overflow-x: hidden; width: 100%;min-height: 200px; margin-bottom: 15px; border: 1px solid #ccc; padding: 15px;">
+                                <field name="estimate_detail_line_ids">
+                                    <list editable="bottom">
+                                        <field name="department"/>
+                                        <field name="product_template_id"/>
+                                        <field name="part_number"/>
+                                        <field name="job_category_id"/>
+                                        <field name="description"/>
+                                        <field name="quantity"/>
+                                        <field name="price_unit"/>
+                                        <field name="price_amt"/>
+                                        <field name="discount"/>
+                                        <field name="after_discount"/>
+                                        <field name="tax_ids" widget="many2many_tags"/>
+                                        <field name="tax_amount"/>
+                                        <field name="total" readonly="1"/>
+                                        <field name="line_state" required="1"/>
+                                    </list>
+                                </field>
+                            </div>
 
                             <group>
-                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">
+                                <div style="display: flex; justify-content: space-between; margin-top: 24px; gap: 2px;">
                                     <!-- Summary Totals -->
                                     <div>
                                         <group string="Summary" col="2">
@@ -154,19 +212,19 @@
                                         </group>
                                     </div>
 
-                                    <div style="flex: 1; margin-left: 700px;margin-top: 75px;">
+                                    <div style="flex: 1; margin-left: 1000px; margin-top: 75px;">
                                         <group col="2" style="font-size: 14px; font-weight: 600;">
                                             <field name="total_price_amt" readonly="1" widget="monetary"/>
                                             <field name="total_discount" readonly="1" widget="monetary"/>
                                             <field name="subtotal" readonly="1" widget="monetary"/>
                                             <field name="vat_total" readonly="1" widget="monetary"/>
-                                            <field name="total_amount" readonly="1" widget="monetary"
-                                                   string="Grand Total"/>
+                                            <field name="total_amount" readonly="1" widget="monetary" string="Grand Total"/>
                                         </group>
                                     </div>
                                 </div>
                             </group>
                         </page>
+
                     </notebook>
 
                 </sheet>
@@ -176,21 +234,20 @@
     </record>
 
     <record id="view_job_estimate_search" model="ir.ui.view">
-    <field name="name">job.card.estimate.search</field>
-    <field name="model">job.card.estimate</field>
-    <field name="arch" type="xml">
-        <search string="Search Estimates">
-            <field name="name" string="Estimate Number"/>
-            <field name="partner_id" string="Customer"/>
-            <field name="vin_sn" string="Chassis Number"/>
-            <!-- Optional filters -->
-            <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]" help="Draft Job Cards"/>
-            <filter name="filter_memo" string="Memo" domain="[('state','=','memo')]"/>
-            <filter name="filter_completed" string="Completed" domain="[('state','=','completed')]"/>
-        </search>
-    </field>
-</record>
-
+        <field name="name">job.card.estimate.search</field>
+        <field name="model">job.card.estimate</field>
+        <field name="arch" type="xml">
+            <search string="Search Estimates">
+                <field name="name" string="Estimate Number"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="vin_sn" string="Chassis Number"/>
+                <!-- Optional filters -->
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]" help="Draft Job Cards"/>
+                <filter name="filter_memo" string="Memo" domain="[('state','=','memo')]"/>
+                <filter name="filter_completed" string="Completed" domain="[('state','=','completed')]"/>
+            </search>
+        </field>
+    </record>
 
 
     <!--     Action-->
