@@ -621,65 +621,108 @@ class JobCardLine(models.Model):
             line.is_request_completed = completed
             line.is_request_pending = pending
 
+
+# working sales tax
+#     @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
+#     def _compute_total(self):
+#         for line in self:
+#             # Step 1: Calculate Amount (Quantity * Price)
+#             amount = line.price_unit * line.quantity
+#             line.price_amt = amount  # Update the price_amt field with the calculated amount
+#
+#             # Step 2: Apply Discount
+#             discount_amount = amount * (line.discount / 100.0)
+#             after_discount_amount = amount - discount_amount
+#             line.after_discount = after_discount_amount
+#
+#             # Step 3: Apply VAT (tax percentage)
+#             vat_amount = 0.0
+#             if line.tax_ids:
+#                 for tax in line.tax_ids:
+#                     if tax.amount:  # Check if there's a valid tax percentage
+#                         vat_amount += after_discount_amount * (tax.amount / 100.0)
+#
+#             line.tax_amount = vat_amount
+#
+#             # Step 4: Total = After Discount + VAT Amount
+#             line.total = after_discount_amount + vat_amount
+
     # @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
     # def _compute_total(self):
     #     for line in self:
-    #         # Step 1: Calculate Amount (Quantity * Price)
+    #         # Step 1: Base amount
     #         amount = line.price_unit * line.quantity
+    #         line.price_amt = amount
     #
-    #         # Step 2: Apply Discount
-    #         discount_amount = amount * (line.discount / 100.0)
-    #         after_discount_amount = amount - discount_amount
-    #         line.after_discount = after_discount_amount
+    #         # Step 2: Discount
+    #         discount_amt = amount * (line.discount / 100.0)
+    #         after_discount = amount - discount_amt
+    #         line.after_discount = after_discount
     #
-    #         # Step 3: Apply VAT (tax percentage)
-    #         vat_amount = 0.0
-    #         if line.tax_ids:
-    #             for tax in line.tax_ids:
-    #                 if tax.amount:  # Check if there's a valid tax percentage
-    #                     vat_amount += after_discount_amount * (tax.amount / 100.0)
+    #         # Step 3: Classify taxes
+    #         inclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_included')
+    #         exclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_excluded')
     #
-    #         line.tax_amount = vat_amount
+    #         # Step 4: Inclusive tax part
+    #         base_amount = after_discount
+    #         tax_inclusive_amt = 0.0
     #
-    #         # Step 4: Total = After Discount + VAT Amount
-    #         line.total = after_discount_amount + vat_amount
-
+    #         if inclusive_taxes:
+    #             total_inclusive_percent = sum(t.amount for t in inclusive_taxes)
+    #             divisor = 1 + (total_inclusive_percent / 100.0)
+    #             base_amount = after_discount / divisor
+    #             tax_inclusive_amt = after_discount - base_amount
+    #         else:
+    #             base_amount = after_discount
+    #
+    #         # Step 5: Exclusive tax part
+    #         tax_exclusive_amt = 0.0
+    #         for tax in exclusive_taxes:
+    #             tax_exclusive_amt += base_amount * (tax.amount / 100.0)
+    #
+    #         # Step 6: Set computed values
+    #         total_tax = tax_inclusive_amt + tax_exclusive_amt
+    #         line.tax_amount = total_tax
+    #         line.total = base_amount + tax_exclusive_amt
+# this function include tax included and default tax ok
     @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
     def _compute_total(self):
         for line in self:
-            # Step 1: Calculate Amount (Quantity * Price)
             amount = line.price_unit * line.quantity
-            line.price_amt = amount  # Update the price_amt field with the calculated amount
+            line.price_amt = amount
 
-            # Step 2: Apply Discount
-            discount_amount = amount * (line.discount / 100.0)
-            after_discount_amount = amount - discount_amount
-            line.after_discount = after_discount_amount
+            # Step 1: Apply discount
+            discount_amt = amount * (line.discount / 100.0)
+            after_discount = amount - discount_amt
+            line.after_discount = after_discount
 
-            # Step 3: Apply VAT (tax percentage)
-            vat_amount = 0.0
-            if line.tax_ids:
-                for tax in line.tax_ids:
-                    if tax.amount:  # Check if there's a valid tax percentage
-                        vat_amount += after_discount_amount * (tax.amount / 100.0)
+            tax_inclusive_amt = 0.0
+            tax_exclusive_amt = 0.0
+            base_amount = after_discount
 
-            line.tax_amount = vat_amount
+            # Classify taxes based on override field
+            inclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_included')
+            exclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_excluded')
+            default_taxes = line.tax_ids.filtered(lambda t: not t.price_include_override)
 
-            # Step 4: Total = After Discount + VAT Amount
-            line.total = after_discount_amount + vat_amount
+            # Step 2: Inclusive tax calculation
+            if inclusive_taxes:
+                total_inclusive_percent = sum(t.amount for t in inclusive_taxes)
+                divisor = 1 + (total_inclusive_percent / 100.0)
+                base_amount = after_discount / divisor
+                tax_inclusive_amt = after_discount - base_amount
+            else:
+                base_amount = after_discount
 
+            # Step 3: Exclusive and default tax calculation
+            for tax in exclusive_taxes + default_taxes:
+                tax_exclusive_amt += base_amount * (tax.amount / 100.0)
 
+            # Step 4: Set computed values
+            total_tax = tax_inclusive_amt + tax_exclusive_amt
+            line.tax_amount = total_tax
+            line.total = base_amount + tax_exclusive_amt
 
-
-
-    # @api.depends('price_unit', 'quantity', 'discount')
-    # def _compute_total(self):
-    #     for line in self:
-    #         subtotal = line.price_unit * line.quantity
-    #         discount_amount = subtotal * (line.discount / 100.0)
-    #         line.total = subtotal - discount_amount
-
-# commented on saturday complete button add cheyyan paranjath kondu
     def write(self, vals):
         res = super().write(vals)
         for line in self:
