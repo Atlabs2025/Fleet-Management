@@ -139,7 +139,7 @@
                         </group>
                     </group>
 
-                    <notebook class="small-pages">
+                    <notebook>
 
                         <page string="Concerns">
                             <field name="complaint_ids">
@@ -152,7 +152,7 @@
                         </page>
 
 
-                        <page string="Job Details" class="small-page">
+                        <page string="Job Details">
                             <field name="job_detail_line_ids">
                                 <list editable="bottom">
                                     <field name="department" readonly="parent.estimate_id"/>
@@ -176,42 +176,76 @@
                                     <field name="is_request_pending" column_invisible="1"/>
                                     <field name="is_request_completed" column_invisible="1"/>
 
-                                    <field name="is_checked"/>
-
+                                    <field name="is_checked" invisible="1"/>
 
                                 </list>
                             </field>
                             <br/><br/>
 
+<!--                            <group>-->
+<!--                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">-->
+<!--                                    &lt;!&ndash; Summary Totals &ndash;&gt;-->
+<!--                                    <div>-->
+<!--                                        <group string="Summary" col="2">-->
+<!--                                            <field name="total_labour" readonly="1"/>-->
+<!--                                            <field name="total_parts" readonly="1"/>-->
+<!--                                            <field name="total_material" readonly="1"/>-->
+<!--                                            <field name="total_lubricant" readonly="1"/>-->
+<!--                                            <field name="total_sublets" readonly="1"/>-->
+<!--                                            <field name="total_paint_material" readonly="1"/>-->
+<!--                                            <field name="total_tyre" readonly="1"/>-->
+<!--                                        </group>-->
+<!--                                    </div>-->
 
+<!--                                    <div style="flex: 1; margin-left: 800px;margin-top: 75px;">-->
+<!--                                        <group col="2" style="font-size: 14px; font-weight: 600;">-->
+<!--                                            <field name="total_price_amt" readonly="1" widget="monetary"/>-->
+<!--                                            <field name="total_discount" readonly="1" widget="monetary"/>-->
+<!--                                            <field name="subtotal" readonly="1" widget="monetary"/>-->
+<!--                                            <field name="vat_total" readonly="1" widget="monetary"/>-->
+<!--                                            <field name="total_amount" readonly="1" widget="monetary"-->
+<!--                                                   string="Grand Total"/>-->
+<!--                                        </group>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 
-                            <group class="oe_subtotal_footer_separator">
-                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">
-                                    <!-- Summary Totals -->
-                                    <div>
-                                        <group string="Summary" col="2">
-                                            <field name="total_labour" readonly="1"/>
-                                            <field name="total_parts" readonly="1"/>
-                                            <field name="total_material" readonly="1"/>
-                                            <field name="total_lubricant" readonly="1"/>
-                                            <field name="total_sublets" readonly="1"/>
-                                            <field name="total_paint_material" readonly="1"/>
-                                            <field name="total_tyre" readonly="1"/>
-                                        </group>
+<!--                            </group>-->
+<!--                            code changed for lines scrolling issue page classes and all removed-->
+                            <group class="oe_subtotal_footer" colspan="2">
+                                <div style="display: flex; justify-content: space-between; gap: 40px; width: 100%;">
+
+                                    <!-- Left Column Totals -->
+                                    <div style="flex: 1;">
+                                        <div style="display: grid; grid-template-columns: auto 1fr; row-gap: 6px; column-gap: 8px;">
+                                            <group string="Summary" col="2" style="text-align: left;">
+                                                <field name="total_labour" readonly="1"/>
+                                                <field name="total_parts" readonly="1"/>
+                                                <field name="total_material" readonly="1"/>
+                                                <field name="total_lubricant" readonly="1"/>
+                                                <field name="total_sublets" readonly="1"/>
+                                                <field name="total_paint_material" readonly="1"/>
+                                                <field name="total_tyre" readonly="1"/>
+                                            </group>
+                                        </div>
                                     </div>
 
-                                    <div style="flex: 1; margin-left: 700px;margin-top: 75px;">
-                                        <group col="2" style="font-size: 14px; font-weight: 600;">
-                                            <field name="total_price_amt" readonly="1" widget="monetary"/>
-                                            <field name="total_discount" readonly="1" widget="monetary"/>
-                                            <field name="subtotal" readonly="1" widget="monetary"/>
-                                            <field name="vat_total" readonly="1" widget="monetary"/>
-                                            <field name="total_amount" readonly="1" widget="monetary"
-                                                   string="Grand Total"/>
-                                        </group>
+                                    <!-- Right Column Totals -->
+                                    <div style="flex: 1; margin-left: 700px;">
+                                        <div style="display: grid; grid-template-columns: auto 1fr; row-gap: 6px; column-gap: 8px; font-weight: 600; text-align: left;">
+                                            <group string="" col="2" style="font-weight: 600;">
+                                                <field name="total_price_amt" readonly="1" widget="monetary"/>
+                                                <field name="total_discount" readonly="1" widget="monetary"/>
+                                                <field name="subtotal" readonly="1" widget="monetary"/>
+                                                <field name="vat_total" readonly="1" widget="monetary"/>
+                                                <field name="total_amount" readonly="1" widget="monetary"
+                                                       string="Grand Total"/>
+                                            </group>
+                                        </div>
                                     </div>
+
                                 </div>
                             </group>
+
 
                         </page>
 
@@ -219,7 +253,7 @@
 <!--edited code on august 1 changes scrolling in the lines-->
 
 
-                        <page string="Requisition Lines" class="small-page">
+                        <page string="Requisition Lines">
                             <field name="material_request_ids">
                                 <list editable="bottom">
                                     <field name="employee_id"/>
@@ -232,7 +266,7 @@
                             </field>
                         </page>
 
-                        <page string="Services" class="small-page">
+                        <page string="Services">
                             <field name="service_line_ids">
                                 <list editable="bottom">
                                     <field name="menu_service"/>
@@ -243,7 +277,7 @@
                         </page>
 
 
-                        <page string="Time Sheet" class="small-page">
+                        <page string="Time Sheet">
                             <field name="time_sheet_ids">
                                 <list editable="bottom">
                                     <field name="date" readonly="1"/>

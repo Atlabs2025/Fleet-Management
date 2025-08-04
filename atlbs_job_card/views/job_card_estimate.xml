@@ -111,7 +111,7 @@
                     </group>
 
 
-                    <notebook class="small-pages">
+                    <notebook>
                         <page string="Concerns">
                             <field name="complaint_ids">
                                 <list editable="bottom">
@@ -121,62 +121,12 @@
                                 </list>
                             </field>
                         </page>
-                        <!--                        <page string="Job Details" class="small-page">-->
-                        <!--&lt;!&ndash;                             <div style="min-height: 200px;overflow: auto; width: 100%; margin-bottom: 15px; border: 1px solid #ccc; padding: 15px;">&ndash;&gt;-->
-                        <!--&lt;!&ndash;                            <div style="overflow-x: auto; overflow-y: visible; width: 100%;">&ndash;&gt;-->
-                        <!--&lt;!&ndash;                                <div style="min-height: 200px;overflow: auto; width: 100%; margin-bottom: 15px; border: 1px solid #ccc; padding: 15px;">&ndash;&gt;-->
-                        <!--                            <field name="estimate_detail_line_ids">-->
-                        <!--                                <list editable="bottom">-->
-                        <!--                                    <field name="department"/>-->
-                        <!--                                    <field name="product_template_id"/>-->
-                        <!--                                    <field name="part_number"/>-->
-                        <!--                                    <field name="job_category_id"/>-->
-                        <!--                                    <field name="description"/>-->
-                        <!--                                    <field name="quantity"/>-->
-                        <!--                                    <field name="price_unit"/>-->
-                        <!--                                    <field name="price_amt"/>-->
-                        <!--                                    <field name="discount"/>-->
-                        <!--                                    <field name="after_discount"/>-->
-                        <!--                                    <field name="tax_ids" widget="many2many_tags"/>-->
-                        <!--                                    <field name="tax_amount"/>-->
-                        <!--                                    <field name="total" readonly="1"/>-->
-                        <!--                                    <field name="line_state" required="1"/>-->
 
-                        <!--                                </list>-->
-                        <!--                            </field>-->
-                        <!--&lt;!&ndash;                            </div>&ndash;&gt;-->
 
-                        <!--                            <group>-->
-                        <!--                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">-->
-                        <!--                                    &lt;!&ndash; Summary Totals &ndash;&gt;-->
-                        <!--                                    <div>-->
-                        <!--                                        <group string="Summary" col="2">-->
-                        <!--                                            <field name="total_labour" readonly="1"/>-->
-                        <!--                                            <field name="total_parts" readonly="1"/>-->
-                        <!--                                            <field name="total_material" readonly="1"/>-->
-                        <!--                                            <field name="total_lubricant" readonly="1"/>-->
-                        <!--                                            <field name="total_sublets" readonly="1"/>-->
-                        <!--                                            <field name="total_paint_material" readonly="1"/>-->
-                        <!--                                            <field name="total_tyre" readonly="1"/>-->
-                        <!--                                        </group>-->
-                        <!--                                    </div>-->
-
-                        <!--                                    <div style="flex: 1; margin-left: 700px;margin-top: 75px;">-->
-                        <!--                                        <group col="2" style="font-size: 14px; font-weight: 600;">-->
-                        <!--                                            <field name="total_price_amt" readonly="1" widget="monetary"/>-->
-                        <!--                                            <field name="total_discount" readonly="1" widget="monetary"/>-->
-                        <!--                                            <field name="subtotal" readonly="1" widget="monetary"/>-->
-                        <!--                                            <field name="vat_total" readonly="1" widget="monetary"/>-->
-                        <!--                                            <field name="total_amount" readonly="1" widget="monetary"-->
-                        <!--                                                   string="Grand Total"/>-->
-                        <!--                                        </group>-->
-                        <!--                                    </div>-->
-                        <!--                                </div>-->
-                        <!--                            </group>-->
-                        <!--                        </page>-->
-<!--                        changes added for lines expanding-->
-                        <page string="Job Details" class="small-page">
-                            <div style="overflow-x: hidden; width: 100%;min-height: 200px; margin-bottom: 15px; border: 1px solid #ccc; padding: 15px;">
+                        <page string="Job Details">
+                            <!-- Scrollable List Section -->
+<!--                            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">-->
+                            <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
                                 <field name="estimate_detail_line_ids">
                                     <list editable="bottom">
                                         <field name="department"/>
@@ -197,11 +147,77 @@
                                 </field>
                             </div>
 
-                            <group>
-                                <div style="display: flex; justify-content: space-between; margin-top: 24px; gap: 2px;">
-                                    <!-- Summary Totals -->
-                                    <div>
-                                        <group string="Summary" col="2">
+                            <!-- Summary Section Below Lines -->
+<!--                            <group class="oe_subtotal_footer oe_left" colspan="2">-->
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_labour"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_labour" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_parts"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_parts" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_material"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_material" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_lubricant"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_lubricant" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_sublets"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_sublets" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_paint_material"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_paint_material" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_tyre"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_tyre" nolabel="1"/>-->
+
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_price_amt"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_price_amt" widget="monetary" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_discount"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_discount" widget="monetary" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="subtotal"/>-->
+<!--                                </div>-->
+<!--                                <field name="subtotal" widget="monetary" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="vat_total"/>-->
+<!--                                </div>-->
+<!--                                <field name="vat_total" widget="monetary" nolabel="1"/>-->
+
+<!--                                <div class="oe_inline o_td_label">-->
+<!--                                    <label for="total_amount"/>-->
+<!--                                </div>-->
+<!--                                <field name="total_amount" widget="monetary" nolabel="1" string="Grand Total"/>-->
+<!--                            </group>-->
+
+                            <group class="oe_subtotal_footer" colspan="2">
+                                <div style="display: flex; justify-content: space-between; gap: 40px; width: 100%;">
+
+                                    <!-- Left Column Totals -->
+                                    <div style="flex: 1;">
+                                        <div style="display: grid; grid-template-columns: auto 1fr; row-gap: 6px; column-gap: 8px;">
+                                        <group string="Summary" col="2" style="text-align: left;">
                                             <field name="total_labour" readonly="1"/>
                                             <field name="total_parts" readonly="1"/>
                                             <field name="total_material" readonly="1"/>
@@ -210,20 +226,28 @@
                                             <field name="total_paint_material" readonly="1"/>
                                             <field name="total_tyre" readonly="1"/>
                                         </group>
+                                        </div>
                                     </div>
 
-                                    <div style="flex: 1; margin-left: 1000px; margin-top: 75px;">
-                                        <group col="2" style="font-size: 14px; font-weight: 600;">
+                                    <!-- Right Column Totals -->
+                                    <div style="flex: 1; margin-left: 700px;">
+                                            <div style="display: grid; grid-template-columns: auto 1fr; row-gap: 6px; column-gap: 8px; font-weight: 600; text-align: left;">
+                                        <group string="" col="2" style="font-weight: 600;">
                                             <field name="total_price_amt" readonly="1" widget="monetary"/>
                                             <field name="total_discount" readonly="1" widget="monetary"/>
                                             <field name="subtotal" readonly="1" widget="monetary"/>
                                             <field name="vat_total" readonly="1" widget="monetary"/>
-                                            <field name="total_amount" readonly="1" widget="monetary" string="Grand Total"/>
+                                            <field name="total_amount" readonly="1" widget="monetary"
+                                                   string="Grand Total"/>
                                         </group>
+                                            </div>
                                     </div>
+
                                 </div>
                             </group>
+
                         </page>
+
 
                     </notebook>
 
