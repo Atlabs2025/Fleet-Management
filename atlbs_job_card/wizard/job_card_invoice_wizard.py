@@ -85,258 +85,6 @@ class JobCardInvoiceWizard(models.TransientModel):
 
 
 
-# code changed for fetching the product if the department is parts
-#     def action_create_invoice(self):
-#         self.ensure_one()
-#
-#         selected_lines = self.line_ids.filtered(lambda l: l.selected)
-#         if not selected_lines:
-#             raise UserError("Please select at least one line to invoice.")
-#
-#         invoice_lines = []
-#         for line in selected_lines:
-#             if line.quantity <= 0:
-#                 raise UserError(f"Quantity must be greater than 0 for line: {line.description}")
-#
-#             # Get product_id only if department is 'parts' and product_template_id is set
-#             product_id = False
-#             if line.department == 'parts' and line.product_template_id:
-#                 product_id = line.product_template_id.product_variant_id.id
-#
-#             invoice_lines.append((0, 0, {
-#                 'name': f"{line.department or ''} - {line.description}",
-#                 'product_id': product_id,
-#                 'quantity': line.quantity,
-#                 'price_unit': line.price_unit,
-#                 'discount': line.discount,
-#             }))
-#
-#         if not invoice_lines:
-#             raise UserError("No valid lines to invoice.")
-#
-#         invoice_vals = {
-#             'partner_id': self.job_card_id.partner_id.id,
-#             'invoice_origin': f"Job Card: {self.job_card_id.name}",
-#             'move_type': 'out_invoice',
-#             'invoice_line_ids': invoice_lines,
-#         }
-#
-#         invoice = self.env['account.move'].create(invoice_vals)
-#
-#         # Mark original job card lines as invoiced and update line state
-#         for wizard_line in selected_lines:
-#             if wizard_line.line_id:
-#                 wizard_line.line_id.write({
-#                     'invoiced': True,
-#                     'line_state': 'x_state',
-#                 })
-#
-#         return {
-#             'type': 'ir.actions.act_window',
-#             'name': 'Customer Invoice',
-#             'view_mode': 'form',
-#             'res_model': 'account.move',
-#             'res_id': invoice.id,
-#             'target': 'current',
-#         }
-#  code changed for invoice creation  and decreesing stock
-#     def action_create_invoice(self):
-#         self.ensure_one()
-#
-#         selected_lines = self.line_ids.filtered(lambda l: l.selected)
-#         if not selected_lines:
-#             raise UserError("Please select at least one line to invoice.")
-#
-#         invoice_lines = []
-#         stock_moves = []
-#
-#         for line in selected_lines:
-#             if line.quantity <= 0:
-#                 raise UserError(f"Quantity must be greater than 0 for line: {line.description}")
-#
-#             product_id = False
-#             if line.department == 'parts' and line.product_template_id:
-#                 product = line.product_template_id.product_variant_id
-#                 product_id = product.id
-#
-#                 # Add to stock move list
-#                 stock_moves.append((0, 0, {
-#                     'name': product.name,
-#                     'product_id': product.id,
-#                     'product_uom_qty': line.quantity,
-#                     'product_uom': product.uom_id.id,
-#                     'location_id': self.env.ref('stock.stock_location_stock').id,
-#                     'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
-#                 }))
-#
-#             invoice_lines.append((0, 0, {
-#                 'name': f"{line.department or ''} - {line.description}",
-#                 'product_id': product_id,
-#                 'quantity': line.quantity,
-#                 'price_unit': line.price_unit,
-#                 'discount': line.discount,
-#
-#             }))
-#
-#         if not invoice_lines:
-#             raise UserError("No valid lines to invoice.")
-#
-#         invoice_vals = {
-#             'partner_id': self.job_card_id.partner_id.id,
-#             'invoice_origin': f"Job Card: {self.job_card_id.name}",
-#             'move_type': 'out_invoice',
-#             'invoice_line_ids': invoice_lines,
-#             'job_card_id': self.job_card_id.id,
-#         }
-#
-#         invoice = self.env['account.move'].create(invoice_vals)
-#
-#         # ✅ Create and validate delivery order if stock moves exist
-#         if stock_moves:
-#             picking = self.env['stock.picking'].create({
-#                 'partner_id': self.job_card_id.partner_id.id,
-#                 'picking_type_id': self.env.ref('stock.picking_type_out').id,
-#                 'location_id': self.env.ref('stock.stock_location_stock').id,
-#                 'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
-#                 'origin': f"Job Card: {self.job_card_id.name}",
-#                 'move_ids_without_package': stock_moves,
-#             })
-#             picking.action_confirm()
-#             picking.action_assign()
-#             picking.button_validate()
-#
-#         # Mark original lines as invoiced
-#         for wizard_line in selected_lines:
-#             if wizard_line.line_id:
-#                 wizard_line.line_id.write({
-#                     'invoiced': True,
-#                     'line_state': 'x_state',
-#                 })
-#
-#         return {
-#             'type': 'ir.actions.act_window',
-#             'name': 'Customer Invoice',
-#             'view_mode': 'form',
-#             'res_model': 'account.move',
-#             'res_id': invoice.id,
-#             'target': 'current',
-#         }
-#     code changed for invoice creation and decreesing stock and creating vendor bills for sublet
-#     def action_create_invoice(self):
-#         self.ensure_one()
-#
-#         selected_lines = self.line_ids.filtered(lambda l: l.selected)
-#         if not selected_lines:
-#             raise UserError("Please select at least one line to invoice.")
-#
-#         invoice_lines = []
-#         stock_moves = []
-#         sublet_vendor_bill_lines = []
-#
-#         for line in selected_lines:
-#             if line.quantity <= 0:
-#                 raise UserError(f"Quantity must be greater than 0 for line: {line.description}")
-#
-#             product_id = False
-#             if line.department == 'parts' and line.product_template_id:
-#                 product = line.product_template_id.product_variant_id
-#                 product_id = product.id
-#
-#                 # Add to stock move list
-#                 stock_moves.append((0, 0, {
-#                     'name': product.name,
-#                     'product_id': product.id,
-#                     'product_uom_qty': line.quantity,
-#                     'product_uom': product.uom_id.id,
-#                     'location_id': self.env.ref('stock.stock_location_stock').id,
-#                     'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
-#                 }))
-#
-#             invoice_lines.append((0, 0, {
-#                 'name': f"{line.department or ''} - {line.description}",
-#                 'product_id': product_id,
-#                 'quantity': line.quantity,
-#                 'price_unit': line.price_unit,
-#                 'discount': line.discount,
-#             }))
-#
-#             # Prepare Sublet Vendor Bill lines
-#             if line.department == 'sublets':
-#                 sublet_vendor_bill_lines.append((0, 0, {
-#                     'name': f"Sublet - {line.description}",
-#                     'quantity': line.quantity,
-#                     'price_unit': line.price_unit,
-#                 }))
-##         # ✅ Create and validate delivery order if stock moves exist
-#         if stock_moves:
-#             picking = self.env['stock.picking'].create({
-#                 'partner_id': self.job_card_id.partner_id.id,
-#                 'picking_type_id': self.env.ref('stock.picking_type_out').id,
-#                 'location_id': self.env.ref('stock.stock_location_stock').id,
-#                 'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
-#                 'origin': f"Job Card: {self.job_card_id.name}",
-#                 'move_ids_without_package': stock_moves,
-#             })
-#             picking.action_confirm()
-#             picking.action_assign()
-#             picking.button_validate()
-#         if not invoice_lines:
-#             raise UserError("No valid lines to invoice.")
-#
-#         # Create Customer Invoice
-#         invoice_vals = {
-#             'partner_id': self.job_card_id.partner_id.id,
-#             'invoice_origin': f"Job Card: {self.job_card_id.name}",
-#             'move_type': 'out_invoice',
-#             'invoice_line_ids': invoice_lines,
-#             'job_card_id': self.job_card_id.id,
-#         }
-#         invoice = self.env['account.move'].create(invoice_vals)
-#
-#         # ✅ Create and validate delivery order if stock moves exist
-#         if stock_moves:
-#             picking = self.env['stock.picking'].create({
-#                 'partner_id': self.job_card_id.partner_id.id,
-#                 'picking_type_id': self.env.ref('stock.picking_type_out').id,
-#                 'location_id': self.env.ref('stock.stock_location_stock').id,
-#                 'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
-#                 'origin': f"Job Card: {self.job_card_id.name}",
-#                 'move_ids_without_package': stock_moves,
-#             })
-#             picking.action_confirm()
-#             picking.action_assign()
-#             picking.button_validate()
-#
-#         # ✅ Create Vendor Bill if Sublet lines exist
-#         if sublet_vendor_bill_lines:
-#             vendor_bill_vals = {
-#                 'partner_id': self.job_card_id.partner_id.id if self.job_card_id.partner_id else False,
-#                 # 'partner_id': self.job_card_id.vendor_id.id if self.job_card_id.vendor_id else False,
-#                 # assuming vendor_id is linked in job card
-#                 'invoice_origin': f"Sublet for Job Card: {self.job_card_id.name}",
-#                 'move_type': 'in_invoice',
-#                 'invoice_line_ids': sublet_vendor_bill_lines,
-#                 'job_card_id': self.job_card_id.id,
-#             }
-#             vendor_bill = self.env['account.move'].create(vendor_bill_vals)
-#
-#         # ✅ Mark lines as invoiced
-#         for wizard_line in selected_lines:
-#             if wizard_line.line_id:
-#                 wizard_line.line_id.write({
-#                     'invoiced': True,
-#                     'line_state': 'x_state',
-#                 })
-#
-#         return {
-#             'type': 'ir.actions.act_window',
-#             'name': 'Customer Invoice',
-#             'view_mode': 'form',
-#             'res_model': 'account.move',
-#             'res_id': invoice.id,
-#             'target': 'current',
-#         }
-
       # code changed for invoice creation and decreesing stock and creating vendor bills for sublet and service lines also invoiced
     # def action_create_invoice(self):
     #     self.ensure_one()
@@ -456,6 +204,129 @@ class JobCardInvoiceWizard(models.TransientModel):
 
 
 # final code with above modifications and added is insurance claim also
+#     def action_create_invoice(self):
+#         self.ensure_one()
+#
+#         selected_lines = self.line_ids.filtered(lambda l: l.selected)
+#         selected_service_lines = self.service_line_ids.filtered(lambda l: l.service_selected)
+#
+#         if not selected_lines and not selected_service_lines:
+#             raise UserError("Please select at least one line or service to invoice.")
+#
+#         invoice_lines = []
+#         stock_moves = []
+#         sublet_vendor_bill_lines = []
+#
+#         # Job Card Detail Lines
+#         for line in selected_lines:
+#             if line.quantity <= 0:
+#                 raise UserError(f"Quantity must be greater than 0 for line: {line.description}")
+#
+#             product_id = False
+#             if line.department == 'parts' and line.product_template_id:
+#                 product = line.product_template_id.product_variant_id
+#                 product_id = product.id
+#
+#                 # Add to stock move list
+#                 stock_moves.append((0, 0, {
+#                     'name': product.name,
+#                     'product_id': product.id,
+#                     'product_uom_qty': line.quantity,
+#                     'product_uom': product.uom_id.id,
+#                     'location_id': self.env.ref('stock.stock_location_stock').id,
+#                     'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
+#                 }))
+#
+#             invoice_lines.append((0, 0, {
+#                 'name': f"{line.department or ''} - {line.description}",
+#                 'product_id': product_id,
+#                 'quantity': line.quantity,
+#                 'price_unit': line.price_unit,
+#                 'discount': line.discount,
+#             }))
+#
+#             # Prepare Sublet Vendor Bill lines
+#             if line.department == 'sublets':
+#                 sublet_vendor_bill_lines.append((0, 0, {
+#                     'name': f"Sublet - {line.description}",
+#                     'quantity': line.quantity,
+#                     'price_unit': line.price_unit,
+#                 }))
+#
+#         # Service Lines
+#         for service_line in selected_service_lines:
+#             if service_line.service_amount <= 0:
+#                 raise UserError(f"Service amount must be greater than 0 for service: {service_line.menu_service}")
+#
+#             invoice_lines.append((0, 0, {
+#                 'name': f"Service - {service_line.menu_service}",
+#                 'quantity': 1,
+#                 'price_unit': service_line.service_amount,
+#                 'discount': 0.0,
+#             }))
+#
+#         if not invoice_lines:
+#             raise UserError("No valid lines to invoice.")
+#
+#         # Determine correct partner for the customer invoice
+#         invoice_partner = (
+#             self.job_card_id.insurance_company_id
+#             if self.job_card_id.is_insurance_claim
+#             else self.job_card_id.partner_id
+#         )
+#
+#         # Create Customer Invoice
+#         invoice_vals = {
+#             'partner_id': invoice_partner.id,
+#             'invoice_origin': f"Job Card: {self.job_card_id.name}",
+#             'move_type': 'out_invoice',
+#             'invoice_line_ids': invoice_lines,
+#             'job_card_id': self.job_card_id.id,
+#         }
+#         invoice = self.env['account.move'].create(invoice_vals)
+#
+#         # Create and validate delivery order if stock moves exist
+#         if stock_moves:
+#             picking = self.env['stock.picking'].create({
+#                 'partner_id': self.job_card_id.partner_id.id,
+#                 'picking_type_id': self.env.ref('stock.picking_type_out').id,
+#                 'location_id': self.env.ref('stock.stock_location_stock').id,
+#                 'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
+#                 'origin': f"Job Card: {self.job_card_id.name}",
+#                 'move_ids_without_package': stock_moves,
+#             })
+#             picking.action_confirm()
+#             picking.action_assign()
+#             picking.button_validate()
+#
+#         # Create Vendor Bill if Sublet lines exist
+#         if sublet_vendor_bill_lines:
+#             vendor_bill_vals = {
+#                 'partner_id': self.job_card_id.partner_id.id if self.job_card_id.partner_id else False,
+#                 'invoice_origin': f"Sublet for Job Card: {self.job_card_id.name}",
+#                 'move_type': 'in_invoice',
+#                 'invoice_line_ids': sublet_vendor_bill_lines,
+#                 'job_card_id': self.job_card_id.id,
+#             }
+#             vendor_bill = self.env['account.move'].create(vendor_bill_vals)
+#
+#         # Mark job detail lines as invoiced
+#         for wizard_line in selected_lines:
+#             if wizard_line.line_id:
+#                 wizard_line.line_id.write({
+#                     'invoiced': True,
+#                     'line_state': 'x_state',
+#                 })
+#
+#         return {
+#             'type': 'ir.actions.act_window',
+#             'name': 'Customer Invoice',
+#             'view_mode': 'form',
+#             'res_model': 'account.move',
+#             'res_id': invoice.id,
+#             'target': 'current',
+#         }
+# new function added on auguest4 because of an error if any issue please refer above code ok
     def action_create_invoice(self):
         self.ensure_one()
 
@@ -468,6 +339,15 @@ class JobCardInvoiceWizard(models.TransientModel):
         invoice_lines = []
         stock_moves = []
         sublet_vendor_bill_lines = []
+
+        # Get stock location for current company
+        stock_location = self.env['stock.location'].search([
+            ('usage', '=', 'internal'),
+            ('company_id', '=', self.job_card_id.company_id.id)
+        ], limit=1)
+
+        if not stock_location:
+            raise UserError("No internal stock location found for the job card's company.")
 
         # Job Card Detail Lines
         for line in selected_lines:
@@ -485,7 +365,7 @@ class JobCardInvoiceWizard(models.TransientModel):
                     'product_id': product.id,
                     'product_uom_qty': line.quantity,
                     'product_uom': product.uom_id.id,
-                    'location_id': self.env.ref('stock.stock_location_stock').id,
+                    'location_id': stock_location.id,
                     'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
                 }))
 
@@ -539,10 +419,19 @@ class JobCardInvoiceWizard(models.TransientModel):
 
         # Create and validate delivery order if stock moves exist
         if stock_moves:
+            # Get picking type for current company
+            picking_type = self.env['stock.picking.type'].search([
+                ('code', '=', 'outgoing'),
+                ('company_id', '=', self.job_card_id.company_id.id)
+            ], limit=1)
+
+            if not picking_type:
+                raise UserError("No Delivery Order picking type found for the job card's company.")
+
             picking = self.env['stock.picking'].create({
                 'partner_id': self.job_card_id.partner_id.id,
-                'picking_type_id': self.env.ref('stock.picking_type_out').id,
-                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'picking_type_id': picking_type.id,
+                'location_id': stock_location.id,
                 'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
                 'origin': f"Job Card: {self.job_card_id.name}",
                 'move_ids_without_package': stock_moves,
@@ -578,7 +467,6 @@ class JobCardInvoiceWizard(models.TransientModel):
             'res_id': invoice.id,
             'target': 'current',
         }
-
 
     def action_select_all(self):
         # Select all non-readonly lines
