@@ -37,6 +37,12 @@
                     <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,memo,completed"/>
                     <button name="action_create_job_card" string="Submit" type="object"
                             invisible="state != 'draft'" class="btn-primary"/>
+
+                    <button name="print_job_card_report"
+                            type="object"
+                            string="Print Job Card"
+                            class="btn-primary"
+                            icon="fa-print"/>
                     <!--                <button name="action_set_to_completed" string="Complete" type="object" invisible="state != 'memo'" class="btn-success"/>-->
                     <button name="action_reset_to_draft" string="Reset To Draft" type="object"
                             invisible="state != 'completed'" class="btn-success"/>
@@ -85,27 +91,42 @@
 
 
                         <group class="small-fields-group">
-                            <field name="is_insurance_claim"/>
                              <field name="cust_type" invisible="1"/>
                             <field name="partner_id"/>
-
-                        </group>
-
-
-                        <group class="small-fields-group">
-                            <field name="company_id" invisible="1"/>
-                            <field name="whatsapp_no"/>
-                            <field name="phone"/>
-                            <field name="vat"/>
-
-                        </group>
-
-                        <group class="small-fields-group">
+                              <field name="email"/>
+                             <field name="is_insurance_claim"/>
                             <field name="insurance_company_id" invisible="is_insurance_claim == False"/>
-                            <field name="email"/>
-                            <field name="created_datetime"/>
+<!--                            <field name="insurance_company_id" invisible="is_insurance_claim == False"/>-->
+                             <field name="claim_number" invisible="is_insurance_claim == False"/>
+                            <field name="estimate_date" invisible="is_insurance_claim == False"/>
+
 
                         </group>
+
+
+                        <group class="small-fields-group">
+                            <field name="phone"/>
+                             <field name="whatsapp_no"/>
+                            <field name="claim_date" invisible="is_insurance_claim == False"/>
+                            <field name="lpo_number" invisible="is_insurance_claim == False"/>
+                            <field name="lpo_date" invisible="is_insurance_claim == False"/>
+                             <field name="brought_by" invisible="is_insurance_claim == False"/>
+
+
+                        </group>
+
+                        <group class="small-fields-group">
+                             <field name="vat"/>
+                             <field name="created_datetime"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="approved_amount" invisible="is_insurance_claim == False"/>
+                            <field name="policy_number" invisible="is_insurance_claim == False"/>
+                            <field name="estimate_number" invisible="is_insurance_claim == False"/>
+                            <field name="nature_of_accident" invisible="is_insurance_claim == False"/>
+
+                        </group>
+
+
                     </group>
                     <br/>
                     <group col="3" style="margin-top: -30px !important; padding-top: 0px !important;">
@@ -156,6 +177,7 @@
                             <field name="job_detail_line_ids">
                                 <list editable="bottom">
                                     <field name="department" readonly="parent.estimate_id"/>
+<!--                                    <field name="department" readonly="parent.state == 'complete'"/>-->
                                     <field name="product_template_id" readonly="parent.estimate_id"/>
                                     <field name="part_number" readonly="parent.estimate_id"/>
 <!--                                    removed category temporarily-->
@@ -292,17 +314,20 @@
                                     <button name="action_end" type="object" string="End" class="fa fa-stop"/>
                                     <!--                                    <field name="employee_id"/>-->
                                     <field name="employee_id" domain="[('employee_status', '=', 'available')]"/>
+                                      <field name="assigned_hours"/>
                                     <field name="status"/>
                                     <field name="start_time" widget="float_time"/>
                                     <field name="pause_time" widget="float_time"/>
                                     <field name="pause_start" widget="float_time"/>
                                     <field name="pause_duration" widget="float_time"/>
                                     <field name="end_time" widget="float_time"/>
-                                    <field name="assigned_hours"/>
                                     <field name="working_hours" widget="float_time"/>
 
                                 </list>
                             </field>
+                        </page>
+                        <page string="Health Check">
+
                         </page>
 
                     </notebook>
