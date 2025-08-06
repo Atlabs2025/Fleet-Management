@@ -115,6 +115,21 @@ class JobCardManagement(models.Model):
     )
     is_insurance_claim = fields.Boolean(string="Is Insurance Claim", default=False, store=True)
     insurance_company_id = fields.Many2one('res.partner',string='Insurance Company')
+    claim_number = fields.Char(string="Claim Number")
+    claim_date = fields.Date(string="Claim Date")
+    lpo_number = fields.Char(string="LPO Number")
+    lpo_date = fields.Date(string="LPO Date")
+    approved_amount = fields.Float(string="Approved Amount")
+    policy_number = fields.Char(string="Policy Number")
+    estimate_number = fields.Char(string="Estimate Number")
+    estimate_date = fields.Date(string="Estimate Date")
+    brought_by = fields.Char(string="Brought By")
+    nature_of_accident = fields.Text(string="Nature of Accident")
+
+
+
+
+
     # insurance_company = fields.One2many('res.partner',string="Is Insurance Claim")
 
     # invoice_count = fields.Integer(string="Excess Invoice Count", compute='_compute_invoice_count')
@@ -297,6 +312,12 @@ class JobCardManagement(models.Model):
     #         raise UserError("No estimate linked to this Job Card.")
     #     return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(self.estimate_id)
 
+    def print_job_card_report(self):
+        self.ensure_one()
+        return self.env.ref('atlbs_job_card.action_print_job_card').report_action(self)
+
+
+
     def action_print_estimate(self):
         self.ensure_one()
         if not self.estimate_id:
@@ -394,77 +415,25 @@ class JobCardManagement(models.Model):
                 self.engine_no = vehicle.engine_no
                 self.register_no = vehicle.id
 
-    # def action_create_estimate(self):
-    #     self.ensure_one()
-    #
-    #     estimate = self.env['job.card.estimate']
-    #     if not self.job_estimate_id:
-    #         # Auto-create estimate from job card
-    #         estimate = estimate.create({
-    #             'register_no': self.register_no.id,
-    #             'vehicle_make_id': self.vehicle_make_id.id,
-    #             'engine_no': self.engine_no,
-    #             'odoo_meter_reading': self.odoo_meter_reading,
-    #             'fuel_level': self.fuel_level,
-    #             'vehicle_colour': self.vehicle_colour,
-    #             'vin_sn': self.vin_sn,
-    #             'partner_id': self.partner_id.id,
-    #             'phone': self.phone,
-    #             'email': self.email,
-    #             'vat': self.vat,
-    #             'whatsapp_no': self.whatsapp_no,
-    #             'company_id': self.company_id.id,
-    #             'vehicle_in_out': self.vehicle_in_out,
-    #             'estimate_detail_line_ids': [
-    #                 (0, 0, {
-    #                     'department': line.department,
-    #                     'description': line.description,
-    #                     'product_template_id': line.product_template_id.id,
-    #                     'price_unit': line.price_unit,
-    #                     'quantity': line.quantity,
-    #                     'tax_ids': [(6, 0, line.tax_ids.ids)],
-    #                     'discount': line.discount,
-    #                 }) for line in self.job_detail_line_ids if line.line_state != 'x_state'
-    #             ],
-    #         })
-    #
-    #         # Link back to job card
-    #         self.job_estimate_id = estimate.id
-    #     else:
-    #         estimate = self.job_estimate_id
-    #
-    #     self.is_estimate_printed = True
-    #     return self.env.ref('atlbs_job_card.report_job_estimate_action').report_action(estimate)
+
+
 
     # def action_create_estimate(self):
     #     self.ensure_one()
-    #
     #     estimate = self.env['job.card.estimate'].create({
-    #         'partner_id': self.partner_id.id,
     #         'register_no': self.register_no.id,
-    #         'vehicle_make_id': self.vehicle_make_id.id,
-    #         'engine_no': self.engine_no,
-    #         'odoo_meter_reading': self.odoo_meter_reading,
-    #         'fuel_level': self.fuel_level,
-    #         'vehicle_colour': self.vehicle_colour,
-    #         'vin_sn': self.vin_sn,
-    #         'phone': self.phone,
-    #         'email': self.email,
-    #         'vat': self.vat,
-    #         'whatsapp_no': self.whatsapp_no,
+    #         'partner_id': self.partner_id.id,
     #         'vehicle_in_out': self.vehicle_in_out,
-    #         'company_id': self.company_id.id,
+    #         'job_card_id': self.id,  # Link back
     #         'estimate_detail_line_ids': [(0, 0, {
-    #             'description': line.description,
-    #             'product_template_id': line.product_template_id.id,
-    #             'quantity': line.quantity,
-    #             'price_unit': line.price_unit,
-    #             'department': line.department,
-    #         }) for line in self.job_detail_line_ids]
+    #             'description': l.description,
+    #             'product_template_id': l.product_template_id.id,
+    #             'quantity': l.quantity,
+    #             'price_unit': l.price_unit,
+    #             'department': l.department,
+    #         }) for l in self.job_detail_line_ids]
     #     })
-    #
-    #     self.estimate_id = estimate.id  # create a Many2one field to link
-    #
+    #     self.estimate_id = estimate.id
     #     return {
     #         'type': 'ir.actions.act_window',
     #         'res_model': 'job.card.estimate',
@@ -479,13 +448,14 @@ class JobCardManagement(models.Model):
             'register_no': self.register_no.id,
             'partner_id': self.partner_id.id,
             'vehicle_in_out': self.vehicle_in_out,
-            'job_card_id': self.id,  # Link back
+            'job_card_id': self.id,  # Link back to job card
             'estimate_detail_line_ids': [(0, 0, {
                 'description': l.description,
                 'product_template_id': l.product_template_id.id,
                 'quantity': l.quantity,
                 'price_unit': l.price_unit,
                 'department': l.department,
+                'tax_ids': [(6, 0, l.tax_ids.ids)],  # ✅ Copy taxes
             }) for l in self.job_detail_line_ids]
         })
         self.estimate_id = estimate.id
@@ -764,25 +734,6 @@ class JobCardLine(models.Model):
 
 
 # added this funtion for fetching the labour line into time sheet
-#     @api.model
-#     def create(self, vals):
-#         print(">>> CREATE CALLED with vals:", vals)
-#         record = super().create(vals)
-#
-#         if record.department == 'labour':
-#             print(">>> Creating time sheet for labour line")
-#             timesheet_vals = {
-#                 'name': record.description,
-#                 'assigned_hours': record.quantity,
-#                 'job_category_id':record.job_category_id.id,
-#                 'date': fields.Date.today(),
-#                 'job_card_id': record.job_card_id.id,  # <-- ADD THIS
-#             }
-#             ts = self.env['job.card.time.sheet'].create(timesheet_vals)
-#             print(">>> Created timesheet ID:", ts.id)
-#
-#         return record
-
    # added this function because of validation error you can use the above function if needed
 
     @api.model

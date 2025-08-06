@@ -326,7 +326,7 @@ class JobCardInvoiceWizard(models.TransientModel):
 #             'res_id': invoice.id,
 #             'target': 'current',
 #         }
-# new function added on auguest4 because of an error if any issue please refer above code ok
+# new function added on auguest4 because of an error if any issue please refer above code ok for this function i have ticked multi company in users
     def action_create_invoice(self):
         self.ensure_one()
 
