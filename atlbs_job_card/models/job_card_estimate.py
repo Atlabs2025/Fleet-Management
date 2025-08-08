@@ -15,7 +15,7 @@ class JobCardEstimate(models.Model):
 
     name = fields.Char(string='Estimate Number', required=True, copy=False, readonly=True, default='New')
     # vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle")
-    register_no = fields.Many2one('fleet.vehicle',string="Reg.No")
+    register_no = fields.Many2one('fleet.vehicle',string="Plate.No")
     # register_id = fields.Many2one('fleet.vehicle', string="Register Number")
 
     vehicle_make_id = fields.Many2one('fleet.vehicle.model.brand', string="Vehicle Model")
@@ -112,6 +112,10 @@ class JobCardEstimate(models.Model):
         ('cancelled', 'Cancelled'),
         ('completed', 'Completed'),
     ], string="Stage", store=True)
+
+
+
+
 
 
 
@@ -271,33 +275,12 @@ class JobCardEstimate(models.Model):
                 self.register_no = vehicle.id
 
 
-    # def action_create_job_card(self):
-    #     self.ensure_one()
-    #     job_card = self.env['job.card.management'].create({
-    #         'register_no': self.register_no.id,
-    #         'partner_id': self.partner_id.id,
-    #         'vehicle_in_out': self.vehicle_in_out,
-    #         'estimate_id': self.id,
-    #         'job_detail_line_ids': [(0, 0, {
-    #             'description': l.description,
-    #             'product_template_id': l.product_template_id.id,
-    #             'quantity': l.quantity,
-    #             'price_unit': l.price_unit,
-    #             'department': l.department,
-    #         }) for l in self.estimate_detail_line_ids]
-    #     })
-    #     self.job_card_id = job_card.id
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'res_model': 'job.card.management',
-    #         'res_id': job_card.id,
-    #         'view_mode': 'form',
-    #         'target': 'current',
-    #     }
+
 
     # def action_create_job_card(self):
     #     self.ensure_one()
     #     job_card = self.env['job.card.management'].create({
+    #         'name': 'New',  # 👈 Add this line to trigger the sequence
     #         'register_no': self.register_no.id,
     #         'partner_id': self.partner_id.id,
     #         'vehicle_in_out': self.vehicle_in_out,
@@ -310,10 +293,9 @@ class JobCardEstimate(models.Model):
     #             'department': l.department,
     #         }) for l in self.estimate_detail_line_ids],
     #         'complaint_ids': [(0, 0, {
-    #             'service_requested':c.service_requested,
+    #             'service_requested': c.service_requested,
     #             'description': c.description,
-    #             'remarks':c.remarks,
-    #             # Add any other fields from complaint model you want to copy
+    #             'remarks': c.remarks,
     #         }) for c in self.complaint_ids],
     #     })
     #     self.job_card_id = job_card.id
@@ -327,26 +309,51 @@ class JobCardEstimate(models.Model):
 
     def action_create_job_card(self):
         self.ensure_one()
+
+        # 1. All estimate lines go to job_card_estimate_line_ids
+        all_estimate_lines = [(0, 0, {
+            'description': l.description,
+            'product_template_id': l.product_template_id.id,
+            'quantity': l.quantity,
+            'uom':l.uom.id,
+            'price_unit': l.price_unit,
+            'department': l.department,
+            'estimate_check': l.estimate_check,  # <-- this fixes the issue
+        }) for l in self.estimate_detail_line_ids]
+
+        # 2. Only checked lines go to job_detail_line_ids
+        checked_lines = self.estimate_detail_line_ids.filtered(lambda l: l.estimate_check)
+        checked_job_lines = [(0, 0, {
+            'description': l.description,
+            'product_template_id': l.product_template_id.id,
+            'quantity': l.quantity,
+            'price_unit': l.price_unit,
+            'department': l.department,
+        }) for l in checked_lines]
+
+        # 3. Create the Job Card
         job_card = self.env['job.card.management'].create({
-            'name': 'New',  # 👈 Add this line to trigger the sequence
+            'name': 'New',
             'register_no': self.register_no.id,
             'partner_id': self.partner_id.id,
             'vehicle_in_out': self.vehicle_in_out,
             'estimate_id': self.id,
-            'job_detail_line_ids': [(0, 0, {
-                'description': l.description,
-                'product_template_id': l.product_template_id.id,
-                'quantity': l.quantity,
-                'price_unit': l.price_unit,
-                'department': l.department,
-            }) for l in self.estimate_detail_line_ids],
+
+            # 👇 Add all estimate lines
+            'estimate_line_ids': all_estimate_lines,
+
+            # 👇 Add only checked ones to job_detail_line_ids
+            'job_detail_line_ids': checked_job_lines,
+
             'complaint_ids': [(0, 0, {
                 'service_requested': c.service_requested,
                 'description': c.description,
                 'remarks': c.remarks,
             }) for c in self.complaint_ids],
         })
+
         self.job_card_id = job_card.id
+
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'job.card.management',
@@ -355,11 +362,20 @@ class JobCardEstimate(models.Model):
             'target': 'current',
         }
 
+
+
     def action_approve_estimate(self):
         for rec in self:
             rec.state = 'approved'
 
-class JobCardLine(models.Model):
+
+
+
+
+
+
+
+class JobEstimateLine(models.Model):
     _name = 'job.estimate.line'
     _description = 'Job Card Line'
 
@@ -379,6 +395,12 @@ class JobCardLine(models.Model):
     price_unit = fields.Float(string="Unit Price")
     price_amt = fields.Float(string="Amount")
     quantity = fields.Float(string="Qty")
+    uom = fields.Many2one(
+        'uom.uom',
+        string="Unit of Measure",
+        default=lambda self: self.env.ref('uom.product_uom_unit', raise_if_not_found=False),
+        required=True
+    )
     tax_ids = fields.Many2many('account.tax', string="Taxes")
     discount = fields.Float(string="Discount (%)")
     after_discount = fields.Float(string="After Discount")
@@ -399,11 +421,11 @@ class JobCardLine(models.Model):
         currency_field='currency_id'
     )
 
-    line_state = fields.Selection([
-        ('memo', 'Memo'),
-        ('complete', 'Complete'),
-        ('x_state', 'X'),
-    ], string="State", default='memo')
+    # line_state = fields.Selection([
+    #     ('memo', 'Memo'),
+    #     ('complete', 'Complete'),
+    #     ('x_state', 'X'),
+    # ], string="State", default='memo')
 
 
 
@@ -421,30 +443,9 @@ class JobCardLine(models.Model):
         string='Categories'
     )
 
-    # @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
-    # def _compute_total(self):
-    #     for line in self:
-    #         # Step 1: Calculate Amount (Quantity * Price)
-    #         amount = line.price_unit * line.quantity
-    #         line.price_amt = amount
-    #
-    #         # Step 2: Apply Discount
-    #         discount_amount = amount * (line.discount / 100.0)
-    #         after_discount_amount = amount - discount_amount
-    #         line.after_discount = after_discount_amount
-    #
-    #         # Step 3: Apply VAT (tax percentage)
-    #         vat_amount = 0.0
-    #         if line.tax_ids:
-    #             for tax in line.tax_ids:
-    #                 if tax.amount:
-    #                     vat_amount += after_discount_amount * (tax.amount / 100.0)
-    #
-    #         line.tax_amount = vat_amount
-    #
-    #         # Step 4: Total = After Discount + VAT Amount
-    #         line.total = after_discount_amount + vat_amount
-    #
+    estimate_check = fields.Boolean(string="Check", default=True)
+
+
 
     @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
     def _compute_total(self):
@@ -510,6 +511,7 @@ class JobCardLine(models.Model):
             if line.department == 'parts' and line.product_template_id:
                 line.price_unit = line.product_template_id.list_price
                 line.part_number = line.product_template_id.id
+                line.description = line.product_template_id.name
 
 
 

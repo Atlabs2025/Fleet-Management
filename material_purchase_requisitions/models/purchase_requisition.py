@@ -573,46 +573,8 @@ class MaterialPurchaseRequisition(models.Model):
         }
         return purchase_action
 
-    # @api.model
-    # def default_get(self, fields):
-    #     res = super(MaterialPurchaseRequisition, self).default_get(fields)
-    #     job_card_id = self.env.context.get('default_job_card_id')
-    #     if job_card_id:
-    #         job_card = self.env['job.card.management'].browse(job_card_id)
-    #         lines = []
-    #         for line in job_card.job_detail_line_ids.filtered(lambda l: l.department == 'parts'):
-    #             if line.product_template_id:
-    #                 lines.append((0, 0, {
-    #                     'product_id': line.product_template_id.id,
-    #                     'qty': line.quantity,  # if you have quantity
-    #                     'description': line.description,
-    #                     # Add other fields as needed
-    #                 }))
-    #         res['requisition_line_ids'] = lines
-    #     return res
 
 
-
-    # @api.model
-    # def default_get(self, fields):
-    #     res = super(MaterialPurchaseRequisition, self).default_get(fields)
-    #     job_card_id = self.env.context.get('default_job_card_id')
-    #     if job_card_id:
-    #         job_card = self.env['job.card.management'].browse(job_card_id)
-    #         lines = []
-    #         for line in job_card.job_detail_line_ids.filtered(
-    #                 lambda l: l.department == 'parts' and not l.is_request_completed):
-    #             product_variant = line.product_template_id.product_variant_id
-    #             if product_variant and product_variant.active:
-    #                 lines.append((0, 0, {
-    #                     'product_id': product_variant.id,
-    #                     'qty': line.quantity,
-    #                     'description': line.description,
-    #                     # Add other fields if needed
-    #                 }))
-    #         res['requisition_line_ids'] = lines
-    #     return res
-    #
 
     # @api.model
     # def default_get(self, fields):
@@ -646,8 +608,12 @@ class MaterialPurchaseRequisition(models.Model):
                 product_variant = line.product_template_id.product_variant_id
                 if product_variant and product_variant.active:
                     lines.append((0, 0, {
+                        # 'part_no':line.product_template_id,
+                        # 'part_no': product_variant.name,
+                        'part_no': f"[{product_variant.default_code}] {product_variant.name}" if product_variant.default_code else product_variant.name,
                         'product_id': product_variant.id,
                         'qty': line.quantity,
+                        'uom':line.uom,
                         'description': line.description,
                     }))
             res['requisition_line_ids'] = lines

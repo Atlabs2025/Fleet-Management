@@ -40,6 +40,8 @@ class AccountAnalyticLine(models.Model):
         comodel_name='job.categories',
         string='Categories'
     )
+
+
     def _get_current_time_float(self):
         now = datetime.now()
         return now.hour + now.minute / 60.0 + now.second / 3600.0
@@ -147,6 +149,7 @@ class AccountAnalyticLine(models.Model):
                 'job_category_id': analytic.job_category_id.id,
                 'name': vals.get('name'),
                 'date': vals.get('date'),
+
             })
 
             # <-- Add this: Link the created time sheet back to analytic line

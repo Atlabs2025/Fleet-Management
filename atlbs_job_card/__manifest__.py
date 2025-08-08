@@ -7,7 +7,7 @@
     'description': 'job card',
     'depends': [
         'contacts', 'fleet','product','stock','material_purchase_requisitions','hr','hr_timesheet','purchase','stock','project',
-        'board','base','mail',
+        'board','base','mail','web',
     ],
 'data': [
     'security/ir.model.access.csv',
@@ -38,7 +38,7 @@
     'assets': {
     'web.assets_backend': [
         'atlbs_job_card/static/src/css/custom_styles.css',
-        # 'atlbs_job_card/static/src/js/job_card_dashboard.js',
+        # 'atlbs_job_card/static/src/js/hide_sidebar.js',
     ],
     },
     'license': 'LGPL-3',

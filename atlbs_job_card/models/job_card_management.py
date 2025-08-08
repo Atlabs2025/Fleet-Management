@@ -127,9 +127,6 @@ class JobCardManagement(models.Model):
     nature_of_accident = fields.Text(string="Nature of Accident")
 
 
-
-
-
     # insurance_company = fields.One2many('res.partner',string="Is Insurance Claim")
 
     # invoice_count = fields.Integer(string="Excess Invoice Count", compute='_compute_invoice_count')
@@ -154,6 +151,17 @@ class JobCardManagement(models.Model):
     is_estimate_printed = fields.Boolean(string='Estimate Printed', default=False)
 
     estimate_id = fields.Many2one('job.card.estimate', string="Estimate Reference")
+
+    estimate_line_ids = fields.One2many('job.card.estimate.line', 'job_card_id', string="Estimate")
+
+
+
+
+
+
+
+
+
 
     @api.depends('created_datetime')
     def _compute_due_days(self):
@@ -418,19 +426,22 @@ class JobCardManagement(models.Model):
 
 
 
+
+
     # def action_create_estimate(self):
     #     self.ensure_one()
     #     estimate = self.env['job.card.estimate'].create({
     #         'register_no': self.register_no.id,
     #         'partner_id': self.partner_id.id,
     #         'vehicle_in_out': self.vehicle_in_out,
-    #         'job_card_id': self.id,  # Link back
+    #         'job_card_id': self.id,  # Link back to job card
     #         'estimate_detail_line_ids': [(0, 0, {
     #             'description': l.description,
     #             'product_template_id': l.product_template_id.id,
     #             'quantity': l.quantity,
     #             'price_unit': l.price_unit,
     #             'department': l.department,
+    #             'tax_ids': [(6, 0, l.tax_ids.ids)],  # ✅ Copy taxes
     #         }) for l in self.job_detail_line_ids]
     #     })
     #     self.estimate_id = estimate.id
@@ -441,31 +452,6 @@ class JobCardManagement(models.Model):
     #         'view_mode': 'form',
     #         'target': 'current',
     #     }
-
-    def action_create_estimate(self):
-        self.ensure_one()
-        estimate = self.env['job.card.estimate'].create({
-            'register_no': self.register_no.id,
-            'partner_id': self.partner_id.id,
-            'vehicle_in_out': self.vehicle_in_out,
-            'job_card_id': self.id,  # Link back to job card
-            'estimate_detail_line_ids': [(0, 0, {
-                'description': l.description,
-                'product_template_id': l.product_template_id.id,
-                'quantity': l.quantity,
-                'price_unit': l.price_unit,
-                'department': l.department,
-                'tax_ids': [(6, 0, l.tax_ids.ids)],  # ✅ Copy taxes
-            }) for l in self.job_detail_line_ids]
-        })
-        self.estimate_id = estimate.id
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'job.card.estimate',
-            'res_id': estimate.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
 
     # @api.onchange('cust_type')
     # def _onchange_cust_type(self):
@@ -488,6 +474,82 @@ class JobCardManagement(models.Model):
     #                 'partner_id': []
     #             }
     #         }
+
+# from estimate to job card
+#     def action_approve_estimate(self):
+#         self.ensure_one()
+#         if not self.estimate_line_ids:
+#             raise UserError("No estimate lines to approve.")
+#
+#         checked_lines = self.estimate_line_ids.filtered(lambda l: l.estimate_check)
+#         if not checked_lines:
+#             raise UserError("Please check at least one line to approve.")
+#
+#         for line in checked_lines:
+#             self.env['job.card.line'].create({
+#                 'job_card_id': self.id,
+#                 'description': line.description,
+#                 'product_template_id': line.product_template_id.id,
+#                 'quantity': line.quantity,
+#                 'price_unit': line.price_unit,
+#                 'department': line.department,
+#                 'tax_ids': [(6, 0, line.tax_ids.ids)],
+#             })
+
+    def action_approve_estimate(self):
+        self.ensure_one()
+
+        if not self.estimate_line_ids:
+            raise UserError("No estimate lines to approve.")
+
+        # 1. Create Job Card Estimate and fill ALL estimate lines
+        estimate = self.env['job.card.estimate'].create({
+            'register_no': self.register_no.id,
+            'partner_id': self.partner_id.id,
+            'vehicle_in_out': self.vehicle_in_out,
+            'job_card_id': self.id,
+            'estimate_detail_line_ids': [
+                (0, 0, {
+                    'description': l.description,
+                    'product_template_id': l.product_template_id.id,
+                    'quantity': l.quantity,
+                    'uom':l.uom.id,
+                    'price_unit': l.price_unit,
+                    'department': l.department,
+                    'tax_ids': [(6, 0, l.tax_ids.ids)],
+                    'discount': l.discount,
+                    'after_discount': l.after_discount,
+                    'price_amt': l.price_amt,
+                    'tax_amount': l.tax_amount,
+                    'total': l.total,
+                    'estimate_check': l.estimate_check,
+                }) for l in self.estimate_line_ids  # ✅ all lines
+            ]
+        })
+
+        # 2. Save estimate reference to job card
+        self.estimate_id = estimate.id
+
+        # 3. Create job card lines from only checked ones
+        checked_lines = self.estimate_line_ids.filtered(lambda l: l.estimate_check)
+        for line in checked_lines:
+            self.env['job.card.line'].create({
+                'job_card_id': self.id,
+                'description': line.description,
+                'product_template_id': line.product_template_id.id,
+                'quantity': line.quantity,
+                'price_unit': line.price_unit,
+                'department': line.department,
+                'tax_ids': [(6, 0, line.tax_ids.ids)],
+            })
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'job.card.estimate',
+            'res_id': estimate.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
 
 class JobCardLine(models.Model):
@@ -567,7 +629,12 @@ class JobCardLine(models.Model):
 
     is_checked = fields.Boolean(string="Checked")
 
-
+    uom = fields.Many2one(
+        'uom.uom',
+        string="Unit of Measure",
+        default=lambda self: self.env.ref('uom.product_uom_unit', raise_if_not_found=False),
+        required=True
+    )
 
 
 
@@ -740,6 +807,7 @@ class JobCardLine(models.Model):
     def create(self, vals):
         print(">>> CREATE CALLED with vals:", vals)
         record = super().create(vals)
+
 
         if record.department == 'labour':
             print(">>> Creating time sheet for labour line")
@@ -915,6 +983,7 @@ class JobCardTimeSheet(models.Model):
     )
 
 
+
     def _get_current_time_float(self):
         now = datetime.now()
         return now.hour + now.minute / 60.0 + now.second / 3600.0
@@ -935,16 +1004,6 @@ class JobCardTimeSheet(models.Model):
             'status': 'paused',
         })
 
-    # def action_resume(self):
-    #     for rec in self:
-    #         if rec.pause_start:
-    #             now = rec._get_current_time_float()
-    #             pause_time = now - rec.pause_start
-    #             rec.write({
-    #                 'pause_duration': rec.pause_duration + pause_time,
-    #                 'pause_start': 0.0,
-    #                 'status': 'in_progress',
-    #             })
 
     def action_resume(self):
         for rec in self:
@@ -967,14 +1026,6 @@ class JobCardTimeSheet(models.Model):
             'status': 'done',
         })
 
-    # @api.depends('start_time', 'pause_time', 'end_time', 'status')
-    # def _compute_working_hours(self):
-    #     for rec in self:
-    #         if rec.status == 'done' and rec.start_time and rec.end_time:
-    #             pause = rec.pause_time or 0.0
-    #             rec.working_hours = max((rec.end_time - rec.start_time) - pause, 0.0)
-    #         else:
-    #             rec.working_hours = 0.0
 
     @api.depends('start_time', 'end_time', 'pause_duration', 'status')
     def _compute_working_hours(self):
@@ -1099,6 +1150,7 @@ class JobCardTimeSheet(models.Model):
             'working_hours': record.working_hours or 0.0,
             'assigned_hours': record.assigned_hours or 0.0,
             'job_card_time_sheet_id': record.id,
+
         }
         analytic = self.env['account.analytic.line'].with_context(skip_timesheet_sync=True).create(analytic_vals)
 
@@ -1126,6 +1178,7 @@ class JobCardTimeSheet(models.Model):
                     'job_category_id': rec.job_category_id.id,
                     'name': rec.name,
                     'date': rec.date,
+
                 })
         return res
 
@@ -1187,3 +1240,154 @@ class JobCardComplaint(models.Model):
     service_requested = fields.Char(string='Service Requested')
     description = fields.Text(string='Description')
     remarks = fields.Text(string='Remarks')
+
+
+
+
+class JobEstimateLine(models.Model):
+    _name = 'job.card.estimate.line'
+    _description = 'Job Card Line'
+
+    # job_estimate_id = fields.Many2one('job.card.estimate', string="Estimate")
+    job_card_id = fields.Many2one('job.card.management', string='Job Card', ondelete='cascade')
+    department = fields.Selection([
+        ('labour', 'Labour'),
+        ('parts', 'Parts'),
+        ('material', 'Material'),
+        ('lubricant', 'Lubricant'),
+        ('sublets', 'Sublets'),
+        ('paint_material', 'Paint Material'),
+        ('tyre', 'Tyre'),
+    ], string="Department")
+
+    description = fields.Text(string="Description")
+    product_template_id = fields.Many2one('product.template', string="Part Number")
+    price_unit = fields.Float(string="Unit Price")
+    price_amt = fields.Float(string="Amount")
+    quantity = fields.Float(string="Qty")
+    uom = fields.Many2one(
+        'uom.uom',
+        string="Unit of Measure",
+        default=lambda self: self.env.ref('uom.product_uom_unit', raise_if_not_found=False),
+        required=True
+    )
+    uom_id = fields.Many2one(
+        'uom.uom',
+        string="Unit of Measure",
+        default=lambda self: self.env.ref('uom.product_uom_unit', raise_if_not_found=False),
+        required=True , invisible=True
+    )
+    tax_ids = fields.Many2many('account.tax', string="Taxes")
+    discount = fields.Float(string="Discount (%)")
+    after_discount = fields.Float(string="After Discount")
+    tax_amount = fields.Float(string="Tax Amount")
+
+
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        default=lambda self: self.env.company.currency_id
+    )
+
+
+    total = fields.Monetary(
+        string="Total",
+        compute='_compute_total',
+        store=True,
+        currency_field='currency_id'
+    )
+
+    # line_state = fields.Selection([
+    #     ('memo', 'Memo'),
+    #     ('complete', 'Complete'),
+    #     ('x_state', 'X'),
+    # ], string="State", default='memo')
+
+
+
+
+
+    # part_number = fields.Char(string="Part Number")
+    part_number = fields.Many2one(
+        'product.template',
+        string="Product",
+
+    )
+
+    job_category_id = fields.Many2one(
+        comodel_name='job.categories',
+        string='Categories'
+    )
+
+    # estimate_check = fields.Boolean(string="Check")
+    estimate_check = fields.Boolean(string="Check", default=True)
+
+    @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
+    def _compute_total(self):
+        for line in self:
+            # Step 1: Calculate base amount (before discount)
+            amount = line.price_unit * line.quantity
+            line.price_amt = amount
+
+            # Step 2: Apply Discount
+            discount_amt = amount * (line.discount / 100.0)
+            after_discount = amount - discount_amt
+            line.after_discount = after_discount
+
+            tax_inclusive_amt = 0.0
+            tax_exclusive_amt = 0.0
+            base_amount = after_discount
+
+            # Step 3: Classify taxes based on price_include_override
+            inclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_included')
+            exclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_excluded')
+            default_taxes = line.tax_ids.filtered(lambda t: not t.price_include_override)
+
+            # Step 4: Inclusive tax adjustment
+            if inclusive_taxes:
+                total_inclusive_percent = sum(t.amount for t in inclusive_taxes)
+                divisor = 1 + (total_inclusive_percent / 100.0)
+                base_amount = after_discount / divisor
+                tax_inclusive_amt = after_discount - base_amount
+            else:
+                base_amount = after_discount
+
+            # Step 5: Exclusive + default taxes calculation
+            for tax in exclusive_taxes + default_taxes:
+                tax_exclusive_amt += base_amount * (tax.amount / 100.0)
+
+            # Step 6: Final values
+            total_tax = tax_inclusive_amt + tax_exclusive_amt
+            line.tax_amount = total_tax
+            line.total = base_amount + tax_exclusive_amt
+
+    # commented on saturday complete button add cheyyan paranjath kondu
+#     def write(self, vals):
+#         res = super().write(vals)
+#         for line in self:
+#             job_estimate = line.job_estimate_id
+#             if job_estimate and all(l.invoiced for l in job_estimate.estimate_detail_line_ids):
+#                 job_estimate.state = 'completed'
+#         return res
+
+
+
+# making products mandatory for parts
+    @api.constrains('department', 'product_template_id')
+    def _check_product_required_for_parts(self):
+        for rec in self:
+            if rec.department == 'parts' and not rec.product_template_id:
+                raise ValidationError("Please choose a product for Parts department.")
+
+
+    @api.onchange('product_template_id')
+    def _onchange_product_template_id(self):
+        for line in self:
+            if line.department == 'parts' and line.product_template_id:
+                line.price_unit = line.product_template_id.list_price
+                line.part_number = line.product_template_id.id
+                line.description = line.product_template_id.name
+
+
+
+
