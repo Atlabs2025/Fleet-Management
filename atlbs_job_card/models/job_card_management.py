@@ -569,7 +569,7 @@ class JobCardManagement(models.Model):
     @api.depends('estimate_line_ids.total')
     def _compute_estimate_total_amount(self):
         for rec in self:
-            rec.total_amount = sum(rec.estimate_line_ids.mapped('total'))
+            rec.estimate_total_amount = sum(rec.estimate_line_ids.mapped('total'))
 
 
 
