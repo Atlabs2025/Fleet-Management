@@ -51,6 +51,7 @@ class MaterialPurchaseRequisitionLine(models.Model):
     )
 
     part_no = fields.Char(string="Part Number")
+    product_template_id = fields.Many2one('product.template', string="Part Number")
     # part_no = fields.Many2one('product.product', string="Part Number", domain="[('default_code', '!=', False)]")
     cost_price = fields.Float(string="Cost Price")
     sale_price = fields.Float(string="Sale Price")

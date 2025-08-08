@@ -133,12 +133,13 @@
                         </page>
 
 
-                        <page string="Job Details">
+                        <page string="Estimate Details">
                             <!-- Scrollable List Section -->
 <!--                            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">-->
-                            <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+<!--                            <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">-->
                                 <field name="estimate_detail_line_ids">
-                                    <list editable="bottom">
+<!--                                    <list editable="bottom">-->
+                                        <list editable="bottom" decoration-success="estimate_check" decoration-danger="not estimate_check">
                                         <field name="department"/>
                                         <field name="product_template_id"/>
                                         <field name="part_number"/>
@@ -152,10 +153,12 @@
                                         <field name="tax_ids" widget="many2many_tags"/>
                                         <field name="tax_amount"/>
                                         <field name="total" readonly="1"/>
-                                        <field name="line_state" required="1"/>
+<!--                                        <field name="line_state" required="1"/>-->
+                                            <field name="estimate_check"/>
+                                            <field name="uom"/>
                                     </list>
                                 </field>
-                            </div>
+<!--                            </div>-->
 
                             <!-- Summary Section Below Lines -->
 <!--                            <group class="oe_subtotal_footer oe_left" colspan="2">-->

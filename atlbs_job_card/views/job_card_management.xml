@@ -53,10 +53,10 @@
                     <!--                    invisible="state  !='memo'"-->
 
 
-                    <button name="action_create_estimate"
-                            string="Create Estimate"
-                            type="object"
-                            class="btn-primary" invisible="estimate_id != False or state != 'memo'"/>
+<!--                    <button name="action_create_estimate"-->
+<!--                            string="Create Estimate"-->
+<!--                            type="object"-->
+<!--                            class="btn-primary" invisible="estimate_id != False or state != 'memo'"/>-->
 
 
                     <button name="action_preforma_invoice" string="Create Preforma Invoice" type="object"
@@ -66,6 +66,16 @@
 
                     <button name="action_complete_job_card" type="object"
                             string="Complete" class="btn-primary" invisible="state  !='memo'"/>
+
+                    <button name="action_approve_estimate"
+                        string="Approve"
+                        type="object"
+                        class="btn-primary"
+                    invisible="state != 'draft' or estimate_id != False"/>
+
+<!--                    hide_approve_button-->
+
+
 
 
                 </header>
@@ -172,6 +182,73 @@
                             </field>
                         </page>
 
+<!--                        Estimate lines page-->
+
+                        <page string="Estimate">
+
+                                <field name="estimate_line_ids">
+                                    <list editable="bottom" decoration-success="estimate_check" decoration-danger="not estimate_check">
+                                        <field name="department" />
+                                        <field name="product_template_id"/>
+                                        <field name="part_number"/>
+                                        <!--                                        <field name="job_category_id"/>-->
+                                        <field name="description"/>
+                                        <field name="quantity"/>
+                                         <field name="uom_id"/>
+                                        <field name="price_unit"/>
+                                        <field name="price_amt"/>
+                                        <field name="discount"/>
+                                        <field name="after_discount"/>
+                                        <field name="tax_ids" widget="many2many_tags"/>
+                                        <field name="tax_amount"/>
+                                        <field name="total" readonly="1"/>
+                                        <field name="estimate_check"/>
+
+
+                                        <!--                                        <field name="line_state" required="1"/>-->
+                                    </list>
+                                </field>
+
+
+
+
+                            <group class="oe_subtotal_footer" colspan="2">
+                                <div style="display: flex; justify-content: space-between; gap: 40px; width: 100%;">
+
+                                    <!-- Left Column Totals -->
+                                    <div style="flex: 1;">
+                                        <div style="display: grid; grid-template-columns: auto 1fr; row-gap: 6px; column-gap: 8px;">
+                                            <group string="Summary" col="2" style="text-align: left;">
+                                                <field name="total_labour" readonly="1"/>
+                                                <field name="total_parts" readonly="1"/>
+                                                <field name="total_material" readonly="1"/>
+                                                <field name="total_lubricant" readonly="1"/>
+                                                <field name="total_sublets" readonly="1"/>
+                                                <field name="total_paint_material" readonly="1"/>
+                                                <field name="total_tyre" readonly="1"/>
+                                            </group>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right Column Totals -->
+                                    <div style="flex: 1; margin-left: 700px;">
+                                        <div style="display: grid; grid-template-columns: auto 1fr; row-gap: 6px; column-gap: 8px; font-weight: 600; text-align: left;">
+                                            <group string="" col="2" style="font-weight: 600;">
+                                                <field name="total_price_amt" readonly="1" widget="monetary"/>
+                                                <field name="total_discount" readonly="1" widget="monetary"/>
+                                                <field name="subtotal" readonly="1" widget="monetary"/>
+                                                <field name="vat_total" readonly="1" widget="monetary"/>
+                                                <field name="total_amount" readonly="1" widget="monetary"
+                                                       string="Grand Total"/>
+                                            </group>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </group>
+
+                        </page>
+
 
                         <page string="Job Details">
                             <field name="job_detail_line_ids">
@@ -185,6 +262,7 @@
                                     <field name="description" readonly="parent.estimate_id"/>
                                     <field name="quantity" readonly="parent.estimate_id"/>
                                     <field name="price_unit" readonly="parent.estimate_id"/>
+                                    <field name="uom"/>
                                     <field name="price_amt" readonly="parent.estimate_id"/>
                                     <field name="discount" readonly="parent.estimate_id"/>
                                     <field name="after_discount" readonly="parent.estimate_id"/>
@@ -198,7 +276,7 @@
                                     <field name="is_request_pending" column_invisible="1"/>
                                     <field name="is_request_completed" column_invisible="1"/>
 
-                                    <field name="is_checked" invisible="1"/>
+                                    <field name="is_checked" column_invisible="1"/>
 
                                 </list>
                             </field>

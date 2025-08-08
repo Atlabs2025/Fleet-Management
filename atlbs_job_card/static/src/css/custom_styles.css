@@ -173,3 +173,35 @@
 
 
 
+/* ✅ GREEN background when checkbox is checked */
+.o_list_view td:has(div[name="estimate_check"] input[type="checkbox"]:checked) {
+    background-color: #1dbf4f !important;
+    color: white !important;
+}
+
+/* ✅ RED background when checkbox is not checked */
+.o_list_view td:has(div[name="estimate_check"] input[type="checkbox"]:not(:checked)) {
+    background-color: #ff2d2d !important;
+    color: white !important;
+}
+
+/* ✅ Clean checkbox layout */
+.o_list_view div[name="estimate_check"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 0 !important;
+}
+
+
+/* ✅ Layout container for checkbox left-aligned */
+.o_list_view div[name="estimate_check"] {
+    display: flex;
+    justify-content: flex-start;  /* Align left */
+    align-items: center;
+    height: 100%;
+    padding-left: 4px;  /* Optional: small left spacing */
+    padding-right: 0;
+    margin: 0;
+}
