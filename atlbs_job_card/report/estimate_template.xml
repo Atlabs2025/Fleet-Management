@@ -70,7 +70,9 @@
                         </div>
 
                         <!-- Department-wise Job Details -->
-                        <t t-set="departments" t-value="list(set([l.department for l in doc.estimate_detail_line_ids if l.line_state != 'x_state' and l.department]))"/>
+<!--                        <t t-set="departments" t-value="list(set([l.department for l in doc.estimate_detail_line_ids if l.line_state != 'x_state' and l.department]))"/>-->
+                        <t t-set="departments" t-value="list(set([l.department for l in doc.estimate_detail_line_ids if l.department]))"/>
+
                         <t t-if="departments">
                             <t t-set="DEPARTMENT_LABELS" t-value="{
                                 'labour': 'Labour Charges',
@@ -94,7 +96,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <t t-foreach="doc.estimate_detail_line_ids.filtered(lambda l: l.department == dept and l.line_state != 'x_state')" t-as="line">
+<!--                                        <t t-foreach="doc.estimate_detail_line_ids.filtered(lambda l: l.department == dept and l.line_state != 'x_state')" t-as="line">-->
+                                            <t t-foreach="doc.estimate_detail_line_ids.filtered(lambda l: l.department == dept)" t-as="line">
+
                                             <tr>
                                                 <td><span t-esc="line.description"/></td>
                                                 <td style="text-align: right;"><span t-esc="'%.2f' % line.quantity"/></td>
@@ -106,7 +110,9 @@
                                         <tr style="font-weight: bold;">
                                             <td colspan="4" style="text-align: right;">Total</td>
                                             <td style="text-align: right;">
-                                                <span t-esc="'%.2f' % sum(l.total for l in doc.estimate_detail_line_ids if l.department == dept and l.line_state != 'x_state')"/>
+<!--                                                <span t-esc="'%.2f' % sum(l.total for l in doc.estimate_detail_line_ids if l.department == dept and l.line_state != 'x_state')"/>-->
+                                                <span t-esc="'%.2f' % sum(l.total for l in doc.estimate_detail_line_ids if l.department == dept)"/>
+
                                             </td>
                                         </tr>
                                     </tbody>

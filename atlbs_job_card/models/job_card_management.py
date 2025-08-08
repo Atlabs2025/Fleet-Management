@@ -101,6 +101,13 @@ class JobCardManagement(models.Model):
         currency_field='currency_id'
     )
 
+    estimate_total_amount = fields.Monetary(
+        string="Grand Total",
+        compute='_compute_estimate_total_amount',
+        store=True,
+        currency_field='currency_id'
+    )
+
 
 
     material_request_ids = fields.One2many(
@@ -155,13 +162,20 @@ class JobCardManagement(models.Model):
     estimate_line_ids = fields.One2many('job.card.estimate.line', 'job_card_id', string="Estimate")
 
 
+# estimate section
+    estimate_total_labour = fields.Float(string="Total Labour", compute="_compute_estimate_totals")
+    estimate_total_parts = fields.Float(string="Total Parts", compute="_compute_estimate_totals")
+    estimate_total_material = fields.Float(string="Total Material", compute="_compute_estimate_totals")
+    estimate_total_lubricant = fields.Float(string="Total Lubricant", compute="_compute_estimate_totals")
+    estimate_total_sublets = fields.Float(string="Total Sublets", compute="_compute_estimate_totals")
+    estimate_total_paint_material = fields.Float(string="Total Paint Material", compute="_compute_estimate_totals")
+    estimate_total_tyre = fields.Float(string="Total Tyre", compute="_compute_estimate_totals")
 
-
-
-
-
-
-
+    estimate_total_price_amt = fields.Float(string="Total Price", compute="_compute_estimate_totals")
+    estimate_total_discount = fields.Float(string="Discount", compute="_compute_estimate_totals")
+    estimate_subtotal = fields.Float(string="Subtotal", compute="_compute_estimate_totals")
+    estimate_vat_total = fields.Float(string="VAT 5%", compute="_compute_estimate_totals")
+    # estimate_total_amount = fields.Float(string="Grand Total", compute="_compute_estimate_totals")
 
     @api.depends('created_datetime')
     def _compute_due_days(self):
@@ -210,13 +224,9 @@ class JobCardManagement(models.Model):
         for rec in self:
             rec.total_amount = sum(rec.job_detail_line_ids.mapped('total'))
 
-
-
-
     @api.depends('job_detail_line_ids.department', 'job_detail_line_ids.total',
                  'job_detail_line_ids.price_amt', 'job_detail_line_ids.after_discount',
                  'job_detail_line_ids.tax_amount')
-
     def _compute_totals(self):
         for rec in self:
             rec.total_labour = sum(
@@ -245,7 +255,6 @@ class JobCardManagement(models.Model):
             rec.subtotal = sum(line.after_discount for line in rec.job_detail_line_ids)
             rec.vat_total = sum(line.tax_amount for line in rec.job_detail_line_ids)
             # rec.total_amount = rec.subtotal + rec.vat_total
-
 
     # @api.model
     # def create(self, vals):
@@ -550,6 +559,51 @@ class JobCardManagement(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+
+
+
+
+
+# estimate total section
+
+    @api.depends('estimate_line_ids.total')
+    def _compute_estimate_total_amount(self):
+        for rec in self:
+            rec.total_amount = sum(rec.estimate_line_ids.mapped('total'))
+
+
+
+    @api.depends('estimate_line_ids.department', 'estimate_line_ids.total',
+                 'estimate_line_ids.price_amt', 'estimate_line_ids.after_discount',
+                 'estimate_line_ids.tax_amount')
+    def _compute_estimate_totals(self):
+        for rec in self:
+            rec.estimate_total_labour = sum(
+                line.after_discount for line in rec.estimate_line_ids if line.department == 'labour'
+            )
+            rec.estimate_total_parts = sum(
+                line.after_discount for line in rec.estimate_line_ids if line.department == 'parts'
+            )
+            rec.estimate_total_material = sum(
+                line.after_discount for line in rec.estimate_line_ids if line.department == 'material'
+            )
+            rec.estimate_total_lubricant = sum(
+                line.after_discount for line in rec.estimate_line_ids if line.department == 'lubricant'
+            )
+            rec.estimate_total_sublets = sum(
+                line.after_discount for line in rec.estimate_line_ids if line.department == 'sublets'
+            )
+            rec.estimate_total_paint_material = sum(
+                line.after_discount for line in rec.estimate_line_ids if line.department == 'paint_material'
+            )
+            rec.estimate_total_tyre = sum(
+                line.after_discount for line in rec.estimate_line_ids if line.department == 'tyre'
+            )
+            rec.estimate_total_price_amt = sum(line.price_amt for line in rec.estimate_line_ids)
+            rec.estimate_total_discount = sum((line.price_amt - line.after_discount) for line in rec.estimate_line_ids)
+            rec.estimate_subtotal = sum(line.after_discount for line in rec.estimate_line_ids)
+            rec.estimate_vat_total = sum(line.tax_amount for line in rec.estimate_line_ids)
+            # rec.total_amount = rec.subtotal + rec.vat_total
 
 
 class JobCardLine(models.Model):
