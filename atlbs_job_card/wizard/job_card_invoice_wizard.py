@@ -368,13 +368,14 @@ class JobCardInvoiceWizard(models.TransientModel):
                     'location_id': stock_location.id,
                     'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
                 }))
-
+# here i have edited on auguest 8 because of department is added
             invoice_lines.append((0, 0, {
                 'name': f"{line.department or ''} - {line.description}",
                 'product_id': product_id,
                 'quantity': line.quantity,
                 'price_unit': line.price_unit,
                 'discount': line.discount,
+                'department': line.department,
             }))
 
             # Prepare Sublet Vendor Bill lines

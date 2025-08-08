@@ -10,15 +10,17 @@
                 <!--            decoration-info="True"-->
                 <field name="name"/>
                 <field name="estimate_id"/>
+                 <field name="created_datetime"/>
+                <field name="due_days_label"/>
                 <field name="total_amount"/>
+                <field name="partner_id"/>
                 <field name="vehicle_make_id"/>
                 <field name="vin_sn"/>
                 <field name="register_no"/>
-                <field name="created_datetime"/>
-                <field name="partner_id"/>
+                <field name="job_card_stage"/>
                 <field name="state"/>
                 <field name="is_insurance_claim" optional="hide"/>
-                <field name="due_days_label"/>
+
 
             </list>
 
