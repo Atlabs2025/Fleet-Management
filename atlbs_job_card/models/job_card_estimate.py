@@ -56,7 +56,7 @@ class JobCardEstimate(models.Model):
     vat_total = fields.Float(string="VAT 5%", compute="_compute_totals")
     total_amount = fields.Float(string="Grand Total", compute="_compute_totals")
 
-    vehicle_in_out = fields.Selection([('vehicle_in', 'IN'),('vehicle_out', 'OUT')], string="Vehicle IN/OUT", default='', tracking=True)
+    vehicle_in_out = fields.Selection([('vehicle_in', 'IN'),('vehicle_out', 'OUT')], string="Vehicle IN/OUT", default='vehicle_in', tracking=True)
 
     # invoiced = fields.Boolean(string="Invoiced", default=False)
 
@@ -414,11 +414,17 @@ class JobEstimateLine(models.Model):
     )
 
 
-    total = fields.Monetary(
+    # total = fields.Monetary(
+    #     string="Total",
+    #     compute='_compute_total',
+    #     store=True,
+    #     currency_field='currency_id'
+    # )
+
+    total = fields.Float(
         string="Total",
         compute='_compute_total',
-        store=True,
-        currency_field='currency_id'
+        store=True
     )
 
     # line_state = fields.Selection([

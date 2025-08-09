@@ -272,7 +272,11 @@
                                     <field name="tax_ids" domain="[('type_tax_use','=','sale'), ('amount','=',5.0)]" widget="many2many_tags" readonly="parent.estimate_id"/>
 
                                     <field name="tax_amount" readonly="parent.estimate_id"/>
-                                    <field name="total" readonly="1" />
+                                    <field name="total" readonly="1"/>
+
+<!--                                    <field name="total" widget="monetary" options="{'currency_field': 'currency_id', 'no_currency_placeholder': ''}" readonly="1"/>-->
+
+
                                     <field name="line_state" required="1"/>
                                     <field name="invoiced" column_invisible="1"/>
                                     <field name="is_request_pending" column_invisible="1"/>
