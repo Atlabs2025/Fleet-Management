@@ -632,19 +632,32 @@ class JobCardLine(models.Model):
     tax_amount = fields.Float(string="Tax Amount")
 
 
+    # currency_id = fields.Many2one(
+    #     'res.currency',
+    #     string='Currency',
+    #     default=lambda self: self.env.company.currency_id
+    # )
+
     currency_id = fields.Many2one(
         'res.currency',
-        string='Currency',
-        default=lambda self: self.env.company.currency_id
+        related='job_card_id.currency_id',
+        store=True,
+        readonly=False
     )
 
-
-    total = fields.Monetary(
+    # total = fields.Monetary(
+    #     string="Total",
+    #     compute='_compute_total',
+    #     store=True,
+    #     currency_field='currency_id'
+    # )
+    total = fields.Float(
         string="Total",
         compute='_compute_total',
         store=True,
-        currency_field='currency_id'
     )
+
+
 
     line_state = fields.Selection([
         ('memo', 'Memo'),
@@ -1344,11 +1357,17 @@ class JobEstimateLine(models.Model):
     )
 
 
-    total = fields.Monetary(
+    # total = fields.Monetary(
+    #     string="Total",
+    #     compute='_compute_total',
+    #     store=True,
+    #     currency_field='currency_id'
+    # )
+
+    total = fields.Float(
         string="Total",
         compute='_compute_total',
-        store=True,
-        currency_field='currency_id'
+        store=True
     )
 
     # line_state = fields.Selection([
