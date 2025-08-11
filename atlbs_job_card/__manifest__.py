@@ -30,9 +30,13 @@
     'views/fleet_vehicle_log_contract_views.xml',
     # 'views/job_card_dashboard.xml',
     'views/cost_analysis_view.xml',
+    'views/checklist_name.xml',
+    'views/quality_checklist.xml',
     # 'views/dynamic_report_wiz_menu.xml',
     'wizard/job_card_cost_analysis_wizard_view.xml',
     'wizard/job_card_invoice_wizard.xml',
+    'wizard/job_card_department_summary_wizard.xml',
+    'wizard/job_card_pl_wizard.xml',
 
 ],
     'assets': {

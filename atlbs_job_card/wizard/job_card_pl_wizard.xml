@@ -1,0 +1,46 @@
+<odoo>
+
+
+    <!-- Wizard View -->
+    <record id="view_job_card_pl_wizard" model="ir.ui.view">
+        <field name="name">job.card.pl.wizard.form</field>
+        <field name="model">job.card.pl.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Job Card P&amp;L">
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <footer>
+                    <button name="action_print_xlsx" type="object" string="Print XLSX" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open wizard -->
+    <record id="action_job_card_pl_wizard" model="ir.actions.act_window">
+        <field name="name">Job Card P&amp;L</field>
+        <field name="res_model">job.card.pl.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+
+    
+      <menuitem id="job_card_pl_report_menu_root" name="Job Card P&amp;L Reports" parent="menu_job_card_root"
+              sequence="54"/>
+    <menuitem id="menu_job_card_pl" name="Job Card P&amp;L" parent="job_card_pl_report_menu_root"
+              action="action_job_card_pl_wizard"/>
+
+
+
+
+</odoo>
+
+
+
+
+
