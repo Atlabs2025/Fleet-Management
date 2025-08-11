@@ -17,3 +17,13 @@ access_job_card_cost_analysis_wizard,access_job_card_cost_analysis_wizard,model_
 access_job_card_cost_analysis_report,access_job_card_cost_analysis_report,model_job_card_cost_analysis_report,base.group_user,1,1,1,1
 access_job_card_complaint,access_job_card_complaint,model_job_card_complaint,base.group_user,1,1,1,1
 access_job_estimiate_complaint,access_job_estimate_complaint,model_job_estimate_complaint,base.group_user,1,1,1,1
+
+
+access_quality_checklist_name,access_quality_checklist_name,model_quality_checklist_name,base.group_user,1,1,1,1
+access_quality_checklist,access_quality.checklist,model_quality_checklist,base.group_user,1,1,1,1
+access_job_card_pl_wizard,access_job_card_pl_wizard,model_job_card_pl_wizard,base.group_user,1,1,1,1
+
+
+
+
+

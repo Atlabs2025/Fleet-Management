@@ -10,3 +10,5 @@ from .import hr_employee
 from .import job_categories
 from .import fleet_vehicle_log_contract
 from .import cost_analysis_report
+from .import checklist_name
+from .import quality_checklist

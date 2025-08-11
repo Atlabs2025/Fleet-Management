@@ -410,9 +410,53 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Health Check">
 
+
+                        <page name="quality_checklist" string="Health Check">
+                            <field name="quality_checklist_ids" widget="section_and_note_one2many" mode="list">
+                                <list editable="bottom" default_order="serial_no" limit="100">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section"
+                                                context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note"
+                                                context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+
+                                    <field name="serial_no" column_invisible="1"/>
+                                    <field name="name" widget="section_and_note_text" optional="show"
+                                           string="Checklist"/>
+                                    <field name="display_type" column_invisible="1"/>
+                                    <field name="checklist_name_id" column_invisible="1"/>
+                                    <field name="description" column_invisible="1"/>
+                                    <field name="check_mark"
+                                           options='{"bg_color": "red: check_mark == False; green: check_mark == True", "fg_color": "red: check_mark == False"}'/>
+
+                                </list>
+                            </field>
                         </page>
+
+
+                        <!--                        <page string="Health Check">-->
+<!--                            <field name="health_check_ids" widget="section_and_note_one2many" mode="list">-->
+<!--                                <list editable="bottom" default_order="serial_no">-->
+<!--&lt;!&ndash;                                    <control>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <create name="add_product_control" string="Add a product"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <create name="add_section_control" string="Add a section"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                context="{'default_display_type': 'line_section'}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <create name="add_note_control" string="Add a note"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                context="{'default_display_type': 'line_note'}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </control>&ndash;&gt;-->
+
+<!--                                    <field name="serial_no" column_invisible="1"/>-->
+<!--                                    <field name="name" widget="section_and_note_text" optional="show" string="Checklist"/>-->
+<!--                                    <field name="display_type" column_invisible="1"/>-->
+<!--                                    <field name="description" column_invisible="1"/>-->
+<!--                                    <field name="check_mark"-->
+<!--                                           options='{"bg_color": "red: check_mark == False; green: check_mark == True", "fg_color": "red: check_mark == False"}'/>-->
+<!--                                </list>-->
+<!--                            </field>-->
+<!--                        </page>-->
 
                     </notebook>
 

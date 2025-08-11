@@ -39,7 +39,6 @@
         </record>
 
 
-
     <record id="action_report_job_card_cost_analysis" model="ir.actions.report">
         <field name="name">Job Card Cost Analysis</field>
         <field name="model">account.move</field>
@@ -49,5 +48,27 @@
         <field name="binding_model_id" ref="atlbs_job_card.model_account_move"/>
         <field name="binding_type">report</field>
     </record>
+
+
+
+
+    <record id="action_report_department_summary" model="ir.actions.report">
+        <field name="name">Department Wise Summary Report</field>
+        <field name="model">job.card.management</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">atlbs_job_card.report_job_card_cost_analysis</field>
+        <field name="report_file">atlbs_job_card.report_job_card_cost_analysis</field>
+        <field name="binding_model_id" ref="atlbs_job_card.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+
+
+
+
+
+
+
+
 
 </odoo>

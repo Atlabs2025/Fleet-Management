@@ -177,6 +177,106 @@ class JobCardManagement(models.Model):
     estimate_vat_total = fields.Float(string="VAT 5%", compute="_compute_estimate_totals")
     # estimate_total_amount = fields.Float(string="Grand Total", compute="_compute_estimate_totals")
 
+    quality_checklist_ids = fields.One2many(
+        'quality.checklist', 'job_card_id',
+        string="Quality Checklist",
+        default=lambda self: self.get_quality_checklist()
+    )
+
+    @api.model
+    def get_quality_checklist(self):
+        quality_lines = []
+        category_checklist = [
+            'UNDER THE HOOD',
+            'UNDER THE VEHICLE',
+            'EXTERIOR & INTERIOR',
+            'MISCELLENOUS INSPECTION'
+        ]
+        checklist_name_obj = self.env['quality.checklist.name']
+
+        # Ensure checklist categories exist
+        for cat in category_checklist:
+            if not checklist_name_obj.search([('name', '=', cat)], limit=1):
+                checklist_name_obj.create({'name': cat})
+
+        checklist_with_serial = [
+            (1, 'Engine Oil', category_checklist[0]),
+            (2, 'Transmission Fluid', category_checklist[0]),
+            (3, 'Powersterring Fluid', category_checklist[0]),
+            (4, 'Engine Coolant', category_checklist[0]),
+            (5, 'Hoses & Water Pump', category_checklist[0]),
+            (6, 'Drive Belts', category_checklist[0]),
+            (7, 'Tensioner & Idler Bearings', category_checklist[0]),
+            (8, 'Battery/Water Level/Condition', category_checklist[0]),
+            (9, 'A/C System', category_checklist[0]),
+            (10, 'Break Fluid', category_checklist[0]),
+            (11, 'Break Master Cyliner', category_checklist[0]),
+            (12, 'Break Booster', category_checklist[0]),
+            (13, 'Clutch Fluid', category_checklist[0]),
+            (14, 'Clutch Cables & Linkings', category_checklist[0]),
+            (15, 'Engine Oil Leaks', category_checklist[1]),
+            (16, 'Transmission Oil Leaks', category_checklist[1]),
+            (17, 'Transmission Cooler Pipes & Linkages', category_checklist[1]),
+            (18, 'Transfer Case Fluid', category_checklist[1]),
+            (19, 'Differential Fluid', category_checklist[1]),
+            (20, 'Gear Box Oil', category_checklist[1]),
+            (21, 'Engine Mounts', category_checklist[1]),
+            (22, 'Transmission Mounts', category_checklist[1]),
+            (23, 'Exhaust System', category_checklist[1]),
+            (24, 'Drive Shafts', category_checklist[1]),
+            (25, 'Universal Joints', category_checklist[1]),
+            (26, 'C.V. Joints', category_checklist[1]),
+            (27, 'Front Shock Absorbers', category_checklist[1]),
+            (28, 'Rear Shock Absorbers', category_checklist[1]),
+            (29, 'Springs & Mounts', category_checklist[1]),
+            (30, 'Upper Arms', category_checklist[1]),
+            (31, 'Lower Arms', category_checklist[1]),
+            (32, 'Stabilizer Links & Bushes Tie Rods', category_checklist[1]),
+            (33, 'Steering Rack/Box', category_checklist[1]),
+            (34, 'Wheel & Tires (Incl Spare)', category_checklist[1]),
+            (35, 'Tyre Pressure (Fill if Less)', category_checklist[1]),
+            (36, 'Front Brakes', category_checklist[1]),
+            (37, 'Rear Brakes', category_checklist[1]),
+            (38, 'Hand Brake', category_checklist[1]),
+            (39, 'Panel, Paintwork & Body Fittings Windscreen & Other Glass', category_checklist[2]),
+            (40, 'Washes & Wipers', category_checklist[2]),
+            (41, 'All Lightings', category_checklist[2]),
+            (42, 'Horn Tone', category_checklist[2]),
+            (43, 'All Instruments & Accessories', category_checklist[2]),
+            (44, 'Checked Engine Oil Cap Tighten', category_checklist[3]),
+            (45, 'Checked Radiator Cap Tighten', category_checklist[3]),
+            (46, 'Checked Brake Fluid Cap Tighten', category_checklist[3]),
+            (47, 'Checked for Tools not left in the Vehicle', category_checklist[3]),
+            (48, 'Checked for Abnormal Sounds', category_checklist[3]),
+        ]
+
+        category_used = []
+        for line in checklist_with_serial:
+            checklist_type = checklist_name_obj.search([('name', '=', line[2])], limit=1)
+            if checklist_type.id not in category_used:
+                category_used.append(checklist_type.id)
+                section = {
+                    'name': checklist_type.name,
+                    'display_type': 'line_section',
+                    'serial_no': line[0] - 0.1,
+                }
+                quality_lines.append((0, 0, section))
+
+            vals = {
+                'name': line[1],
+                'checklist_name_id': checklist_type.id,
+                'serial_no': line[0],
+            }
+            quality_lines.append((0, 0, vals))
+
+        return quality_lines
+
+
+
+
+
+
+
     @api.depends('created_datetime')
     def _compute_due_days(self):
         for record in self:
@@ -730,16 +830,13 @@ class JobCardLine(models.Model):
 #     @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
 #     def _compute_total(self):
 #         for line in self:
-#             # Step 1: Calculate Amount (Quantity * Price)
 #             amount = line.price_unit * line.quantity
 #             line.price_amt = amount  # Update the price_amt field with the calculated amount
 #
-#             # Step 2: Apply Discount
 #             discount_amount = amount * (line.discount / 100.0)
 #             after_discount_amount = amount - discount_amount
 #             line.after_discount = after_discount_amount
 #
-#             # Step 3: Apply VAT (tax percentage)
 #             vat_amount = 0.0
 #             if line.tax_ids:
 #                 for tax in line.tax_ids:
@@ -748,26 +845,23 @@ class JobCardLine(models.Model):
 #
 #             line.tax_amount = vat_amount
 #
-#             # Step 4: Total = After Discount + VAT Amount
 #             line.total = after_discount_amount + vat_amount
 
     # @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
     # def _compute_total(self):
     #     for line in self:
-    #         # Step 1: Base amount
     #         amount = line.price_unit * line.quantity
     #         line.price_amt = amount
     #
-    #         # Step 2: Discount
     #         discount_amt = amount * (line.discount / 100.0)
     #         after_discount = amount - discount_amt
     #         line.after_discount = after_discount
     #
-    #         # Step 3: Classify taxes
+
     #         inclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_included')
     #         exclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_excluded')
     #
-    #         # Step 4: Inclusive tax part
+
     #         base_amount = after_discount
     #         tax_inclusive_amt = 0.0
     #
@@ -779,12 +873,12 @@ class JobCardLine(models.Model):
     #         else:
     #             base_amount = after_discount
     #
-    #         # Step 5: Exclusive tax part
+
     #         tax_exclusive_amt = 0.0
     #         for tax in exclusive_taxes:
     #             tax_exclusive_amt += base_amount * (tax.amount / 100.0)
     #
-    #         # Step 6: Set computed values
+
     #         total_tax = tax_inclusive_amt + tax_exclusive_amt
     #         line.tax_amount = total_tax
     #         line.total = base_amount + tax_exclusive_amt
@@ -795,7 +889,7 @@ class JobCardLine(models.Model):
             amount = line.price_unit * line.quantity
             line.price_amt = amount
 
-            # Step 1: Apply discount
+            #  Apply discount
             discount_amt = amount * (line.discount / 100.0)
             after_discount = amount - discount_amt
             line.after_discount = after_discount
@@ -804,12 +898,12 @@ class JobCardLine(models.Model):
             tax_exclusive_amt = 0.0
             base_amount = after_discount
 
-            # Classify taxes based on override field
+
             inclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_included')
             exclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_excluded')
             default_taxes = line.tax_ids.filtered(lambda t: not t.price_include_override)
 
-            # Step 2: Inclusive tax calculation
+
             if inclusive_taxes:
                 total_inclusive_percent = sum(t.amount for t in inclusive_taxes)
                 divisor = 1 + (total_inclusive_percent / 100.0)
@@ -818,11 +912,11 @@ class JobCardLine(models.Model):
             else:
                 base_amount = after_discount
 
-            # Step 3: Exclusive and default tax calculation
+
             for tax in exclusive_taxes + default_taxes:
                 tax_exclusive_amt += base_amount * (tax.amount / 100.0)
 
-            # Step 4: Set computed values
+
             total_tax = tax_inclusive_amt + tax_exclusive_amt
             line.tax_amount = total_tax
             line.total = base_amount + tax_exclusive_amt
@@ -884,13 +978,13 @@ class JobCardLine(models.Model):
                 'job_category_id': record.job_category_id.id,
                 'date': fields.Date.today(),
                 'job_card_id': record.job_card_id.id,
-                # No employee_id here
+
             }
             try:
                 ts = self.env['job.card.time.sheet'].create(timesheet_vals)
                 print(">>> Created timesheet ID:", ts.id)
             except ValidationError:
-                # Ignore the validation error about missing employee
+
                 pass
 
         return record
@@ -994,7 +1088,7 @@ class JobCardServiceLine(models.Model):
             rec._compute_service_details()
 
     def _compute_service_details(self):
-        """Common logic: set amount and products based on menu_service."""
+
         service_prices = {
             'regular': 500,
             'medium': 1000,
@@ -1398,11 +1492,11 @@ class JobEstimateLine(models.Model):
     @api.depends('price_unit', 'quantity', 'discount', 'tax_ids')
     def _compute_total(self):
         for line in self:
-            # Step 1: Calculate base amount (before discount)
+
             amount = line.price_unit * line.quantity
             line.price_amt = amount
 
-            # Step 2: Apply Discount
+
             discount_amt = amount * (line.discount / 100.0)
             after_discount = amount - discount_amt
             line.after_discount = after_discount
@@ -1411,12 +1505,12 @@ class JobEstimateLine(models.Model):
             tax_exclusive_amt = 0.0
             base_amount = after_discount
 
-            # Step 3: Classify taxes based on price_include_override
+
             inclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_included')
             exclusive_taxes = line.tax_ids.filtered(lambda t: t.price_include_override == 'tax_excluded')
             default_taxes = line.tax_ids.filtered(lambda t: not t.price_include_override)
 
-            # Step 4: Inclusive tax adjustment
+
             if inclusive_taxes:
                 total_inclusive_percent = sum(t.amount for t in inclusive_taxes)
                 divisor = 1 + (total_inclusive_percent / 100.0)
@@ -1425,11 +1519,11 @@ class JobEstimateLine(models.Model):
             else:
                 base_amount = after_discount
 
-            # Step 5: Exclusive + default taxes calculation
+            # Exclusive + default taxes calculation
             for tax in exclusive_taxes + default_taxes:
                 tax_exclusive_amt += base_amount * (tax.amount / 100.0)
 
-            # Step 6: Final values
+            # Final values
             total_tax = tax_inclusive_amt + tax_exclusive_amt
             line.tax_amount = total_tax
             line.total = base_amount + tax_exclusive_amt
@@ -1461,6 +1555,28 @@ class JobEstimateLine(models.Model):
                 line.part_number = line.product_template_id.id
                 line.description = line.product_template_id.name
 
+
+
+
+
+
+class JobCardHealthLine(models.Model):
+    _name = 'job.card.health.line'
+    _description = 'Job Card Health Line'
+
+    # job_card_id = fields.Many2one('job.card.management', string="Job Card")
+    # checklist_id = fields.Many2one('quality.checklist', string="Checklist")
+    # is_checked = fields.Boolean(string="Checked?")
+
+    job_card_id = fields.Many2one('job.card.management', string='Job Card', required=True, ondelete='cascade')
+    serial_no = fields.Integer(string='Sequence', default=10)
+    name = fields.Char(string='Checklist', required=True)
+    display_type = fields.Selection([
+        ('line_section', 'Section'),
+        ('line_note', 'Note'),
+    ], string='Display Type', default=False)
+    description = fields.Text(string='Description')
+    check_mark = fields.Boolean(string='Check Mark', default=False)
 
 
 
