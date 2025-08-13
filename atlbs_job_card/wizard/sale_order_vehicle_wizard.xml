@@ -1,0 +1,23 @@
+<odoo>
+
+
+    <record id="view_sale_order_vehicle_product_wizard_form" model="ir.ui.view">
+        <field name="name">sale.order.vehicle.product.wizard.form</field>
+        <field name="model">sale.order.vehicle.product.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Vehicle Products">
+                <sheet>
+                    <group>
+                        <field name="product_ids" widget="many2many_tags"/>
+                    </group>
+                    <footer>
+                        <button string="Add to Order" type="object" name="action_add_products" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

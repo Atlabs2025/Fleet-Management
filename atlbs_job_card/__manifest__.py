@@ -7,7 +7,7 @@
     'description': 'job card',
     'depends': [
         'contacts', 'fleet','product','stock','material_purchase_requisitions','hr','hr_timesheet','purchase','stock','project',
-        'board','base','mail','web',
+        'board','base','mail','web','sale',
     ],
 'data': [
     'security/ir.model.access.csv',
@@ -32,11 +32,13 @@
     'views/cost_analysis_view.xml',
     'views/checklist_name.xml',
     'views/quality_checklist.xml',
+    'views/sale_order_inherit.xml',
     # 'views/dynamic_report_wiz_menu.xml',
     'wizard/job_card_cost_analysis_wizard_view.xml',
     'wizard/job_card_invoice_wizard.xml',
     'wizard/job_card_department_summary_wizard.xml',
     'wizard/job_card_pl_wizard.xml',
+    'wizard/sale_order_vehicle_wizard.xml',
 
 ],
     'assets': {

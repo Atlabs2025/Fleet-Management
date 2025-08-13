@@ -29,7 +29,7 @@
 
 
 
-    
+
       <menuitem id="job_card_pl_report_menu_root" name="Job Card P&amp;L Reports" parent="menu_job_card_root"
               sequence="54"/>
     <menuitem id="menu_job_card_pl" name="Job Card P&amp;L" parent="job_card_pl_report_menu_root"

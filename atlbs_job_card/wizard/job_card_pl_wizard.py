@@ -19,11 +19,11 @@ class JobCardPLWizard(models.TransientModel):
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         sheet = workbook.add_worksheet("Job Card P&L")
 
-        # Write header
+
         sheet.write(0, 0, "Period:")
         sheet.write(0, 1, f"{self.date_from} - {self.date_to}")
 
-        # Table headers
+
         headers = [
             "Date", "Job Card", "Estimate #", "Invoice #", "Vehicle / Plate", "VIN Number",
             "Labor", "Parts", "Material", "SubletCost", "Total",
@@ -32,7 +32,6 @@ class JobCardPLWizard(models.TransientModel):
         for col, header in enumerate(headers):
             sheet.write(2, col, header)
 
-        # Example: Fetch job cards in date range
         job_cards = self.env['job.card.management'].search([
             ('created_datetime', '>=', self.date_from),
             ('created_datetime', '<=', self.date_to),
@@ -41,12 +40,12 @@ class JobCardPLWizard(models.TransientModel):
         row = 3
         for jc in job_cards:
             total_revenue = jc.total_labour + jc.total_parts + jc.total_material + jc.total_sublets
-            total_expense = 0.0  # Replace with your expense calculation logic
+            total_expense = 0.0
 
             sheet.write(row, 0, jc.created_datetime.strftime('%d/%m/%Y') if jc.created_datetime else '')
             sheet.write(row, 1, jc.name or '')
             sheet.write(row, 2, jc.estimate_number or '')
-            sheet.write(row, 3, '')  # Invoice number, if available
+            sheet.write(row, 3, '')
             sheet.write(row, 4, f"{jc.register_no.name if jc.register_no else ''}")
             sheet.write(row, 5, jc.vin_sn or '')
 
@@ -56,11 +55,11 @@ class JobCardPLWizard(models.TransientModel):
             sheet.write(row, 9, jc.total_sublets)
             sheet.write(row, 10, total_revenue)
 
-            # Assuming expense fields available, otherwise set 0
-            sheet.write(row, 11, 0)  # Labor Cost placeholder
-            sheet.write(row, 12, 0)  # Parts Cost placeholder
-            sheet.write(row, 13, 0)  # Material Cost placeholder
-            sheet.write(row, 14, 0)  # Sublet Cost placeholder
+
+            sheet.write(row, 11, 0)
+            sheet.write(row, 12, 0)
+            sheet.write(row, 13, 0)
+            sheet.write(row, 14, 0)
             sheet.write(row, 15, total_expense)
 
             row += 1
@@ -68,13 +67,13 @@ class JobCardPLWizard(models.TransientModel):
         workbook.close()
         output.seek(0)
 
-        # Save file in binary field
+
         self.write({
             'file_data': base64.b64encode(output.read()),
             'file_name': f"Job_Card_PL_{self.date_from}_to_{self.date_to}.xlsx",
         })
 
-        # Return download action
+
         return {
             "type": "ir.actions.act_url",
             "url": f"/web/content/{self._name}/{self.id}/file_data/{self.file_name}?download=true",

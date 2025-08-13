@@ -9,11 +9,11 @@
         'base','stock', 'fleet'
     ],
 'data': [
-    'security/car_user_security.xml',
+    # 'security/car_user_security.xml',
     'security/ir.model.access.csv',
     # 'data/sequence.xml',
-    'views/vehicle_stock_book.xml',
-    # 'views/product_template.xml',
+    # 'views/vehicle_stock_book.xml',
+    'views/product_template.xml',
     # 'views/menu.xml',
 ],
     'assets': {},

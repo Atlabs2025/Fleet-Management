@@ -1,3 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vehicle_stock_book,access_vehicle_stock_book,model_vehicle_stock_book,base.group_user,1,1,1,1
-access_vehicle_stock_image,access_vehicle_stock_image,model_vehicle_stock_image,base.group_user,1,1,1,1
+access_product_template_image,access_product_template_image,model_product_template_image,base.group_user,1,1,1,1
