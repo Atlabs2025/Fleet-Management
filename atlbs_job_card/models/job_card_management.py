@@ -177,11 +177,17 @@ class JobCardManagement(models.Model):
     estimate_vat_total = fields.Float(string="VAT 5%", compute="_compute_estimate_totals")
     # estimate_total_amount = fields.Float(string="Grand Total", compute="_compute_estimate_totals")
 
+
+# for vehicle sale this field is added
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order')
+
     quality_checklist_ids = fields.One2many(
         'quality.checklist', 'job_card_id',
         string="Quality Checklist",
         default=lambda self: self.get_quality_checklist()
     )
+
+
 
     @api.model
     def get_quality_checklist(self):
@@ -719,6 +725,7 @@ class JobCardLine(models.Model):
         ('sublets', 'Sublets'),
         ('paint_material', 'Paint Material'),
         ('tyre', 'Tyre'),
+        ('vehicle', 'Vehicle'),
     ], string="Department")
 
     description = fields.Text(string="Description")

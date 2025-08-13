@@ -73,7 +73,8 @@
                         string="Approve"
                         type="object"
                         class="btn-primary"
-                    invisible="state != 'draft' or estimate_id != False"/>
+                    invisible="state != 'draft' or estimate_id != False or sale_order_id != False"/>
+                    'sale_order_id', '!=', False
 
 <!--                    hide_approve_button-->
 

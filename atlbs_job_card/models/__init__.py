@@ -12,3 +12,4 @@ from .import fleet_vehicle_log_contract
 from .import cost_analysis_report
 from .import checklist_name
 from .import quality_checklist
+from .import sale_order_inherit

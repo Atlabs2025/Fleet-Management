@@ -81,7 +81,34 @@ class VehicleStockBook(models.Model):
     image_ids = fields.One2many('vehicle.stock.image', 'stock_book_id', string="Images")
     product_code = fields.Char(string="Product Code", readonly=True, copy=False)
 
+    product_id = fields.Many2one('product.template', string="Related Product", readonly=True)
 
+
+    # @api.model
+    # def create(self, vals):
+    #     if not vals.get('product_code') and vals.get('vin'):
+    #         vals['product_code'] = f"VEH-{vals['vin'][:8].upper()}"
+    #
+    #     vehicle = super(VehicleStockBook, self).create(vals)
+    #
+    #     # Automatically create a product in the "Cars" category
+    #     product_category = self.env['product.category'].search([('name', '=', 'Cars')], limit=1)
+    #     if not product_category:
+    #         product_category = self.env['product.category'].create({'name': 'Cars'})
+    #
+    #     self.env['product.template'].create({
+    #         'name': vehicle.name,
+    #         'default_code': vehicle.product_code,
+    #         # 'type': 'product',
+    #         'categ_id': product_category.id,
+    #         'list_price': vehicle.sales_price,
+    #         'standard_price': vehicle.landing_price,
+    #         'description_sale': f"{vehicle.vehicle_type} - {vehicle.model_id.name or ''} ({vehicle.year_of_manufacturing})",
+    #     })
+    #
+    #
+    #
+    #     return vehicle
 
     @api.model
     def create(self, vals):
@@ -90,26 +117,25 @@ class VehicleStockBook(models.Model):
 
         vehicle = super(VehicleStockBook, self).create(vals)
 
-        # Automatically create a product in the "Cars" category
+        # Ensure "Cars" category exists
         product_category = self.env['product.category'].search([('name', '=', 'Cars')], limit=1)
         if not product_category:
             product_category = self.env['product.category'].create({'name': 'Cars'})
 
-        self.env['product.template'].create({
+        # Create related product
+        product = self.env['product.template'].create({
             'name': vehicle.name,
             'default_code': vehicle.product_code,
-            # 'type': 'product',
             'categ_id': product_category.id,
             'list_price': vehicle.sales_price,
             'standard_price': vehicle.landing_price,
             'description_sale': f"{vehicle.vehicle_type} - {vehicle.model_id.name or ''} ({vehicle.year_of_manufacturing})",
         })
 
+        # Link product to vehicle
+        vehicle.product_id = product.id
+
         return vehicle
-
-
-
-
 
 
 class VehicleStockImage(models.Model):
@@ -118,6 +144,9 @@ class VehicleStockImage(models.Model):
 
     stock_book_id = fields.Many2one('vehicle.stock.book', string="Stock Book", ondelete='cascade')
     image = fields.Binary(string="Image", attachment=True)
+
+
+
 
 
 
