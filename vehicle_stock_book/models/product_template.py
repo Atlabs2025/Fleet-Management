@@ -20,12 +20,12 @@ class ProductTemplate(models.Model):
         ('luxury', 'Luxury'),
         ('super_luxury', 'Super Luxury')
     ], string="Vehicle Type")
-    vehicle_id = fields.Many2one('fleet.vehicle', string="Make")
+    # vehicle_id = fields.Many2one('fleet.vehicle', string="Make")
+    register_no = fields.Many2one('fleet.vehicle', string="Plate No.")
     model_id = fields.Many2one('fleet.vehicle.model', string="Model")
-    vin = fields.Char(string="VIN")
+    vin_sn = fields.Char(string="Chassis Number")
     engine_no = fields.Char(string="Engine Number")
-    plate_no =  fields.Char(string="Plate Number")
-    brand_id = fields.Many2one('fleet.vehicle.model.brand', string="Brand")
+    vehicle_make_id = fields.Many2one('fleet.vehicle.model.brand', string="Make")
     specification = fields.Selection([
         ('gcc_country', 'GCC'),
         ('un_states', 'US'),
