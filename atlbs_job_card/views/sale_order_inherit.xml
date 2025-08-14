@@ -12,53 +12,40 @@
                         string="Create Job Card"
                         type="object"
                         class="btn-primary"
-                         invisible="state  !='sale'"/>
+                        invisible="state  !='sale'"/>
             </xpath>
 
 
-
             <xpath expr="//field[@name='order_line']" position="before">
-            <button name="action_add_vehicle_products"
-                    string="Add Vehicle Products"
-                    type="object"
-                    class="btn-primary"/>
-        </xpath>
+                <button name="action_add_vehicle_products"
+                        string="Add Vehicle Products"
+                        type="object"
+                        class="btn-primary"/>
+            </xpath>
 
 
-
-               <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="before">
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="before">
                 <field name="department"/>
-<!--                <field name="product_template_id_next"/>-->
+                <!--                <field name="product_template_id_next"/>-->
             </xpath>
 
         </field>
     </record>
 
 
-
-
     <!-- Action for Vehicles -->
     <record id="action_vehicle_products" model="ir.actions.act_window">
-    <field name="name">Vehicles</field>
-    <field name="res_model">product.template</field>
-    <field name="view_mode">kanban,list,form</field>
-    <field name="domain">[('categ_id.name','=','Vehicles')]</field>
-</record>
-
-
-
-
-
+        <field name="name">Vehicles</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('categ_id.name','=','Vehicles')]</field>
+    </record>
 
 
     <menuitem id="menu_vehicle_products" name="Vehicles" parent="sale.sale_menu_root" sequence="50"/>
 
-    <menuitem id="submenu_all_vehicles" name="All Vehicles" parent="menu_vehicle_products" action="action_vehicle_products" sequence="1"/>
-
-
-
-
-
+    <menuitem id="submenu_all_vehicles" name="All Vehicles" parent="menu_vehicle_products"
+              action="action_vehicle_products" sequence="1"/>
 
 
 </odoo>

@@ -10,20 +10,33 @@
 <!--            <field name="engine_no" string="Engine Number"/>-->
 <!--        </xpath>-->
         <xpath expr="//sheet/notebook" position="inside">
+
+
             <page string="Vehicle Informations">
                 <group>
-                    <group>
-
+                    <group string="Basic Identification">
                         <field name="vehicle_type"/>
                         <field name="vin_sn"/>
-                        <field name="register_no"/>
+                        <field name="register_no" />
                         <field name="vehicle_make_id"/>
                         <field name="model_id"/>
+                        <field name="variant"/>
+                        <field name="year_of_manufacturing"/>
+                        <field name="odoo_meeter"/>
+                        <field name="colour_type"/>
+                    </group>
+                    <group string="Technical Specifications" col="2">
+                        <field name="fuel_type"/>
+                        <field name="engine_capacity"/>
+                        <field name="transmission"/>
+                        <field name="drivetrain"/>
+                        <field name="number_of_doors"/>
+                        <field name="number_of_seats"/>
                         <field name="engine_no"/>
                         <field name="specification"/>
-                        <field name="fuel_type"/>
+
                         <field name="date_of_purchase"/>
-                        <field name="year_of_manufacturing"/>
+
                         <field name="date_of_manufacturing"/>
                         <field name="country_of_origin_id"/>
                         <field name="number_of_cylinders"/>
@@ -31,28 +44,46 @@
 
                     </group>
 
-                    <group>
+                    <group string="Ownership &amp; Documentation">
+                        <field name="ownership_status"/>
+                        <field name="service_history"/>
+                        <field name="rta_passing"/>
                         <field name="product_code" readonly="1"/>
                         <field name="bought_from"/>
                         <field name="bought_by"/>
                         <field name="consignment"/>
                         <field name="consignment_location"/>
                         <field name="hours_spent"/>
-                        <field name="service_history"/>
-                        <field name="odoo_meeter"/>
-                        <field name="colour_type"/>
+
+
                         <field name="trim_colour"/>
                         <field name="interior_type"/>
-                         <field name="additional_features"/>
+                        <field name="additional_features"/>
                         <field name="send_to_id"/>
                     </group>
                     <group string="Cost Details" col="2">
+                        <field name="purchase_price"/>
+                        <field name="sales_price"/>
+                        <field name="offer_price"/>
+                        <field name="loan_price"/>
+                        <field name="vat_applicable"/>
                         <field name="landing_price"/>
                         <field name="sales_cost"/>
                         <field name="refurb_cost"/>
                         <field name="additional_expenses"/>
-                        <field name="sales_price"/>
 
+
+                    </group>
+                    <group string="Condition &amp; Features">
+                        <field name="accident_history"/>
+                        <field name="accident_details"/>
+                        <!--                        invisible="accident_history == False"-->
+                        <field name="interior_condition"/>
+                        <field name="exterior_condition"/>
+                        <field name="tyre_condition"/>
+                        <field name="tyre_life_percent"/>
+                        <!--                         invisible="tyre_condition != used"-->
+                        <field name="no_of_keys"/>
                     </group>
 
                     <group string="Vehicle Images" colspan="4">
