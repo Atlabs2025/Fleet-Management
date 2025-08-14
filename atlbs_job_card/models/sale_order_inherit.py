@@ -15,14 +15,7 @@ class SaleOrder(models.Model):
             'context': {'default_sale_order_id': self.id},
         }
 
-    # return {
-    #     'name': 'Add Vehicle Products',
-    #     'type': 'ir.actions.act_window',
-    #     'res_model': 'sale.order.vehicle.product.wizard',
-    #     'view_mode': 'form',
-    #     'target': 'new',
-    #     'context': {'default_sale_order_id': self.id},
-    # }
+   
 
 
     def action_create_job_card(self):
@@ -30,8 +23,8 @@ class SaleOrder(models.Model):
 
         vehicle_make_id = False
         for line in self.order_line:
-            if line.product_template_id and line.product_template_id.vehicle_id:
-                vehicle_make_id = line.product_template_id.vehicle_id.id
+            if line.product_template_id and line.product_template_id.register_no.id:
+                vehicle_make_id = line.product_template_id.register_no.id
                 break
 
         # Create job card record linked to this sale order
