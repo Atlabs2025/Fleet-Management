@@ -22,7 +22,7 @@ class VehicleStockBook(models.Model):
     ], string="Vehicle Type")
     vehicle_id = fields.Many2one('fleet.vehicle', string="Make")
     model_id = fields.Many2one('fleet.vehicle.model', string="Model")
-    vin = fields.Char(string="VIN")
+    vin_sn = fields.Char(string="Chassis Number")
     engine_no = fields.Char(string="Engine Number")
     plate_no = fields.Char(string="Plate Number")
     brand_id = fields.Many2one('fleet.vehicle.model.brand', string="Brand")
