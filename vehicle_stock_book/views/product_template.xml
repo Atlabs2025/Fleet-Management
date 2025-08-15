@@ -11,6 +11,7 @@
 <!--        </xpath>-->
         <xpath expr="//sheet/notebook" position="inside">
 
+<!--            vehicle informations-->
 
             <page string="Vehicle Informations">
                 <group>
