@@ -145,4 +145,5 @@ class AccountMoveLine(models.Model):
         ('sublets', 'Sublets'),
         ('paint_material', 'Paint Material'),
         ('tyre', 'Tyre'),
+        ('vehicle', 'Vehicle'),
     ], string="Department")

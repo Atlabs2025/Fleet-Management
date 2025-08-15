@@ -334,7 +334,7 @@ class JobCardInvoiceWizard(models.TransientModel):
         selected_service_lines = self.service_line_ids.filtered(lambda l: l.service_selected)
 
         if not selected_lines and not selected_service_lines:
-            raise UserError("Please select at least one line or service to invoice.")
+            raise UserError("Please select at least one line oValueError: Wrong value for job.card.invoice.wizard.line.department: 'vehicle'r service to invoice.")
 
         invoice_lines = []
         stock_moves = []
@@ -504,6 +504,7 @@ class JobCardInvoiceWizardLine(models.TransientModel):
         ('sublets', 'Sublets'),
         ('paint_material', 'Paint Material'),
         ('tyre', 'Tyre'),
+        ('vehicle', 'Vehicle'),
     ], string="Department")
     product_template_id = fields.Many2one('product.template', string="Product")
 
