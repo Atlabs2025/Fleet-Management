@@ -3,7 +3,7 @@
         <field name="name">job.card.invoice.wizard.form</field>
         <field name="model">job.card.invoice.wizard</field>
         <field name="arch" type="xml">
-
+<!--vehicle department added in lines-->
             <form string="Select Lines to Invoice">
                 <sheet>
                     <header>
