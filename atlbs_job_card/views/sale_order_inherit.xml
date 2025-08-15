@@ -23,7 +23,7 @@
                         class="btn-primary"/>
             </xpath>
 
-
+<!--dept added-->
             <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="before">
                 <field name="department"/>
                 <!--                <field name="product_template_id_next"/>-->

@@ -15,28 +15,29 @@ class SaleOrder(models.Model):
             'context': {'default_sale_order_id': self.id},
         }
 
-   
+
 
 
     def action_create_job_card(self):
         self.ensure_one()
 
-        vehicle_make_id = False
-        for line in self.order_line:
-            if line.product_template_id and line.product_template_id.register_no.id:
-                vehicle_make_id = line.product_template_id.register_no.id
-                break
 
-        # Create job card record linked to this sale order
+# commented temporarily for creating job card
+        # vehicle_make_id = False
+        # for line in self.order_line:
+        #     if line.product_template_id and line.product_template_id.register_no.id:
+        #         vehicle_make_id = line.product_template_id.register_no.id
+        #         break
+
+
         job_card = self.env['job.card.management'].create({
-            'sale_order_id': self.id,  # Assuming job card links to sale.order
+            'sale_order_id': self.id,
             'partner_id': self.partner_id.id,
             'email': self.partner_id.email,
             'phone': self.partner_id.phone,
             'whatsapp_no': self.partner_id.whatsapp_no,
-            'register_no': vehicle_make_id,
+            # 'register_no': vehicle_make_id,
 
-            # add other fields as needed
         })
 
         job_card_line_obj = self.env['job.card.line']
