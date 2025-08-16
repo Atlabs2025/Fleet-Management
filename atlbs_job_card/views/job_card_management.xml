@@ -430,12 +430,46 @@
                                     <field name="display_type" column_invisible="1"/>
                                     <field name="checklist_name_id" column_invisible="1"/>
                                     <field name="description" column_invisible="1"/>
+
+                                    <field name="is_ok"/>
+                                    <field name="repair_required"/>
+                                    <field name="replace_required"/>
+                                    <field name="check_mark"/>
+                                    <field name="remarks"/>
                                     <field name="check_mark"
                                            options='{"bg_color": "red: check_mark == False; green: check_mark == True", "fg_color": "red: check_mark == False"}'/>
 
                                 </list>
                             </field>
                         </page>
+
+
+                        <page string="Vehicle Images">
+
+                            <field name="vehicle_image_ids">
+                            <list editable="bottom">
+                                <field name="image" widget="image"/>
+                            </list>
+                        </field>
+
+
+<!--                            <field name="vehicle_image_ids">-->
+<!--                                <list editable="bottom">-->
+<!--&lt;!&ndash;                                    <field name="name"/>&ndash;&gt;-->
+<!--                                    <field name="image"/>-->
+<!--                                </list>-->
+<!--                            </field>-->
+                        </page>
+
+
+
+
+
+
+
+
+
+
 
 
                         <!--                        <page string="Health Check">-->
