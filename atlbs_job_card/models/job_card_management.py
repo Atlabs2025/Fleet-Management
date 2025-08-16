@@ -186,6 +186,7 @@ class JobCardManagement(models.Model):
         string="Quality Checklist",
         default=lambda self: self.get_quality_checklist()
     )
+    vehicle_image_ids = fields.One2many('job.card.vehicle.image', 'job_card_id', string="Vehicle Images")
 
 
 
@@ -1583,7 +1584,23 @@ class JobCardHealthLine(models.Model):
         ('line_note', 'Note'),
     ], string='Display Type', default=False)
     description = fields.Text(string='Description')
+    is_ok = fields.Boolean(string='OK',default=False)
+    repair_required = fields.Boolean(string='Required',default=False)
+    replace_required = fields.Boolean(string='Replace Required',default=False)
     check_mark = fields.Boolean(string='Check Mark', default=False)
+    remarks = fields.Char(string='Remarks')
+
+
+
+
+class JobCardVehicleImage(models.Model):
+    _name = "job.card.vehicle.image"
+    _description = "Job Card Vehicle Images"
+
+    job_card_id = fields.Many2one('job.card.management', string="Job Card", required=True, ondelete='cascade')
+    # name = fields.Char(string="Description")
+    # image = fields.Image(string="Image", max_width=1024, max_height=1024)
+    image = fields.Binary(string="Image", attachment=True)
 
 
 

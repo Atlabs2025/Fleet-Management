@@ -1,0 +1,51 @@
+<odoo>
+
+    <record id="view_purchase_order_form_inherit_department" model="ir.ui.view">
+        <field name="name">purchase.order.line.form.department</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+
+<!--            <xpath expr="//header" position="inside">-->
+<!--                <button name="action_create_job_card"-->
+<!--                        string="Create Job Card"-->
+<!--                        type="object"-->
+<!--                        class="btn-primary"-->
+<!--                        invisible="state  !='purchase'"/>-->
+<!--            </xpath>-->
+
+
+            <xpath expr="//field[@name='order_line']" position="before">
+                <button name="action_add_vehicle_products"
+                        string="Add Vehicle Products"
+                        type="object"
+                        class="btn-primary"/>
+            </xpath>
+
+<!--dept added-->
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="before">
+                <field name="department"/>
+                <!--                <field name="product_template_id_next"/>-->
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <!-- Action for Vehicles -->
+    <record id="action_vehicle_products" model="ir.actions.act_window">
+        <field name="name">Vehicles</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('categ_id.name','=','Vehicles')]</field>
+    </record>
+
+
+    <menuitem id="menu_vehicle_products" name="Vehicles" parent="purchase.menu_purchase_root" sequence="100"/>
+
+    <menuitem id="submenu_all_vehicles" name="All Vehicles" parent="menu_vehicle_products"
+              action="action_vehicle_products" sequence="1"/>
+
+
+</odoo>
