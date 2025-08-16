@@ -37,8 +37,8 @@
             <form string="Job Card">
                 <header>
                     <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,memo,completed"/>
-                    <button name="action_create_job_card" string="Submit" type="object"
-                            invisible="state != 'draft'" class="btn-primary"/>
+<!--                    <button name="action_create_job_card" string="Submit" type="object"-->
+<!--                            invisible="state != 'draft' " class="btn-primary"/>-->
 
                     <button name="print_job_card_report"
                             type="object"
@@ -49,7 +49,7 @@
                     <button name="action_reset_to_draft" string="Reset To Draft" type="object"
                             invisible="state != 'completed'" class="btn-success"/>
                     <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary"
-                            invisible="state  !='completed'"/>
+                            invisible="state  !='completed' or  all_lines_invoiced == True"/>
                     <button name="action_print_estimate" string="Print Estimate" type="object" class="btn-primary"
                             invisible="state != 'memo' or is_estimate_printed == True or estimate_id == False"/>
                     <!--                    invisible="state  !='memo'"-->

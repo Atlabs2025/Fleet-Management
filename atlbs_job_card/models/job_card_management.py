@@ -188,7 +188,7 @@ class JobCardManagement(models.Model):
     )
     vehicle_image_ids = fields.One2many('job.card.vehicle.image', 'job_card_id', string="Vehicle Images")
 
-
+    all_lines_invoiced = fields.Boolean(compute='_compute_all_lines_invoiced', store=True)
 
     @api.model
     def get_quality_checklist(self):
@@ -394,11 +394,11 @@ class JobCardManagement(models.Model):
                 rec.vat = rec.partner_id.vat
                 rec.whatsapp_no = rec.partner_id.whatsapp_no
 
+# commented saturday for client requirement
 
-
-    def action_create_job_card(self):
-
-        self.state = 'memo'
+    # def action_create_job_card(self):
+    #
+    #     self.state = 'memo'
 
     def action_reset_to_draft(self):
         for rec in self:
@@ -659,6 +659,8 @@ class JobCardManagement(models.Model):
                 'tax_ids': [(6, 0, line.tax_ids.ids)],
             })
 
+        self.state = 'memo'
+
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'job.card.estimate',
@@ -711,6 +713,18 @@ class JobCardManagement(models.Model):
             rec.estimate_subtotal = sum(line.after_discount for line in rec.estimate_line_ids)
             rec.estimate_vat_total = sum(line.tax_amount for line in rec.estimate_line_ids)
             # rec.total_amount = rec.subtotal + rec.vat_total
+
+
+
+# for hiding invoice button
+    @api.depends('job_detail_line_ids.line_state')
+    def _compute_all_lines_invoiced(self):
+        for rec in self:
+            rec.all_lines_invoiced = all(l.line_state == 'x_state' for l in rec.job_detail_line_ids)
+
+
+
+
 
 
 class JobCardLine(models.Model):
