@@ -68,20 +68,25 @@ class PurchaseOrder(models.Model):
 #
 
 
-class PurchaseOrderLine(models.Model):
-    _inherit = 'purchase.order.line'
+    class PurchaseOrderLine(models.Model):
+        _inherit = 'purchase.order.line'
 
-    department = fields.Selection([
-        ('labour', 'Labour'),
-        ('parts', 'Parts'),
-        ('material', 'Material'),
-        ('lubricant', 'Lubricant'),
-        ('sublets', 'Sublets'),
-        ('paint_material', 'Paint Material'),
-        ('tyre', 'Tyre'),
-        ('vehicle', 'Vehicle'),
-    ], string="Department")
-    # product_template_id_next = fields.Many2one('product.template', string="Part Number")
+        department = fields.Selection([
+            ('labour', 'Labour'),
+            ('parts', 'Parts'),
+            ('material', 'Material'),
+            ('lubricant', 'Lubricant'),
+            ('sublets', 'Sublets'),
+            ('paint_material', 'Paint Material'),
+            ('tyre', 'Tyre'),
+            ('vehicle', 'Vehicle'),
+        ], string="Department")
+        # product_template_id_next = fields.Many2one('product.template', string="Part Number")
+
+        product_location_id = fields.Many2one(
+            'stock.location',
+            string="Product Location")
+
 
 
 

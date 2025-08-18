@@ -282,8 +282,6 @@ class JobCardManagement(models.Model):
 
 
 
-
-
     @api.depends('created_datetime')
     def _compute_due_days(self):
         for record in self:
