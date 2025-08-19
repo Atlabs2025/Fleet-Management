@@ -20,28 +20,17 @@ class SaleOrder(models.Model):
 
     def action_create_job_card(self):
         self.ensure_one()
-
-
-# commented temporarily for creating job card
-        # vehicle_make_id = False
-        # for line in self.order_line:
-        #     if line.product_template_id and line.product_template_id.register_no.id:
-        #         vehicle_make_id = line.product_template_id.register_no.id
-        #         break
-
-
         job_card = self.env['job.card.management'].create({
             'sale_order_id': self.id,
             'partner_id': self.partner_id.id,
             'email': self.partner_id.email,
             'phone': self.partner_id.phone,
             'whatsapp_no': self.partner_id.whatsapp_no,
+            'state': 'memo',
             # 'register_no': vehicle_make_id,
 
         })
-
         job_card_line_obj = self.env['job.card.line']
-
         for line in self.order_line:
             job_card_line_obj.create({
                 'job_card_id': job_card.id,
@@ -56,7 +45,6 @@ class SaleOrder(models.Model):
                 # compute tax_amount if you want here
                 'uom': line.product_uom.id if hasattr(line, 'product_uom') else False,
             })
-
         return {
             'name': 'Job Card',
             'type': 'ir.actions.act_window',
