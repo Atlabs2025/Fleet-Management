@@ -17,6 +17,14 @@ class SaleOrder(models.Model):
             'context': {'default_sale_order_id': self.id},
         }
 
+    def _create_invoices(self, **kwargs):
+        invoices = super()._create_invoices(**kwargs)
+        for order in self:
+            if order.job_card_id:
+                invoices.filtered(lambda inv: inv.invoice_origin == order.name).write({
+                    "job_card_id": order.job_card_id.id
+                })
+        return invoices
 
 
 # function commented on aug26
