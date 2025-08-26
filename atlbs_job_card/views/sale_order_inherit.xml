@@ -12,7 +12,8 @@
                         string="Create Job Card"
                         type="object"
                         class="btn-primary"
-                        invisible="state  !='sale'"/>
+                        invisible="state  !='sale' or job_card_id != False"
+               />
             </xpath>
 
 
