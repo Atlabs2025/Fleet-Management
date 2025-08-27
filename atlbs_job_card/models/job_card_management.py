@@ -461,6 +461,7 @@ class JobCardManagement(models.Model):
             'view_mode': 'form',
             'target': 'new',
             'context': {
+
                 'default_job_card_id': self.id,
                 'default_employee_id': employee.id if employee else False,
                 'default_job_number': self.name,

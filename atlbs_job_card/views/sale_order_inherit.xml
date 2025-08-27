@@ -30,6 +30,12 @@
                 <!--                <field name="product_template_id_next"/>-->
             </xpath>
 
+
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
+                <field name="stock_qty"/>
+            </xpath>
+
+
         </field>
     </record>
 
@@ -43,9 +49,9 @@
     </record>
 
 
-    <menuitem id="menu_vehicle_products" name="Vehicles" parent="sale.sale_menu_root" sequence="50"/>
+    <menuitem id="menu_sale_vehicle_products" name="Vehicles" parent="sale.sale_menu_root" sequence="100"/>
 
-    <menuitem id="submenu_all_vehicles" name="All Vehicles" parent="menu_vehicle_products"
+    <menuitem id="submenu_sale_all_vehicles" name="All Vehicles" parent="menu_sale_vehicle_products"
               action="action_vehicle_products" sequence="1"/>
 
 
