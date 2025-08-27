@@ -116,6 +116,20 @@ class SaleOrderLine(models.Model):
     ], string="Department")
     # product_template_id_next = fields.Many2one('product.template', string="Part Number")
 
+    stock_qty = fields.Float(
+        string="Stock",
+        compute="_compute_stock_qty",
+        store=False
+    )
+
+    @api.depends("product_id")
+    def _compute_stock_qty(self):
+        for line in self:
+            if line.product_id:
+                # total on-hand quantity across all locations
+                line.stock_qty = line.product_id.qty_available
+            else:
+                line.stock_qty = 0.0
 
 
 # part number onchange
