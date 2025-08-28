@@ -31,6 +31,11 @@
             </xpath>
 
 
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_template_id']" position="after">
+                <field name="description"/>
+            </xpath>
+
+
             <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
                 <field name="stock_qty"/>
             </xpath>
@@ -40,12 +45,43 @@
     </record>
 
 
+
+
+
+
     <!-- Action for Vehicles -->
     <record id="action_vehicle_products" model="ir.actions.act_window">
         <field name="name">Vehicles</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('categ_id.name','=','Vehicles')]</field>
+         <field name="search_view_id" ref="view_vehicle_products_search"/>
+    </record>
+
+
+
+    <!-- Custom Search View -->
+    <record id="view_vehicle_products_search" model="ir.ui.view">
+        <field name="name">product.template.vehicle.search</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <search string="Search Vehicles">
+                <field name="name"/>
+                <field name="vehicle_make_id"/>
+                <field name="model_id"/>
+                <field name="colour_type"/>
+
+                <!-- Group By Options -->
+                <group expand="0" string="Group By">
+                    <filter string="Make" name="group_make"
+                            context="{'group_by':'vehicle_make_id'}"/>
+                    <filter string="Model" name="group_model"
+                            context="{'group_by':'model_id'}"/>
+                    <filter string="Colour" name="group_colour"
+                            context="{'group_by':'colour_type'}"/>
+                </group>
+            </search>
+        </field>
     </record>
 
 

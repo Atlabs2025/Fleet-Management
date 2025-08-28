@@ -8,6 +8,8 @@
             <form string="Select Vehicle Products">
                 <sheet>
                     <group>
+
+
                         <field name="product_ids" widget="many2many_tags"/>
                     </group>
                     <footer>

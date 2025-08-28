@@ -134,6 +134,9 @@ class AccountMove(models.Model):
                 payment.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable').reconcile()
 
 
+
+
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
@@ -147,3 +150,27 @@ class AccountMoveLine(models.Model):
         ('tyre', 'Tyre'),
         ('vehicle', 'Vehicle'),
     ], string="Department")
+
+
+
+
+# this function is added for if the product is in vehicle then the account is in stock input
+    @api.onchange('product_id')
+    def _onchange_product_id_override_account(self):
+        if self.product_id and self.move_id.move_type == 'in_invoice':
+            if self.product_id.categ_id.name == 'Vehicles':
+                input_account = self.product_id.categ_id.property_stock_valuation_account_id
+                if input_account:
+                    self.account_id = input_account.id
+
+
+ # this function can be used if i select  department as vehicle
+    # @api.onchange('product_id')
+    # def _onchange_product_department_override_account(self):
+    #     # Only for vendor bills
+    #     if self.move_id.move_type == 'in_invoice' and self.product_id:
+    #         # Check the department
+    #         if getattr(self.product_id, 'department', False) == 'vehicle':
+    #             input_account = self.product_id.categ_id.property_stock_valuation_account_id
+    #             if input_account:
+    #                 self.account_id = input_account.id
