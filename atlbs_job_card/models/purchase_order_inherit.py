@@ -68,10 +68,10 @@ class PurchaseOrder(models.Model):
 #
 
 
-    class PurchaseOrderLine(models.Model):
-        _inherit = 'purchase.order.line'
+class PurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
 
-        department = fields.Selection([
+    department = fields.Selection([
             ('labour', 'Labour'),
             ('parts', 'Parts'),
             ('material', 'Material'),
@@ -83,9 +83,26 @@ class PurchaseOrder(models.Model):
         ], string="Department")
         # product_template_id_next = fields.Many2one('product.template', string="Part Number")
 
-        product_location_id = fields.Many2one(
+    product_location_id = fields.Many2one(
             'stock.location',
             string="Product Location")
+
+    stock_qty = fields.Float(
+        string="Stock",
+        compute="_compute_stock_qty",
+        store=False
+    )
+
+    @api.depends("product_id")
+    def _compute_stock_qty(self):
+        for line in self:
+            if line.product_id:
+                # total on-hand quantity across all locations
+                line.stock_qty = line.product_id.qty_available
+            else:
+                line.stock_qty = 0.0
+
+
 
 
 

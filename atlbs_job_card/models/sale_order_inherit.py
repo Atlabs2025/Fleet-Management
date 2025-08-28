@@ -122,6 +122,8 @@ class SaleOrderLine(models.Model):
         store=False
     )
 
+    description = fields.Char(string='Description')
+
     @api.depends("product_id")
     def _compute_stock_qty(self):
         for line in self:

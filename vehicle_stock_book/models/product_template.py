@@ -83,13 +83,7 @@ class ProductTemplate(models.Model):
         string='Service History'
     )
     odoo_meeter = fields.Float(string="Odoo Meeter")
-    colour_type = fields.Selection(
-        selection=[
-            ('interior', 'Interior'),
-            ('Exterior', 'Exterior')
-        ],
-        string=' Body Colour'
-    )
+    colour_type = fields.Char(string='Body Colour')
     trim_colour = fields.Char(string="Trim Colour")
     interior_type = fields.Selection(
         selection=[
