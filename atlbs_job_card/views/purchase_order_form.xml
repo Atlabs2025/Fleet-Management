@@ -17,6 +17,10 @@
             <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="before">
                 <field name="department"/>
             </xpath>
+             <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="after">
+                <field name="description"/>
+            </xpath>
+
 
             <!-- Add stock_qty after qty -->
             <xpath expr="//field[@name='order_line']/list/field[@name='product_qty']" position="after">
@@ -28,6 +32,19 @@
 
         </field>
     </record>
+
+
+        <record id="action_purchase_vehicle_products" model="ir.actions.act_window">
+        <field name="name">Vehicles</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('categ_id.name','=','Vehicles')]</field>
+<!--         <field name="search_view_id" ref="view_vehicle_products_search"/>-->
+    </record>
+
+    <menuitem id="menu_vehicle_products" name="Vehicles" parent="purchase.menu_purchase_root" sequence="100"/>
+    <menuitem id="submenu_all_vehicles" name="All Vehicles" parent="menu_vehicle_products"
+              action="action_purchase_vehicle_products" sequence="1"/>
 
 
 </odoo>
