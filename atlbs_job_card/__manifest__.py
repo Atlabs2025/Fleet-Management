@@ -6,7 +6,7 @@
     'summary': 'Atlabs Job Card Management',
     'description': 'job card',
     'depends': [
-        'contacts', 'fleet','product','stock','material_purchase_requisitions','hr','hr_timesheet','purchase','stock','project',
+        'contacts', 'fleet','product','vehicle_stock_book','stock','material_purchase_requisitions','hr','hr_timesheet','purchase','stock','project',
         'board','base','mail','web','sale',
     ],
 'data': [

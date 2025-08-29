@@ -112,6 +112,9 @@
 
 
 
+
+
+
     <!--<record id="view_product_template_vehicle_form" model="ir.ui.view">-->
 <!--    <field name="name">product.template.vehicle.form.inherit</field>-->
 <!--    <field name="model">product.template</field>-->

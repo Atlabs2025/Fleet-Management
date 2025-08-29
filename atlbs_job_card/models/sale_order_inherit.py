@@ -7,14 +7,23 @@ class SaleOrder(models.Model):
 
     job_card_id = fields.Many2one("job.card.management", string="Job Card")
 
+
     def action_add_vehicle_products(self):
+        # Prepopulate wizard with all vehicle products
+        all_vehicles = self.env['product.product'].search([('categ_id.name', '=', 'Vehicles')])
+        wizard = self.env['sale.order.vehicle.product.wizard'].create({'sale_order_id': self.id})
+        for product in all_vehicles:
+            self.env['sale.order.vehicle.product.wizard.line'].create({
+                'wizard_id': wizard.id,
+                'product_id': product.id,
+            })
         return {
-            'name': 'Add Vehicle Products',
+            'name': 'Select Vehicle Products',
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order.vehicle.product.wizard',
             'view_mode': 'form',
+            'res_id': wizard.id,
             'target': 'new',
-            'context': {'default_sale_order_id': self.id},
         }
 
     def _create_invoices(self, **kwargs):
