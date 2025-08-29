@@ -50,7 +50,7 @@
 
 
     <!-- Action for Vehicles -->
-    <record id="action_vehicle_products" model="ir.actions.act_window">
+    <record id="action_sale_vehicle_products" model="ir.actions.act_window">
         <field name="name">Vehicles</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form</field>
@@ -58,6 +58,17 @@
          <field name="search_view_id" ref="view_vehicle_products_search"/>
     </record>
 
+
+
+
+
+    <!--    <record id="action_vehicle_products_sale" model="ir.actions.act_window">-->
+<!--        <field name="name">Vehicles (Sale)</field>-->
+<!--        <field name="res_model">product.template</field>-->
+<!--        <field name="view_mode">kanban,list,form</field>-->
+<!--        <field name="domain">[('categ_id.name','=','Vehicles')]</field>-->
+<!--        <field name="search_view_id" ref="view_vehicle_products_search"/>-->
+<!--    </record>-->
 
 
     <!-- Custom Search View -->
@@ -88,7 +99,12 @@
     <menuitem id="menu_sale_vehicle_products" name="Vehicles" parent="sale.sale_menu_root" sequence="100"/>
 
     <menuitem id="submenu_sale_all_vehicles" name="All Vehicles" parent="menu_sale_vehicle_products"
-              action="action_vehicle_products" sequence="1"/>
+              action="action_sale_vehicle_products" sequence="1"/>
+
+
+
+
+
 
 
 </odoo>

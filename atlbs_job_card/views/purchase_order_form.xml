@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_purchase_order_form_inherit_vehicle" model="ir.ui.view">
+        <field name="name">purchase.order.form.vehicle.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add button before order_line -->
+            <xpath expr="//field[@name='order_line']" position="before">
+                <button name="action_add_vehicle_products"
+                        string="Add Vehicle Products"
+                        type="object"
+                        class="btn-primary"/>
+            </xpath>
+
+            <!-- Add department field in purchase.order.line -->
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="before">
+                <field name="department"/>
+            </xpath>
+
+            <!-- Add stock_qty after qty -->
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_qty']" position="after">
+                <field name="stock_qty"/>
+                <field name="product_location_id"/>
+            </xpath>
+
+<!--            &lt;!&ndash; Add location before UoM &ndash;&gt;-->
+         
+        </field>
+    </record>
+
+
+</odoo>

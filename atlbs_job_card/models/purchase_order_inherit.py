@@ -17,57 +17,6 @@ class PurchaseOrder(models.Model):
 
 
 
-
-#     def action_create_job_card(self):
-#         self.ensure_one()
-#
-#
-# # commented temporarily for creating job card
-#         # vehicle_make_id = False
-#         # for line in self.order_line:
-#         #     if line.product_template_id and line.product_template_id.register_no.id:
-#         #         vehicle_make_id = line.product_template_id.register_no.id
-#         #         break
-#
-#
-#         job_card = self.env['job.card.management'].create({
-#             'sale_order_id': self.id,
-#             'partner_id': self.partner_id.id,
-#             'email': self.partner_id.email,
-#             'phone': self.partner_id.phone,
-#             'whatsapp_no': self.partner_id.whatsapp_no,
-#             # 'register_no': vehicle_make_id,
-#
-#         })
-#
-#         job_card_line_obj = self.env['job.card.line']
-#
-#         for line in self.order_line:
-#             job_card_line_obj.create({
-#                 'job_card_id': job_card.id,
-#                 'department': line.department,
-#                 'product_template_id': line.product_template_id.id if hasattr(line, 'product_template_id') else False,
-#                 'description': line.name,
-#                 'price_unit': line.price_unit,
-#                 'quantity': line.product_uom_qty,
-#                 'tax_ids': [(6, 0, line.tax_id.ids)] if hasattr(line, 'tax_id') else False,
-#                 'discount': line.discount,
-#                 'after_discount': line.price_unit * (1 - (line.discount or 0.0) / 100),
-#                 # compute tax_amount if you want here
-#                 'uom': line.product_uom.id if hasattr(line, 'product_uom') else False,
-#             })
-#
-#         return {
-#             'name': 'Job Card',
-#             'type': 'ir.actions.act_window',
-#             'res_model': 'job.card.management',
-#             'view_mode': 'form',
-#             'res_id': job_card.id,
-#             'target': 'current',
-#         }
-#
-
-
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
@@ -90,7 +39,7 @@ class PurchaseOrderLine(models.Model):
     stock_qty = fields.Float(
         string="Stock",
         compute="_compute_stock_qty",
-        store=False
+
     )
 
     @api.depends("product_id")
