@@ -7,6 +7,7 @@
     <field name="arch" type="xml">
         <xpath expr="//field[@name='invoice_vendor_bill_id']" position="after">
             <field name="job_card_id"/>
+            <field name="vehicle_make_id"/>
              <field name="service_advisor_id" readonly="1"/>
             <field name="service_contract_id"/>
 
@@ -53,6 +54,25 @@
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">records.action_group_pay_now()</field>
+    </record>
+
+
+
+    <record id="view_account_move_filter_inherit_vehicle" model="ir.ui.view">
+        <field name="name">account.move.filter.vehicle</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//search" position="inside">
+                <filter string="Vehicle Make"
+                        name="vehicle_make"
+                        domain="[]"
+                        context="{'group_by':'vehicle_make_id'}"/>
+                <field name="vehicle_make_id"/>
+            </xpath>
+
+        </field>
     </record>
 
 
