@@ -12,6 +12,13 @@ class AccountMove(models.Model):
 
     service_contract_id = fields.Many2one('fleet.vehicle.log.contract', string="Service Contract")
 
+    vehicle_make_id = fields.Many2one(
+        'fleet.vehicle.model.brand',  # replace with your actual vehicle make model
+        related='job_card_id.vehicle_make_id',
+        store=True,
+        string='Vehicle Make'
+    )
+
 
 
 # new fields  and functions added recently
