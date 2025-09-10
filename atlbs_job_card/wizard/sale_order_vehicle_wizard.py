@@ -37,30 +37,58 @@ class SaleOrderVehicleProductWizard(models.TransientModel):
         domain=[('categ_id.name', '=', 'Vehicles')]
     )
 
-    def action_add_products(self):
+    # def action_add_products(self):
+    #
+    #     self.ensure_one()
+    #     sale_order = self.sale_order_id
+    #
+    #     for product in self.product_ids:
+    #         # Build the description from vehicle fields
+    #         description_text = ' '.join(filter(None, [
+    #             getattr(product, 'vehicle_make_id',
+    #                     False) and product.vehicle_make_id if product.vehicle_make_id else '',
+    #             getattr(product, 'model_id', False) and product.model_id if product.model_id else '',
+    #             getattr(product, 'colour_type', False) and product.colour_type,
+    #         ]))
+    #
+    #         self.env['sale.order.line'].create({
+    #             'order_id': sale_order.id,
+    #             'product_id': product.id,
+    #             'department': 'vehicle',
+    #             'description': description_text,  # set description here
+    #             'product_uom_qty': 1,  # default quantity
+    #             'price_unit': product.list_price,
+    #         })
+    #
+    #     return {'type': 'ir.actions.act_window_close'}
 
+
+    def action_add_products(self):
         self.ensure_one()
         sale_order = self.sale_order_id
 
-        for product in self.product_ids:
-            # Build the description from vehicle fields
+        for template in self.product_ids:  # these are product.template
+            # Get the variant (always at least one)
+            variant = template.product_variant_id
+
+            # Build the description from vehicle fields (stored on template)
             description_text = ' '.join(filter(None, [
-                getattr(product, 'vehicle_make_id',
-                        False) and product.vehicle_make_id if product.vehicle_make_id else '',
-                getattr(product, 'model_id', False) and product.model_id if product.model_id else '',
-                getattr(product, 'colour_type', False) and product.colour_type,
+                template.vehicle_make_id if template.vehicle_make_id else '',
+                template.model_id if template.model_id else '',
+                template.colour_type or '',
             ]))
 
             self.env['sale.order.line'].create({
                 'order_id': sale_order.id,
-                'product_id': product.id,
+                'product_id': variant.id,  # must be product.product
                 'department': 'vehicle',
-                'description': description_text,  # set description here
-                'product_uom_qty': 1,  # default quantity
-                'price_unit': product.list_price,
+                'description': description_text,
+                'product_uom_qty': 1,
+                'price_unit': template.list_price,
             })
 
         return {'type': 'ir.actions.act_window_close'}
+
 
 # class SaleOrderVehicleProductWizardLine(models.TransientModel):
 #     _name = 'sale.order.vehicle.product.wizard.line'

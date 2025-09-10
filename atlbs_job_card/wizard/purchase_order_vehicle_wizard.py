@@ -16,47 +16,51 @@ class PurchaseOrderVehicleProductWizard(models.TransientModel):
 
 
     # def action_add_products(self):
+    #
     #     self.ensure_one()
-    #     order_line_obj = self.env['purchase.order.line']
-    #     for line in self.line_ids.filtered('selected'):
-    #         product = line.product_id
+    #     purchase_order = self.purchase_order_id
+    #
+    #     for product in self.product_ids:
+    #         # Build the description from vehicle fields
     #         description_text = ' '.join(filter(None, [
-    #             getattr(product, 'vehicle_make_id', False) and product.vehicle_make_id,
-    #             getattr(product, 'model_id', False) and product.model_id,
-    #             getattr(product, 'colour_type', False) and product.colour_type,
+    #             product.vehicle_make_id if product.vehicle_make_id else '',
+    #             product.model_id if product.model_id else '',
+    #             product.colour_type or '',
     #         ]))
-    #         order_line_obj.create({
-    #             'order_id': self.purchase_order_id.id,
+    #
+    #         self.env['purchase.order.line'].create({
+    #             'order_id': purchase_order.id,
     #             'product_id': product.id,
-    #             'product_uom_qty': 1,
-    #             'price_unit': product.lst_price,
     #             'department': 'vehicle',
-    #             'description': description_text,
+    #             'description': description_text,  # set description here
+    #             'product_uom_qty': 1,  # default quantity
+    #             'price_unit': product.list_price,
     #         })
+    #
     #     return {'type': 'ir.actions.act_window_close'}
 
-
     def action_add_products(self):
-
         self.ensure_one()
         purchase_order = self.purchase_order_id
 
-        for product in self.product_ids:
-            # Build the description from vehicle fields
+        for template in self.product_ids:  # these are product.template
+            # Get the variant (always at least one)
+            variant = template.product_variant_id
+
+            # Build the description from vehicle fields (stored on template)
             description_text = ' '.join(filter(None, [
-                getattr(product, 'vehicle_make_id',
-                        False) and product.vehicle_make_id if product.vehicle_make_id else '',
-                getattr(product, 'model_id', False) and product.model_id if product.model_id else '',
-                getattr(product, 'colour_type', False) and product.colour_type,
+                template.vehicle_make_id if template.vehicle_make_id else '',
+                template.model_id if template.model_id else '',
+                template.colour_type or '',
             ]))
 
             self.env['purchase.order.line'].create({
                 'order_id': purchase_order.id,
-                'product_id': product.id,
+                'product_id': variant.id,  # must be product.product
                 'department': 'vehicle',
-                'description': description_text,  # set description here
-                'product_uom_qty': 1,  # default quantity
-                'price_unit': product.list_price,
+                'description': description_text,
+                'product_uom_qty': 1,
+                'price_unit': template.list_price,
             })
 
         return {'type': 'ir.actions.act_window_close'}
