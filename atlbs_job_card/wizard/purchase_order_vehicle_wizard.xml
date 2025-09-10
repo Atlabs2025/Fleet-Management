@@ -1,16 +1,36 @@
 <odoo>
 
 
-    <record id="view_purchase_order_vehicle_product_wizard_list" model="ir.ui.view">
-        <field name="name">purchase.order.vehicle.product.wizard.list</field>
-        <field name="model">purchase.order.vehicle.product.wizard.line</field>
-        <field name="arch" type="xml">
-            <list string="Vehicle Products" editable="bottom">
-                <field name="selected"/>
-                <field name="product_id"/>
-            </list>
-        </field>
-    </record>
+<!--    <record id="view_purchase_order_vehicle_product_wizard_list" model="ir.ui.view">-->
+<!--        <field name="name">purchase.order.vehicle.product.wizard.list</field>-->
+<!--        <field name="model">purchase.order.vehicle.product.wizard.line</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <list string="Vehicle Products" editable="bottom">-->
+<!--                <field name="selected"/>-->
+<!--                <field name="product_id"/>-->
+<!--                 <field name="vin_sn"/>-->
+<!--                <field name="year"/>-->
+<!--                <field name="model_id"/>-->
+<!--            </list>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--        <record id="view_purchase_order_vehicle_product_wizard_form" model="ir.ui.view">-->
+<!--        <field name="name">purchase.order.vehicle.product.wizard.form</field>-->
+<!--        <field name="model">purchase.order.vehicle.product.wizard</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form string="Select Vehicle Products">-->
+<!--                <sheet>-->
+<!--                    <field name="line_ids" mode="list,form"/>-->
+<!--                    <footer>-->
+<!--                        <button string="Add to Order" type="object" name="action_add_products" class="btn-primary"/>-->
+<!--                        <button string="Cancel" class="btn-secondary" special="cancel"/>-->
+<!--                    </footer>-->
+<!--                </sheet>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
 
 
         <record id="view_purchase_order_vehicle_product_wizard_form" model="ir.ui.view">
@@ -19,7 +39,7 @@
         <field name="arch" type="xml">
             <form string="Select Vehicle Products">
                 <sheet>
-                    <field name="line_ids" mode="list,form"/>
+                    <field name="product_ids" widget="many2many_tags"/>
                     <footer>
                         <button string="Add to Order" type="object" name="action_add_products" class="btn-primary"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
@@ -30,25 +50,6 @@
     </record>
 
 
-
-
-<!--    <record id="view_purchase_order_vehicle_product_wizard_form" model="ir.ui.view">-->
-<!--        <field name="name">purchase.order.vehicle.product.wizard.form</field>-->
-<!--        <field name="model">purchase.order.vehicle.product.wizard</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <form string="Select Vehicle Products">-->
-<!--                <sheet>-->
-<!--                    <group>-->
-<!--                        <field name="product_ids" widget="many2many_tags"/>-->
-<!--                    </group>-->
-<!--                    <footer>-->
-<!--                        <button string="Add to Order" type="object" name="action_add_products" class="btn-primary"/>-->
-<!--                        <button string="Cancel" class="btn-secondary" special="cancel"/>-->
-<!--                    </footer>-->
-<!--                </sheet>-->
-<!--            </form>-->
-<!--        </field>-->
-<!--    </record>-->
 
 
 </odoo>

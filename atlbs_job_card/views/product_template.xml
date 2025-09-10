@@ -38,6 +38,39 @@
     </field>
 </record>
 
+    <record id="product_template_simple_search_extend" model="ir.ui.view">
+    <field name="name">product.template.simple.search.extend</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_search_view"/>
+    <field name="arch" type="xml">
+        <!-- Add model_id and vin_sn as simple search fields -->
+        <xpath expr="//field[@name='name']" position="after">
+            <field name="model_id"/>
+            <field name="vin_sn"/>
+            <field name="year_of_manufacturing"/>
+            <field name="colour_type"/>
+        </xpath>
+    </field>
+</record>
+
+
+    <record id="product_template_tree_inherit_vehicle" model="ir.ui.view">
+        <field name="name">product.template.tree.vehicle</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <!-- Add model_id and vin_sn after the name field -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="vin_sn"/>
+                <field name="model_id"/>
+                <field name="year_of_manufacturing"/>
+                <field name="colour_type"/>
+
+            </xpath>
+        </field>
+    </record>
+
+
 </odoo>
 
 
