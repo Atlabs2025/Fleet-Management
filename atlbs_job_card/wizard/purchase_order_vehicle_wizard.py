@@ -45,7 +45,7 @@ class PurchaseOrderVehicleProductWizard(models.TransientModel):
             # Build the description from vehicle fields
             description_text = ' '.join(filter(None, [
                 getattr(product, 'vehicle_make_id',
-                        False) and product.vehicle_make_id.name if product.vehicle_make_id else '',
+                        False) and product.vehicle_make_id if product.vehicle_make_id else '',
                 getattr(product, 'model_id', False) and product.model_id if product.model_id else '',
                 getattr(product, 'colour_type', False) and product.colour_type,
             ]))
