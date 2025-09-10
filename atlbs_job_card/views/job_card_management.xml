@@ -10,7 +10,7 @@
                 <!--            decoration-info="True"-->
                 <field name="name"/>
                 <field name="estimate_id"/>
-                 <field name="created_datetime"/>
+                <field name="created_datetime"/>
                 <field name="due_days_label"/>
                 <field name="total_amount"/>
                 <field name="partner_id"/>
@@ -37,8 +37,8 @@
             <form string="Job Card">
                 <header>
                     <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,memo,completed"/>
-<!--                    <button name="action_create_job_card" string="Submit" type="object"-->
-<!--                            invisible="state != 'draft' " class="btn-primary"/>-->
+                    <!--                    <button name="action_create_job_card" string="Submit" type="object"-->
+                    <!--                            invisible="state != 'draft' " class="btn-primary"/>-->
 
                     <button name="print_job_card_report"
                             type="object"
@@ -55,10 +55,10 @@
                     <!--                    invisible="state  !='memo'"-->
 
 
-<!--                    <button name="action_create_estimate"-->
-<!--                            string="Create Estimate"-->
-<!--                            type="object"-->
-<!--                            class="btn-primary" invisible="estimate_id != False or state != 'memo'"/>-->
+                    <!--                    <button name="action_create_estimate"-->
+                    <!--                            string="Create Estimate"-->
+                    <!--                            type="object"-->
+                    <!--                            class="btn-primary" invisible="estimate_id != False or state != 'memo'"/>-->
 
 
                     <button name="action_preforma_invoice" string="Create Preforma Invoice" type="object"
@@ -70,15 +70,13 @@
                             string="Complete" class="btn-primary" invisible="state  !='memo'"/>
 
                     <button name="action_approve_estimate"
-                        string="Approve"
-                        type="object"
-                        class="btn-primary"
-                    invisible="state != 'draft' or estimate_id != False or sale_order_id != False"/>
-                    'sale_order_id', '!=', False
-
-<!--                    hide_approve_button-->
+                            string="Approve"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft' or estimate_id != False or sale_order_id != False"/>
 
 
+                    <!--                    hide_approve_button-->
 
 
                 </header>
@@ -104,13 +102,13 @@
 
 
                         <group class="small-fields-group">
-                             <field name="cust_type" invisible="1"/>
+                            <field name="cust_type" invisible="1"/>
                             <field name="partner_id"/>
-                              <field name="email"/>
-                             <field name="is_insurance_claim"/>
+                            <field name="email"/>
+                            <field name="is_insurance_claim"/>
                             <field name="insurance_company_id" invisible="is_insurance_claim == False"/>
-<!--                            <field name="insurance_company_id" invisible="is_insurance_claim == False"/>-->
-                             <field name="claim_number" invisible="is_insurance_claim == False"/>
+                            <!--                            <field name="insurance_company_id" invisible="is_insurance_claim == False"/>-->
+                            <field name="claim_number" invisible="is_insurance_claim == False"/>
                             <field name="estimate_date" invisible="is_insurance_claim == False"/>
 
 
@@ -119,18 +117,18 @@
 
                         <group class="small-fields-group">
                             <field name="phone"/>
-                             <field name="whatsapp_no"/>
+                            <field name="whatsapp_no"/>
                             <field name="claim_date" invisible="is_insurance_claim == False"/>
                             <field name="lpo_number" invisible="is_insurance_claim == False"/>
                             <field name="lpo_date" invisible="is_insurance_claim == False"/>
-                             <field name="brought_by" invisible="is_insurance_claim == False"/>
+                            <field name="brought_by" invisible="is_insurance_claim == False"/>
 
 
                         </group>
 
                         <group class="small-fields-group">
-                             <field name="vat"/>
-                             <field name="created_datetime"/>
+                            <field name="vat"/>
+                            <field name="created_datetime"/>
                             <field name="company_id" invisible="1"/>
                             <field name="approved_amount" invisible="is_insurance_claim == False"/>
                             <field name="policy_number" invisible="is_insurance_claim == False"/>
@@ -185,34 +183,33 @@
                             </field>
                         </page>
 
-<!--                        Estimate lines page-->
+                        <!--                        Estimate lines page-->
 
                         <page string="Estimate">
 
-                                <field name="estimate_line_ids">
-                                    <list editable="bottom" decoration-success="estimate_check" decoration-danger="not estimate_check">
-                                        <field name="department" />
-                                        <field name="product_template_id"/>
-                                        <field name="part_number"/>
-                                        <!--                                        <field name="job_category_id"/>-->
-                                        <field name="description"/>
-                                        <field name="quantity"/>
-                                         <field name="uom_id"/>
-                                        <field name="price_unit"/>
-                                        <field name="price_amt"/>
-                                        <field name="discount"/>
-                                        <field name="after_discount"/>
-                                        <field name="tax_ids" widget="many2many_tags"/>
-                                        <field name="tax_amount"/>
-                                        <field name="total" readonly="1"/>
-                                        <field name="estimate_check"/>
+                            <field name="estimate_line_ids">
+                                <list editable="bottom" decoration-success="estimate_check"
+                                      decoration-danger="not estimate_check">
+                                    <field name="department"/>
+                                    <field name="product_template_id"/>
+                                    <field name="part_number"/>
+                                    <!--                                        <field name="job_category_id"/>-->
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_amt"/>
+                                    <field name="discount"/>
+                                    <field name="after_discount"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="tax_amount"/>
+                                    <field name="total" readonly="1"/>
+                                    <field name="estimate_check"/>
 
 
-                                        <!--                                        <field name="line_state" required="1"/>-->
-                                    </list>
-                                </field>
-
-
+                                    <!--                                        <field name="line_state" required="1"/>-->
+                                </list>
+                            </field>
 
 
                             <group class="oe_subtotal_footer" colspan="2">
@@ -257,11 +254,11 @@
                             <field name="job_detail_line_ids">
                                 <list editable="bottom">
                                     <field name="department" readonly="parent.estimate_id"/>
-<!--                                    <field name="department" readonly="parent.state == 'complete'"/>-->
+                                    <!--                                    <field name="department" readonly="parent.state == 'complete'"/>-->
                                     <field name="product_template_id" readonly="parent.estimate_id"/>
                                     <field name="part_number" readonly="parent.estimate_id"/>
-<!--                                    removed category temporarily-->
-<!--                                    <field name="job_category_id" readonly="parent.estimate_id"/>-->
+                                    <!--                                    removed category temporarily-->
+                                    <!--                                    <field name="job_category_id" readonly="parent.estimate_id"/>-->
                                     <field name="description" readonly="parent.estimate_id"/>
                                     <field name="quantity" readonly="parent.estimate_id"/>
                                     <field name="price_unit" readonly="parent.estimate_id"/>
@@ -269,13 +266,14 @@
                                     <field name="price_amt" readonly="parent.estimate_id"/>
                                     <field name="discount" readonly="parent.estimate_id"/>
                                     <field name="after_discount" readonly="parent.estimate_id"/>
-<!--                                    <field name="tax_ids" widget="many2many_tags" readonly="parent.estimate_id"/>-->
-                                    <field name="tax_ids" domain="[('type_tax_use','=','sale'), ('amount','=',5.0)]" widget="many2many_tags" readonly="parent.estimate_id"/>
+                                    <!--                                    <field name="tax_ids" widget="many2many_tags" readonly="parent.estimate_id"/>-->
+                                    <field name="tax_ids" domain="[('type_tax_use','=','sale'), ('amount','=',5.0)]"
+                                           widget="many2many_tags" readonly="parent.estimate_id"/>
 
                                     <field name="tax_amount" readonly="parent.estimate_id"/>
                                     <field name="total" readonly="1"/>
 
-<!--                                    <field name="total" widget="monetary" options="{'currency_field': 'currency_id', 'no_currency_placeholder': ''}" readonly="1"/>-->
+                                    <!--                                    <field name="total" widget="monetary" options="{'currency_field': 'currency_id', 'no_currency_placeholder': ''}" readonly="1"/>-->
 
 
                                     <field name="line_state" required="1"/>
@@ -287,37 +285,38 @@
 
                                 </list>
                             </field>
-                            <br/><br/>
+                            <br/>
+                            <br/>
 
-<!--                            <group>-->
-<!--                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">-->
-<!--                                    &lt;!&ndash; Summary Totals &ndash;&gt;-->
-<!--                                    <div>-->
-<!--                                        <group string="Summary" col="2">-->
-<!--                                            <field name="total_labour" readonly="1"/>-->
-<!--                                            <field name="total_parts" readonly="1"/>-->
-<!--                                            <field name="total_material" readonly="1"/>-->
-<!--                                            <field name="total_lubricant" readonly="1"/>-->
-<!--                                            <field name="total_sublets" readonly="1"/>-->
-<!--                                            <field name="total_paint_material" readonly="1"/>-->
-<!--                                            <field name="total_tyre" readonly="1"/>-->
-<!--                                        </group>-->
-<!--                                    </div>-->
+                            <!--                            <group>-->
+                            <!--                                <div style="display: flex; justify-content: space-between; margin-top: 94px; gap: 2px;">-->
+                            <!--                                    &lt;!&ndash; Summary Totals &ndash;&gt;-->
+                            <!--                                    <div>-->
+                            <!--                                        <group string="Summary" col="2">-->
+                            <!--                                            <field name="total_labour" readonly="1"/>-->
+                            <!--                                            <field name="total_parts" readonly="1"/>-->
+                            <!--                                            <field name="total_material" readonly="1"/>-->
+                            <!--                                            <field name="total_lubricant" readonly="1"/>-->
+                            <!--                                            <field name="total_sublets" readonly="1"/>-->
+                            <!--                                            <field name="total_paint_material" readonly="1"/>-->
+                            <!--                                            <field name="total_tyre" readonly="1"/>-->
+                            <!--                                        </group>-->
+                            <!--                                    </div>-->
 
-<!--                                    <div style="flex: 1; margin-left: 800px;margin-top: 75px;">-->
-<!--                                        <group col="2" style="font-size: 14px; font-weight: 600;">-->
-<!--                                            <field name="total_price_amt" readonly="1" widget="monetary"/>-->
-<!--                                            <field name="total_discount" readonly="1" widget="monetary"/>-->
-<!--                                            <field name="subtotal" readonly="1" widget="monetary"/>-->
-<!--                                            <field name="vat_total" readonly="1" widget="monetary"/>-->
-<!--                                            <field name="total_amount" readonly="1" widget="monetary"-->
-<!--                                                   string="Grand Total"/>-->
-<!--                                        </group>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                            <!--                                    <div style="flex: 1; margin-left: 800px;margin-top: 75px;">-->
+                            <!--                                        <group col="2" style="font-size: 14px; font-weight: 600;">-->
+                            <!--                                            <field name="total_price_amt" readonly="1" widget="monetary"/>-->
+                            <!--                                            <field name="total_discount" readonly="1" widget="monetary"/>-->
+                            <!--                                            <field name="subtotal" readonly="1" widget="monetary"/>-->
+                            <!--                                            <field name="vat_total" readonly="1" widget="monetary"/>-->
+                            <!--                                            <field name="total_amount" readonly="1" widget="monetary"-->
+                            <!--                                                   string="Grand Total"/>-->
+                            <!--                                        </group>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
 
-<!--                            </group>-->
-<!--                            code changed for lines scrolling issue page classes and all removed-->
+                            <!--                            </group>-->
+                            <!--                            code changed for lines scrolling issue page classes and all removed-->
                             <group class="oe_subtotal_footer" colspan="2">
                                 <div style="display: flex; justify-content: space-between; gap: 40px; width: 100%;">
 
@@ -357,7 +356,7 @@
                         </page>
 
 
-<!--edited code on august 1 changes scrolling in the lines-->
+                        <!--edited code on august 1 changes scrolling in the lines-->
 
 
                         <page string="Requisition Lines">
@@ -399,7 +398,7 @@
                                     <button name="action_end" type="object" string="End" class="fa fa-stop"/>
                                     <!--                                    <field name="employee_id"/>-->
                                     <field name="employee_id" domain="[('employee_status', '=', 'available')]"/>
-                                      <field name="assigned_hours"/>
+                                    <field name="assigned_hours"/>
                                     <field name="status"/>
                                     <field name="start_time" widget="float_time"/>
                                     <field name="pause_time" widget="float_time"/>
@@ -447,51 +446,41 @@
                         <page string="Vehicle Images">
 
                             <field name="vehicle_image_ids">
-                            <list editable="bottom">
-                                <field name="image" widget="image"/>
-                            </list>
-                        </field>
+                                <list editable="bottom">
+                                    <field name="image" widget="image"/>
+                                </list>
+                            </field>
 
 
-<!--                            <field name="vehicle_image_ids">-->
-<!--                                <list editable="bottom">-->
-<!--&lt;!&ndash;                                    <field name="name"/>&ndash;&gt;-->
-<!--                                    <field name="image"/>-->
-<!--                                </list>-->
-<!--                            </field>-->
+                            <!--                            <field name="vehicle_image_ids">-->
+                            <!--                                <list editable="bottom">-->
+                            <!--&lt;!&ndash;                                    <field name="name"/>&ndash;&gt;-->
+                            <!--                                    <field name="image"/>-->
+                            <!--                                </list>-->
+                            <!--                            </field>-->
                         </page>
 
 
-
-
-
-
-
-
-
-
-
-
                         <!--                        <page string="Health Check">-->
-<!--                            <field name="health_check_ids" widget="section_and_note_one2many" mode="list">-->
-<!--                                <list editable="bottom" default_order="serial_no">-->
-<!--&lt;!&ndash;                                    <control>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <create name="add_product_control" string="Add a product"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <create name="add_section_control" string="Add a section"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                context="{'default_display_type': 'line_section'}"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <create name="add_note_control" string="Add a note"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                context="{'default_display_type': 'line_note'}"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    </control>&ndash;&gt;-->
+                        <!--                            <field name="health_check_ids" widget="section_and_note_one2many" mode="list">-->
+                        <!--                                <list editable="bottom" default_order="serial_no">-->
+                        <!--&lt;!&ndash;                                    <control>&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                        <create name="add_product_control" string="Add a product"/>&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                        <create name="add_section_control" string="Add a section"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                                context="{'default_display_type': 'line_section'}"/>&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                        <create name="add_note_control" string="Add a note"&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                                context="{'default_display_type': 'line_note'}"/>&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                    </control>&ndash;&gt;-->
 
-<!--                                    <field name="serial_no" column_invisible="1"/>-->
-<!--                                    <field name="name" widget="section_and_note_text" optional="show" string="Checklist"/>-->
-<!--                                    <field name="display_type" column_invisible="1"/>-->
-<!--                                    <field name="description" column_invisible="1"/>-->
-<!--                                    <field name="check_mark"-->
-<!--                                           options='{"bg_color": "red: check_mark == False; green: check_mark == True", "fg_color": "red: check_mark == False"}'/>-->
-<!--                                </list>-->
-<!--                            </field>-->
-<!--                        </page>-->
+                        <!--                                    <field name="serial_no" column_invisible="1"/>-->
+                        <!--                                    <field name="name" widget="section_and_note_text" optional="show" string="Checklist"/>-->
+                        <!--                                    <field name="display_type" column_invisible="1"/>-->
+                        <!--                                    <field name="description" column_invisible="1"/>-->
+                        <!--                                    <field name="check_mark"-->
+                        <!--                                           options='{"bg_color": "red: check_mark == False; green: check_mark == True", "fg_color": "red: check_mark == False"}'/>-->
+                        <!--                                </list>-->
+                        <!--                            </field>-->
+                        <!--                        </page>-->
 
                     </notebook>
 
@@ -502,8 +491,6 @@
                 <br/>
                 <br/>
                 <chatter/>
-
-
 
 
             </form>
@@ -547,7 +534,7 @@
                 <field name="service_contract_id"/>
                 <field name="vehicle_in_out"/>
                 <field name="insurance_company_id"/>
-<!--                <field name="company_id"/>-->
+                <!--                <field name="company_id"/>-->
 
                 <!-- Optional filters -->
                 <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]" help="Draft Job Cards"/>
@@ -565,7 +552,7 @@
                             context="{'group_by':'vehicle_make_id'}"/>
                     <filter name="group_by_insurance" string="Insurance Company" domain="[]"
                             context="{'group_by':'insurance_company_id'}"/>
-<!--                    <filter name="group_by_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>-->
+                    <!--                    <filter name="group_by_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>-->
                     <filter name="group_by_state" string="State" domain="[]" context="{'group_by':'state'}"/>
                 </group>
             </search>
@@ -578,7 +565,6 @@
         <field name="name">Job Card</field>
         <field name="res_model">job.card.management</field>
         <field name="view_mode">list,form</field>
-
     </record>
 
 
@@ -599,10 +585,6 @@
               sequence="54"/>
     <menuitem id="menu_job_card_cost_report" name="Cost Analysis Report" parent="job_card_analysis_report_menu_root"
               action="action_report_job_card_cost_analysis"/>
-
-
-
-
 
 
 </odoo>

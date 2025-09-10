@@ -8,23 +8,40 @@ class SaleOrder(models.Model):
     job_card_id = fields.Many2one("job.card.management", string="Job Card")
 
 
-    def action_add_vehicle_products(self):
-        # Prepopulate wizard with all vehicle products
-        all_vehicles = self.env['product.product'].search([('categ_id.name', '=', 'Vehicles')])
-        wizard = self.env['sale.order.vehicle.product.wizard'].create({'sale_order_id': self.id})
-        for product in all_vehicles:
-            self.env['sale.order.vehicle.product.wizard.line'].create({
-                'wizard_id': wizard.id,
-                'product_id': product.id,
-            })
+    # def action_add_vehicle_products(self):
+    #     # Prepopulate wizard with all vehicle products
+    #     all_vehicles = self.env['product.product'].search([('categ_id.name', '=', 'Vehicles')])
+    #     wizard = self.env['sale.order.vehicle.product.wizard'].create({'sale_order_id': self.id})
+    #     for product in all_vehicles:
+    #         self.env['sale.order.vehicle.product.wizard.line'].create({
+    #             'wizard_id': wizard.id,
+    #             'product_id': product.id,
+    #             'year': product.year_of_manufacturing,
+    #             'model_id': product.model_id,
+    #             'vin_sn': product.vin_sn,
+    #         })
+    #     return {
+    #         'name': 'Select Vehicle Products',
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'sale.order.vehicle.product.wizard',
+    #         'view_mode': 'form',
+    #         'res_id': wizard.id,
+    #         'target': 'new',
+    #     }
+
+    def action_open_vehicle_products(self):
+        """Open the wizard popup"""
         return {
             'name': 'Select Vehicle Products',
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order.vehicle.product.wizard',
             'view_mode': 'form',
-            'res_id': wizard.id,
             'target': 'new',
+            'context': {
+                'default_sale_order_id': self.id
+            }
         }
+
 
     def _create_invoices(self, **kwargs):
         invoices = super()._create_invoices(**kwargs)
@@ -142,20 +159,4 @@ class SaleOrderLine(models.Model):
             else:
                 line.stock_qty = 0.0
 
-
-# part number onchange
-#     @api.onchange('product_template_id_next')
-#     def _onchange_product_template_id_next(self):
-#         for line in self:
-#             if line.product_template_id_next:
-#                 # Find first variant of this template
-#                 variant = self.env['product.product'].search([('product_tmpl_id', '=', line.product_template_id_next.id)],
-#                                                              limit=1)
-#                 if variant:
-#                     line.product_id = variant.id  # set product_id for normal onchange chain
-#                     line.product_uom = variant.uom_id
-#                     line.product_uom_qty = 1
-#                 else:
-#                     line.product_id = False
-#                     line.product_uom = False
 

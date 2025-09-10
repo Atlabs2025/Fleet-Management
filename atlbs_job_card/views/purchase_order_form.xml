@@ -7,11 +7,19 @@
 
             <!-- Add button before order_line -->
             <xpath expr="//field[@name='order_line']" position="before">
-                <button name="action_add_vehicle_products"
+                <button name="action_open_vehicle_products"
                         string="Add Vehicle Products"
                         type="object"
                         class="btn-primary"/>
             </xpath>
+
+
+<!--            <xpath expr="//field[@name='order_line']" position="before">-->
+<!--                <button name="action_add_vehicle_products"-->
+<!--                        string="Add Vehicle Products"-->
+<!--                        type="object"-->
+<!--                        class="btn-primary"/>-->
+<!--            </xpath>-->
 
             <!-- Add department field in purchase.order.line -->
             <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="before">
@@ -28,18 +36,17 @@
                 <field name="product_location_id"/>
             </xpath>
 
-<!--            &lt;!&ndash; Add location before UoM &ndash;&gt;-->
 
         </field>
     </record>
 
 
-        <record id="action_purchase_vehicle_products" model="ir.actions.act_window">
+    <record id="action_purchase_vehicle_products" model="ir.actions.act_window">
         <field name="name">Vehicles</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,list,form</field>
+        <!--        <field name="view_mode">kanban,list,form</field>-->
+        <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('categ_id.name','=','Vehicles')]</field>
-<!--         <field name="search_view_id" ref="view_vehicle_products_search"/>-->
     </record>
 
     <menuitem id="menu_vehicle_products" name="Vehicles" parent="purchase.menu_purchase_root" sequence="100"/>

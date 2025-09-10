@@ -5,35 +5,41 @@ from odoo import models, fields, api
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
+
+
+
     # def action_add_vehicle_products(self):
+    #     all_vehicles = self.env['product.product'].search([('categ_id.name', '=', 'Vehicles')])
+    #     wizard = self.env['purchase.order.vehicle.product.wizard'].create({'purchase_order_id': self.id})
+    #     for product in all_vehicles:
+    #         self.env['purchase.order.vehicle.product.wizard.line'].create({
+    #             'wizard_id': wizard.id,
+    #             'product_id': product.id,
+    #             'year': product.year_of_manufacturing,
+    #             'model_id': product.model_id,
+    #             'vin_sn': product.vin_sn,
+    #         })
     #     return {
-    #         'name': 'Add Vehicle Products',
+    #         'name': 'Select Vehicle Products',
     #         'type': 'ir.actions.act_window',
     #         'res_model': 'purchase.order.vehicle.product.wizard',
     #         'view_mode': 'form',
+    #         'res_id': wizard.id,
     #         'target': 'new',
-    #         'context': {'default_purchase_order_id': self.id},
     #     }
+    #
 
-
-
-    def action_add_vehicle_products(self):
-        all_vehicles = self.env['product.product'].search([('categ_id.name', '=', 'Vehicles')])
-        wizard = self.env['purchase.order.vehicle.product.wizard'].create({'purchase_order_id': self.id})
-        for product in all_vehicles:
-            self.env['purchase.order.vehicle.product.wizard.line'].create({
-                'wizard_id': wizard.id,
-                'product_id': product.id,
-            })
+    def action_open_vehicle_products(self):
         return {
             'name': 'Select Vehicle Products',
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order.vehicle.product.wizard',
             'view_mode': 'form',
-            'res_id': wizard.id,
             'target': 'new',
+            'context': {
+                'default_purchase_order_id': self.id
+            }
         }
-
 
 
 
