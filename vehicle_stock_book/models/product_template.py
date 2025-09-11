@@ -54,12 +54,26 @@ class ProductTemplate(models.Model):
     number_of_cylinders = fields.Integer(string='Number of Cylinders')
     order_date = fields.Date(string="Order Date", default=fields.Date.context_today)
 
-    purchase_price = fields.Float(string="Purchase Price")
+    # purchase_price = fields.Float(string="Purchase Price")
+    purchase_price = fields.Float(
+        string="Purchase Price",
+        related="standard_price",
+        store=True,
+        readonly=False
+    )
     landing_price = fields.Float(string="Landing Price")
     sales_cost = fields.Float(string="Margin Value")
     refurb_cost = fields.Float(string="Refurb Cost")
     additional_expenses = fields.Float(string="Additional Expenses")
-    sales_price = fields.Float(string="Selling Price")
+    # sales_price = fields.Float(string="Selling Price")
+    sales_price = fields.Float(
+        string="Sales Price",
+        related="list_price",
+        store=True,
+        readonly=False
+    )
+
+
     offer_price = fields.Float(string="Offer Price")
     loan_price = fields.Float(string="Loan")
     vat_applicable = fields.Selection(
@@ -158,6 +172,11 @@ class ProductTemplate(models.Model):
     tyre_life_percent = fields.Integer(string="Tyre Life Left (%)")
 
     no_of_keys = fields.Integer(string="Number of Keys")
+
+
+
+
+
 
 
 class ProductTemplateImage(models.Model):

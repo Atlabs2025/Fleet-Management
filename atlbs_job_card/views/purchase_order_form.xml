@@ -14,7 +14,6 @@
             </xpath>
 
 
-
             <!-- Add department field in purchase.order.line -->
             <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="before">
                 <field name="department"/>

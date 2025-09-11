@@ -12,6 +12,6 @@
         name="Vehicle Stock Book"
         parent="menu_vehicle_stock_information"
         action="action_vehicle_stock_book"
-        sequence="1"/>
+        sequence="1"/>z
 
 </odoo>
