@@ -50,6 +50,7 @@ class PurchaseOrderVehicleProductWizard(models.TransientModel):
             # Build the description from vehicle fields (stored on template)
             description_text = ' '.join(filter(None, [
                 template.vehicle_make_id if template.vehicle_make_id else '',
+                template.vin_sn if template.vin_sn else '',
                 template.model_id if template.model_id else '',
                 template.colour_type or '',
             ]))
