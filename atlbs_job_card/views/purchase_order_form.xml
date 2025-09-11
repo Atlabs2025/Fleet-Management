@@ -40,6 +40,8 @@
         <field name="res_model">product.template</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('categ_id.name','=','Vehicles')]</field>
+<!--        here i have given id instead of string if is there any change in future we can change this id-->
+        <field name="context">{'default_categ_id': 4, 'default_is_storable': True}</field>
     </record>
 
     <menuitem id="menu_vehicle_products" name="Vehicles" parent="purchase.menu_purchase_root" sequence="100"/>
