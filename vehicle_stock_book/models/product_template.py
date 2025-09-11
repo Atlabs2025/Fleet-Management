@@ -44,7 +44,7 @@ class ProductTemplate(models.Model):
         ('ev', 'EV'),
     ], string="Fuel Type")
     date_of_purchase = fields.Date(string="Date Of Purchase")
-    year_list = [(str(y), str(y)) for y in range(1997, datetime.datetime.now().year + 1)]
+    year_list = [(str(y), str(y)) for y in range(1997, datetime.datetime.now().year + 2)]
     year_of_manufacturing = fields.Selection(selection=year_list, string='Year Model')
     date_of_manufacturing = fields.Date(string="Date Of Manufacturing")
     country_of_origin_id = fields.Many2one(
