@@ -2,6 +2,7 @@ import datetime
 
 from odoo import models, fields, api
 from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -173,9 +174,16 @@ class ProductTemplate(models.Model):
 
     no_of_keys = fields.Integer(string="Number of Keys")
 
-
-
-
+    @api.constrains('vin_sn')
+    def _check_unique_vin_sn(self):
+        for record in self:
+            if record.vin_sn:
+                existing = self.search([
+                    ('vin_sn', '=', record.vin_sn),
+                    ('id', '!=', record.id)
+                ], limit=1)
+                if existing:
+                    raise ValidationError("Chassis Number already exists.")
 
 
 
