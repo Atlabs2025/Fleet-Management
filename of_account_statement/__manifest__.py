@@ -14,8 +14,8 @@
     'images': ["static/description/account_state.png"],
 
     'category': 'Accounting',
-    'version': '18.0.1.0.0',
-    'depends': ['account', 'base','mail'],
+    'version': '15.0.1',
+    'depends': ['account', 'base'],
     'license': 'AGPL-3',
     'data': [
         'security/ir.model.access.csv',
@@ -24,7 +24,7 @@
         'views/report_cust_acc_stat.xml',
         'views/report_supp_acc_stat.xml',
         'views/reports.xml',
-        'data/mail_data.xml',
+        # 'data/mail_data.xml',
     ],
 
     'installable': True,
