@@ -49,6 +49,7 @@
             <field name="vin_sn"/>
             <field name="year_of_manufacturing"/>
             <field name="colour_type"/>
+            <field name="vehicle_type"/>
         </xpath>
     </field>
 </record>
