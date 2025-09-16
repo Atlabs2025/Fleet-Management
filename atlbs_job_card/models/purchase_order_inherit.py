@@ -1,6 +1,4 @@
-from importlib.resources._common import _
-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -85,7 +83,6 @@ class PurchaseOrderLine(models.Model):
 
 
 
-
 # new change added the vehicle product should not be repeated
 
 
@@ -120,19 +117,55 @@ class PurchaseOrderLine(models.Model):
 
 
 # added this create and write function for if we change the price from lines then it will be reflect in the inventory cost price also
+#     @api.model
+#     def create(self, vals):
+#         line = super().create(vals)
+#         if 'price_unit' in vals and line.product_id:
+#             # Update product's standard price
+#             line.product_id.sudo().write({'standard_price': line.price_unit})
+#         return line
+#
+#     def write(self, vals):
+#         res = super().write(vals)
+#         if 'price_unit' in vals:
+#             for line in self:
+#                 if line.product_id:
+#                     # Update product's standard price
+#                     line.product_id.sudo().write({'standard_price': line.price_unit})
+#         return res
+
     @api.model
     def create(self, vals):
-        line = super().create(vals)
-        if 'price_unit' in vals and line.product_id:
-            # Update product's standard price
+        # Validate Vehicle quantity before creation
+        product = self.env['product.product'].browse(vals.get('product_id'))
+        if product and product.categ_id.name == "Vehicles" and vals.get('product_qty', 1) > 1:
+            raise UserError(_("Quantity for Vehicle products cannot be greater than 1."))
+
+        # Call super properly
+        line = super(PurchaseOrderLine, self).create(vals)
+
+        # Update standard price if provided
+        if vals.get('price_unit') and line.product_id:
             line.product_id.sudo().write({'standard_price': line.price_unit})
+
         return line
 
     def write(self, vals):
-        res = super().write(vals)
+        # Validate Vehicle quantity before writing
+        if 'product_qty' in vals:
+            for line in self:
+                if line.product_id.categ_id.name == "Vehicles" and vals['product_qty'] > 1:
+                    raise UserError(_("Quantity for Vehicle products cannot be greater than 1."))
+
+        # Call super properly
+        res = super(PurchaseOrderLine, self).write(vals)
+
+        # Update standard price if provided
         if 'price_unit' in vals:
             for line in self:
                 if line.product_id:
-                    # Update product's standard price
                     line.product_id.sudo().write({'standard_price': line.price_unit})
+
         return res
+
+
