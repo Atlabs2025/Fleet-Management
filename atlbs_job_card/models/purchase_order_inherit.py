@@ -1,5 +1,7 @@
-from odoo import models, fields, api
+from importlib.resources._common import _
 
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError, UserError
 
 
 class PurchaseOrder(models.Model):
@@ -84,21 +86,53 @@ class PurchaseOrderLine(models.Model):
 
 
 
+# new change added the vehicle product should not be repeated
 
 
-# part number onchange
-#     @api.onchange('product_template_id_next')
-#     def _onchange_product_template_id_next(self):
-#         for line in self:
-#             if line.product_template_id_next:
-#                 # Find first variant of this template
-#                 variant = self.env['product.product'].search([('product_tmpl_id', '=', line.product_template_id_next.id)],
-#                                                              limit=1)
-#                 if variant:
-#                     line.product_id = variant.id  # set product_id for normal onchange chain
-#                     line.product_uom = variant.uom_id
-#                     line.product_uom_qty = 1
-#                 else:
-#                     line.product_id = False
-#                     line.product_uom = False
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id and self.product_id.vin_sn:
+            # Check if VIN already used in the same purchase order
+            duplicates = self.order_id.order_line.filtered(
+                lambda l: l.product_id.vin_sn == self.product_id.vin_sn and l.id != self.id
+            )
+            if duplicates:
+                raise UserError(
+                    f"Vehicle with VIN '{self.product_id.vin_sn}' is already selected in this Purchase Order."
+                )
+
+        if self.order_id:
+            # Build domain to hide already used VINs
+            selected_vins = self.order_id.order_line.filtered(
+                lambda l: l.product_id and l.product_id.vin_sn and l.id != self.id
+            ).mapped('product_id.vin_sn')
+
+            return {
+                'domain': {
+                    'product_id': [
+                        '|',
+                        ('vin_sn', '=', False),  # allow non-vehicle products
+                        ('vin_sn', 'not in', selected_vins)
+                    ]
+                }
+            }
+
+
+# added this create and write function for if we change the price from lines then it will be reflect in the inventory cost price also
+    @api.model
+    def create(self, vals):
+        line = super().create(vals)
+        if 'price_unit' in vals and line.product_id:
+            # Update product's standard price
+            line.product_id.sudo().write({'standard_price': line.price_unit})
+        return line
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'price_unit' in vals:
+            for line in self:
+                if line.product_id:
+                    # Update product's standard price
+                    line.product_id.sudo().write({'standard_price': line.price_unit})
+        return res

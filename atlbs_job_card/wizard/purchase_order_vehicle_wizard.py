@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
+
 
 class PurchaseOrderVehicleProductWizard(models.TransientModel):
     _name = 'purchase.order.vehicle.product.wizard'
@@ -15,39 +17,26 @@ class PurchaseOrderVehicleProductWizard(models.TransientModel):
     )
 
 
-    # def action_add_products(self):
-    #
-    #     self.ensure_one()
-    #     purchase_order = self.purchase_order_id
-    #
-    #     for product in self.product_ids:
-    #         # Build the description from vehicle fields
-    #         description_text = ' '.join(filter(None, [
-    #             product.vehicle_make_id if product.vehicle_make_id else '',
-    #             product.model_id if product.model_id else '',
-    #             product.colour_type or '',
-    #         ]))
-    #
-    #         self.env['purchase.order.line'].create({
-    #             'order_id': purchase_order.id,
-    #             'product_id': product.id,
-    #             'department': 'vehicle',
-    #             'description': description_text,  # set description here
-    #             'product_uom_qty': 1,  # default quantity
-    #             'price_unit': product.list_price,
-    #         })
-    #
-    #     return {'type': 'ir.actions.act_window_close'}
 
+# see this function changes because vin number validation and the cost price fetching into the unit price is done
     def action_add_products(self):
         self.ensure_one()
         purchase_order = self.purchase_order_id
 
         for template in self.product_ids:  # these are product.template
-            # Get the variant (always at least one)
-            variant = template.product_variant_id
+            variant = template.product_variant_id  # get product.product
 
-            # Build the description from vehicle fields (stored on template)
+            # Check if this VIN is already in the PO
+            if variant.vin_sn:
+                duplicates = purchase_order.order_line.filtered(
+                    lambda l: l.product_id.vin_sn == variant.vin_sn
+                )
+                if duplicates:
+                    raise UserError(
+                        f"Vehicle with VIN '{variant.vin_sn}' is already selected in this Purchase Order."
+                    )
+
+            # Build the description from vehicle fields
             description_text = ' '.join(filter(None, [
                 template.vehicle_make_id if template.vehicle_make_id else '',
                 template.vin_sn if template.vin_sn else '',
@@ -55,29 +44,45 @@ class PurchaseOrderVehicleProductWizard(models.TransientModel):
                 template.colour_type or '',
             ]))
 
+            # Create purchase order line with cost price
             self.env['purchase.order.line'].create({
                 'order_id': purchase_order.id,
-                'product_id': variant.id,  # must be product.product
+                'product_id': variant.id,
                 'department': 'vehicle',
                 'description': description_text,
                 'product_uom_qty': 1,
-                'price_unit': template.list_price,
+                'price_unit': variant.standard_price,  # cost price
             })
 
         return {'type': 'ir.actions.act_window_close'}
 
-# class SaleOrderVehicleProductWizardLine(models.TransientModel):
-#     _name = 'purchase.order.vehicle.product.wizard.line'
-#     _description = 'Vehicle Product Line for Wizard'
-#
-#     wizard_id = fields.Many2one('purchase.order.vehicle.product.wizard', string="Wizard")
-#     product_id = fields.Many2one(
-#         'product.product',
-#         string='Vehicle Product',
-#         domain="[('categ_id.name', '=', 'Vehicles')]",
-#     )
-#     selected = fields.Boolean(string="Select")
-#
-#     year = fields.Char(string="Year")
-#     model_id = fields.Char(string="Model")
-#     vin_sn = fields.Char(string="Chassis Number")
+
+
+
+    # def action_add_products(self):
+    #     self.ensure_one()
+    #     purchase_order = self.purchase_order_id
+    #
+    #     for template in self.product_ids:  # these are product.template
+    #         # Get the variant (always at least one)
+    #         variant = template.product_variant_id
+    #
+    #         # Build the description from vehicle fields (stored on template)
+    #         description_text = ' '.join(filter(None, [
+    #             template.vehicle_make_id if template.vehicle_make_id else '',
+    #             template.vin_sn if template.vin_sn else '',
+    #             template.model_id if template.model_id else '',
+    #             template.colour_type or '',
+    #         ]))
+    #
+    #         self.env['purchase.order.line'].create({
+    #             'order_id': purchase_order.id,
+    #             'product_id': variant.id,  # must be product.product
+    #             'department': 'vehicle',
+    #             'description': description_text,
+    #             'product_uom_qty': 1,
+    #             'price_unit': template.list_price,
+    #         })
+    #
+    #     return {'type': 'ir.actions.act_window_close'}
+    #

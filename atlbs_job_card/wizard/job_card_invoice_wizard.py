@@ -12,32 +12,11 @@ class JobCardInvoiceWizard(models.TransientModel):
     service_line_ids = fields.One2many('job.card.invoice.wizard.service.line', 'wizard_id', string="Service Lines")
 
 
-    # @api.model
-    # def default_get(self, fields):
-    #     res = super().default_get(fields)
-    #     active_id = self.env.context.get('active_id')
-    #     job_card = self.env['job.card.management'].browse(active_id)
-    #
-    #     lines = []
-    #     # for line in job_card.job_detail_line_ids.filtered(lambda l: not l.invoiced):
-    #     for line in job_card.job_detail_line_ids.filtered(lambda l: not l.invoiced and l.line_state == 'complete'):
-    #         print("Preparing line with ID:", line.id)
-    #         lines.append((0, 0, {
-    #             'line_id': line.id,  # This must be valid Many2one
-    #             'description': line.description,
-    #             'product_template_id': line.product_template_id,
-    #             'price_unit': line.price_unit,
-    #             'quantity': line.quantity,
-    #             'discount': line.discount,
-    #             'total': line.total,
-    #             'department': line.department,
-    #             'selected': False,
-    #         }))
-    #     res.update({
-    #         'job_card_id': job_card.id,
-    #         'line_ids': lines,
-    #     })
-    #     return res
+
+
+
+
+
 
     @api.model
     def default_get(self, fields):
@@ -203,7 +182,8 @@ class JobCardInvoiceWizard(models.TransientModel):
     #     }
 
 
-# final code with above modifications and added is insurance claim also
+
+# new function added on auguest4 because of an error if any issue please refer above code ok for this function i have ticked multi company in users
 #     def action_create_invoice(self):
 #         self.ensure_one()
 #
@@ -211,11 +191,20 @@ class JobCardInvoiceWizard(models.TransientModel):
 #         selected_service_lines = self.service_line_ids.filtered(lambda l: l.service_selected)
 #
 #         if not selected_lines and not selected_service_lines:
-#             raise UserError("Please select at least one line or service to invoice.")
+#             raise UserError("Please select at least one line oValueError: Wrong value for job.card.invoice.wizard.line.department: 'vehicle'r service to invoice.")
 #
 #         invoice_lines = []
 #         stock_moves = []
 #         sublet_vendor_bill_lines = []
+#
+#         # Get stock location for current company
+#         stock_location = self.env['stock.location'].search([
+#             ('usage', '=', 'internal'),
+#             ('company_id', '=', self.job_card_id.company_id.id)
+#         ], limit=1)
+#
+#         if not stock_location:
+#             raise UserError("No internal stock location found for the job card's company.")
 #
 #         # Job Card Detail Lines
 #         for line in selected_lines:
@@ -233,16 +222,17 @@ class JobCardInvoiceWizard(models.TransientModel):
 #                     'product_id': product.id,
 #                     'product_uom_qty': line.quantity,
 #                     'product_uom': product.uom_id.id,
-#                     'location_id': self.env.ref('stock.stock_location_stock').id,
+#                     'location_id': stock_location.id,
 #                     'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
 #                 }))
-#
+# # here i have edited on auguest 8 because of department is added
 #             invoice_lines.append((0, 0, {
 #                 'name': f"{line.department or ''} - {line.description}",
 #                 'product_id': product_id,
 #                 'quantity': line.quantity,
 #                 'price_unit': line.price_unit,
 #                 'discount': line.discount,
+#                 'department': line.department,
 #             }))
 #
 #             # Prepare Sublet Vendor Bill lines
@@ -287,10 +277,19 @@ class JobCardInvoiceWizard(models.TransientModel):
 #
 #         # Create and validate delivery order if stock moves exist
 #         if stock_moves:
+#             # Get picking type for current company
+#             picking_type = self.env['stock.picking.type'].search([
+#                 ('code', '=', 'outgoing'),
+#                 ('company_id', '=', self.job_card_id.company_id.id)
+#             ], limit=1)
+#
+#             if not picking_type:
+#                 raise UserError("No Delivery Order picking type found for the job card's company.")
+#
 #             picking = self.env['stock.picking'].create({
 #                 'partner_id': self.job_card_id.partner_id.id,
-#                 'picking_type_id': self.env.ref('stock.picking_type_out').id,
-#                 'location_id': self.env.ref('stock.stock_location_stock').id,
+#                 'picking_type_id': picking_type.id,
+#                 'location_id': stock_location.id,
 #                 'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
 #                 'origin': f"Job Card: {self.job_card_id.name}",
 #                 'move_ids_without_package': stock_moves,
@@ -326,7 +325,9 @@ class JobCardInvoiceWizard(models.TransientModel):
 #             'res_id': invoice.id,
 #             'target': 'current',
 #         }
-# new function added on auguest4 because of an error if any issue please refer above code ok for this function i have ticked multi company in users
+
+
+# sep16 function added if stock is not there please throw an error. if any change please refer above function
     def action_create_invoice(self):
         self.ensure_one()
 
@@ -334,7 +335,9 @@ class JobCardInvoiceWizard(models.TransientModel):
         selected_service_lines = self.service_line_ids.filtered(lambda l: l.service_selected)
 
         if not selected_lines and not selected_service_lines:
-            raise UserError("Please select at least one line oValueError: Wrong value for job.card.invoice.wizard.line.department: 'vehicle'r service to invoice.")
+            raise UserError(
+                "Please select at least one line or service to invoice."
+            )
 
         invoice_lines = []
         stock_moves = []
@@ -354,8 +357,17 @@ class JobCardInvoiceWizard(models.TransientModel):
             if line.quantity <= 0:
                 raise UserError(f"Quantity must be greater than 0 for line: {line.description}")
 
+            # --- STOCK VALIDATION FOR ALL PRODUCTS ---
+            if line.product_template_id:
+                product = line.product_template_id.product_variant_id
+                available_qty = self.env['stock.quant']._get_available_quantity(product, stock_location)
+                if available_qty <= 0:
+                    raise UserError(
+                        f"Cannot invoice '{product.name}' because there is no stock available in {stock_location.name}."
+                    )
+
             product_id = False
-            if line.department == 'parts' and line.product_template_id:
+            if line.department in ['parts', 'vehicle'] and line.product_template_id:
                 product = line.product_template_id.product_variant_id
                 product_id = product.id
 
@@ -368,7 +380,7 @@ class JobCardInvoiceWizard(models.TransientModel):
                     'location_id': stock_location.id,
                     'location_dest_id': self.job_card_id.partner_id.property_stock_customer.id,
                 }))
-# here i have edited on auguest 8 because of department is added
+
             invoice_lines.append((0, 0, {
                 'name': f"{line.department or ''} - {line.description}",
                 'product_id': product_id,
@@ -420,7 +432,6 @@ class JobCardInvoiceWizard(models.TransientModel):
 
         # Create and validate delivery order if stock moves exist
         if stock_moves:
-            # Get picking type for current company
             picking_type = self.env['stock.picking.type'].search([
                 ('code', '=', 'outgoing'),
                 ('company_id', '=', self.job_card_id.company_id.id)
@@ -468,6 +479,12 @@ class JobCardInvoiceWizard(models.TransientModel):
             'res_id': invoice.id,
             'target': 'current',
         }
+
+
+
+
+
+
 
     def action_select_all(self):
         # Select all non-readonly lines
