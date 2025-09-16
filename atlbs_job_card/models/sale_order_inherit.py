@@ -1,4 +1,8 @@
-from odoo import models, fields, api
+# from importlib.resources._common import _
+#
+# from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError, UserError
 from odoo.exceptions import UserError
 
 
@@ -169,19 +173,53 @@ class SaleOrderLine(models.Model):
                 }
             }
 
+    # @api.model
+    # def create(self, vals):
+    #     line = super().create(vals)
+    #     if 'price_unit' in vals and line.product_id:
+    #         # Update product's list price
+    #         line.product_id.sudo().write({'list_price': line.price_unit})
+    #     return line
+    #
+    # def write(self, vals):
+    #     res = super().write(vals)
+    #     if 'price_unit' in vals:
+    #         for line in self:
+    #             if line.product_id:
+    #                 # Update product's list price
+    #                 line.product_id.sudo().write({'list_price': line.price_unit})
+    #     return res
+
     @api.model
     def create(self, vals):
-        line = super().create(vals)
+        # Validate Vehicle quantity before creation
+        product = self.env['product.product'].browse(vals.get('product_id'))
+        if product and product.categ_id.name == "Vehicles" and vals.get('product_uom_qty', 1) > 1:
+            raise UserError(_("Quantity for Vehicle products cannot be greater than 1."))
+
+        # Call super
+        line = super(SaleOrderLine, self).create(vals)
+
+        # Update product's list price if price_unit is provided
         if 'price_unit' in vals and line.product_id:
-            # Update product's list price
             line.product_id.sudo().write({'list_price': line.price_unit})
+
         return line
 
     def write(self, vals):
-        res = super().write(vals)
+        # Validate Vehicle quantity before writing
+        if 'product_uom_qty' in vals:
+            for line in self:
+                if line.product_id.categ_id.name == "Vehicles" and vals['product_uom_qty'] > 1:
+                    raise UserError(_("Quantity for Vehicle products cannot be greater than 1."))
+
+        # Call super
+        res = super(SaleOrderLine, self).write(vals)
+
+        # Update product's list price if price_unit is provided
         if 'price_unit' in vals:
             for line in self:
                 if line.product_id:
-                    # Update product's list price
                     line.product_id.sudo().write({'list_price': line.price_unit})
+
         return res
