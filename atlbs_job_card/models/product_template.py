@@ -1,6 +1,6 @@
 import datetime
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
@@ -43,3 +43,15 @@ class ProductTemplate(models.Model):
     def _onchange_default_code(self):
         if self.default_code != self.part_no:
             self.part_no = self.default_code
+
+
+# new function added for updating quantity
+class StockChangeProductQty(models.TransientModel):
+    _inherit = "stock.change.product.qty"
+
+    def change_product_qty(self):
+        for wizard in self:
+            if wizard.product_id.categ_id.name == "Vehicles" and wizard.new_quantity != 1:
+                raise UserError(_("Quantity for Vehicle products cannot be greater than 1."))
+
+        return super(StockChangeProductQty, self).change_product_qty()
