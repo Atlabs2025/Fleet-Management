@@ -17,6 +17,8 @@
     'report/estimate_template.xml',
     'report/tax_invoice_template.xml',
     'report/job_card_cost_analysis_template.xml',
+    'report/job_card_service_report.xml',
+    'report/not_invoiced_report.xml',
     'views/data.xml',
     'views/job_card_management.xml',
     'views/job_card_estimate.xml',

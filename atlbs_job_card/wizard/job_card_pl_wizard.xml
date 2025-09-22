@@ -13,6 +13,7 @@
                 </group>
                 <footer>
                     <button name="action_print_xlsx" type="object" string="Print XLSX" class="btn-primary"/>
+                     <button name="action_view_report" type="object" string="View Report" class="btn-info"/>
                     <button string="Cancel" special="cancel" class="btn-secondary"/>
                 </footer>
             </form>
@@ -26,6 +27,38 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
+
+
+
+
+
+
+
+    <record id="view_job_card_pl_line_tree" model="ir.ui.view">
+    <field name="name">job.card.pl.line.tree</field>
+    <field name="model">job.card.pl.line</field>
+    <field name="arch" type="xml">
+        <list string="Job Card P&amp;L Report">
+            <field name="date"/>
+            <field name="job_card"/>
+            <field name="estimate"/>
+            <field name="invoice"/>
+            <field name="vehicle"/>
+            <field name="vin"/>
+            <field name="labor"/>
+            <field name="parts"/>
+            <field name="material"/>
+            <field name="sublet"/>
+            <field name="total"/>
+            <field name="labor_cost"/>
+            <field name="parts_cost"/>
+            <field name="material_cost"/>
+            <field name="sublet_cost"/>
+            <field name="total_expense"/>
+        </list>
+    </field>
+</record>
+
 
 
 

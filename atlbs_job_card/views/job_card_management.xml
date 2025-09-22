@@ -512,6 +512,10 @@
                 <filter name="filter_memo" string="Memo" domain="[('state','=','memo')]" help="Memo Job Cards"/>
                 <filter name="filter_completed" string="Completed" domain="[('state','=','completed')]"
                         help="Completed Job Cards"/>
+
+
+
+
             </search>
         </field>
     </record>
@@ -544,6 +548,17 @@
                 <filter name="filter_insurance" string="Insurance Claims" domain="[('is_insurance_claim','=',True)]"/>
                 <filter name="filter_vehicle_in" string="Vehicle IN" domain="[('vehicle_in_out','=','vehicle_in')]"/>
                 <filter name="filter_vehicle_out" string="Vehicle OUT" domain="[('vehicle_in_out','=','vehicle_out')]"/>
+
+
+                <filter name="filter_regular" string="Regular Service"
+                        domain="[('service_line_ids.menu_service','=','regular')]"/>
+                <filter name="filter_medium" string="Medium Service"
+                        domain="[('service_line_ids.menu_service','=','medium')]"/>
+                <filter name="filter_major" string="Major Service"
+                        domain="[('service_line_ids.menu_service','=','major')]"/>
+                <filter name="filter_lube" string="Lube Services"
+                        domain="[('service_line_ids.menu_service','=','lube_services')]"/>
+
 
                 <!-- Group by options -->
                 <group expand="1" string="Group By">
@@ -585,6 +600,12 @@
               sequence="54"/>
     <menuitem id="menu_job_card_cost_report" name="Cost Analysis Report" parent="job_card_analysis_report_menu_root"
               action="action_report_job_card_cost_analysis"/>
+
+    <menuitem id="menu_job_card_service_report" name="Service Report" parent="job_card_analysis_report_menu_root"
+              action="action_report_job_card_service"/>
+    <menuitem id="menu_job_card_not_invoiced_report" name="WIP Report" parent="job_card_analysis_report_menu_root"
+              action="action_report_job_card_not_completed"/>
+
 
 
 </odoo>
