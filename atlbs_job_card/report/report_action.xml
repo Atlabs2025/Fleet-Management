@@ -28,15 +28,8 @@
 
 
 
-    <record id="action_report_tax_invoice" model="ir.actions.report">
-            <field name="name">Tax Invoice</field>
-            <field name="model">account.move</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">atlbs_job_card.report_tax_invoice</field>
-            <field name="report_file">atlbs_job_card.report_tax_invoice</field>
-            <field name="binding_model_id" ref="model_account_move"/>
-            <field name="binding_type">report</field>
-        </record>
+
+
 
 
     <record id="action_report_job_card_cost_analysis" model="ir.actions.report">
@@ -66,9 +59,22 @@
 
 
 
+    <record id="action_report_job_card_service" model="ir.actions.report">
+    <field name="name">Job Card Service Report</field>
+    <field name="model">job.card.service.line</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">atlbs_job_card.report_job_card_service_template</field>
+    <field name="print_report_name">'Job Card Service Report - %s' % (object.job_card_id.name)</field>
+</record>
 
 
-
+    <record id="action_report_job_card_not_completed" model="ir.actions.report">
+        <field name="name">Not Fully Invoiced Job Cards</field>
+        <field name="model">job.card.management</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">atlbs_job_card.report_job_card_not_completed_template</field>
+        <field name="print_report_name">'Not Fully Invoiced Job Cards'</field>
+    </record>
 
 
 </odoo>

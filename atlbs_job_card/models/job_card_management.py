@@ -669,9 +669,6 @@ class JobCardManagement(models.Model):
         }
 
 
-
-
-
 # estimate total section
 
     @api.depends('estimate_line_ids.total')
@@ -1095,7 +1092,7 @@ class JobCardServiceLine(models.Model):
         ('regular', 'Regular'),
         ('medium', 'Medium'),
         ('major', 'Major'),
-        ('loop_services', 'Loop Services'),
+        ('lube_services', 'Lube Services'),
     ], string="Menu Service")
 
     service_amount = fields.Float(string="Service Amount")
@@ -1114,7 +1111,7 @@ class JobCardServiceLine(models.Model):
             'regular': 500,
             'medium': 1000,
             'major': 2000,
-            'loop_services': 300,
+            'lube_services': 300,
         }
         if self.menu_service:
             self.service_amount = service_prices.get(self.menu_service, 0.0)
