@@ -10,6 +10,8 @@
                 <group>
                     <field name="date_from"/>
                     <field name="date_to"/>
+                    <field name="service_advisor_id" groups="atlbs_job_card.group_job_card_pl_admin"/>
+
                 </group>
                 <footer>
                     <button name="action_print_xlsx" type="object" string="Print XLSX" class="btn-primary"/>

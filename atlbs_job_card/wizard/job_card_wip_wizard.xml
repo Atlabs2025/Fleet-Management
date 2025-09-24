@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_job_card_wip_wizard_form" model="ir.ui.view">
+        <field name="name">job.card.wip.wizard.form</field>
+        <field name="model">job.card.wip.wizard</field>
+        <field name="arch" type="xml">
+            <form string="WIP Report">
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+<!--                    <field name="due_days_label"/>-->
+                </group>
+                <footer>
+                    <button name="action_print_report" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+
+    <!-- Replace menu to open wizard instead of report -->
+
+</odoo>

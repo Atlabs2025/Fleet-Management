@@ -6,11 +6,9 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">atlbs_job_card.report_job_card_template</field>
         <field name="report_file">atlbs_job_card.report_job_card_template</field>
-<!--        <field name="binding_model_id" ref="model_job_card_management"/> &lt;!&ndash; 👈 Binds it to your model &ndash;&gt;-->
-<!--        <field name="binding_type">report</field> &lt;!&ndash; 👈 Makes it show under the Print button &ndash;&gt;-->
+        <!--        <field name="binding_model_id" ref="model_job_card_management"/> &lt;!&ndash; 👈 Binds it to your model &ndash;&gt;-->
+        <!--        <field name="binding_type">report</field> &lt;!&ndash; 👈 Makes it show under the Print button &ndash;&gt;-->
     </record>
-
-
 
 
     <record id="report_job_estimate_action" model="ir.actions.report">
@@ -22,14 +20,8 @@
         <field name="print_report_name">'JOB-ESTIMATE - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_job_card_estimate"/>
         <field name="binding_type">report</field>
-<!--        <field name="groups_id" eval="[(4, ref('sale.group_proforma_sales'))]"/>-->
+        <!--        <field name="groups_id" eval="[(4, ref('sale.group_proforma_sales'))]"/>-->
     </record>
-
-
-
-
-
-
 
 
     <record id="action_report_job_card_cost_analysis" model="ir.actions.report">
@@ -43,8 +35,6 @@
     </record>
 
 
-
-
     <record id="action_report_department_summary" model="ir.actions.report">
         <field name="name">Department Wise Summary Report</field>
         <field name="model">job.card.management</field>
@@ -56,24 +46,37 @@
     </record>
 
 
-
-
-
     <record id="action_report_job_card_service" model="ir.actions.report">
-    <field name="name">Job Card Service Report</field>
-    <field name="model">job.card.service.line</field>
-    <field name="report_type">qweb-pdf</field>
-    <field name="report_name">atlbs_job_card.report_job_card_service_template</field>
-    <field name="print_report_name">'Job Card Service Report - %s' % (object.job_card_id.name)</field>
-</record>
+        <field name="name">Job Card Service Report</field>
+        <field name="model">job.card.service.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">atlbs_job_card.report_job_card_service_template</field>
+        <field name="print_report_name">'Job Card Service Report - %s' % (object.job_card_id.name)</field>
+    </record>
 
+
+    <!--    <record id="action_report_job_card_not_completed" model="ir.actions.report">-->
+    <!--        <field name="name">Not Fully Invoiced Job Cards</field>-->
+    <!--        <field name="model">job.card.management</field>-->
+    <!--        <field name="report_type">qweb-pdf</field>-->
+    <!--        <field name="report_name">atlbs_job_card.report_job_card_not_completed_template</field>-->
+    <!--        <field name="print_report_name">'Not Fully Invoiced Job Cards'</field>-->
+    <!--    </record>-->
 
     <record id="action_report_job_card_not_completed" model="ir.actions.report">
         <field name="name">Not Fully Invoiced Job Cards</field>
+        <!--    <field name="model">job.card.wip.wizard</field>-->
         <field name="model">job.card.management</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">atlbs_job_card.report_job_card_not_completed_template</field>
         <field name="print_report_name">'Not Fully Invoiced Job Cards'</field>
+    </record>
+
+    <record id="action_job_card_wip_wizard" model="ir.actions.act_window">
+        <field name="name">WIP Report</field>
+        <field name="res_model">job.card.wip.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
     </record>
 
 
