@@ -43,6 +43,7 @@
     'wizard/job_card_pl_wizard.xml',
     'wizard/sale_order_vehicle_wizard.xml',
     'wizard/purchase_order_vehicle_wizard.xml',
+    'wizard/job_card_wip_wizard.xml',
 
 ],
     'assets': {

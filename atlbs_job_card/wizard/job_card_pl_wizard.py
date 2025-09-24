@@ -13,6 +13,7 @@ class JobCardPLWizard(models.TransientModel):
     date_to = fields.Date(required=True)
     file_data = fields.Binary(string='File')
     file_name = fields.Char(string='File Name')
+    service_advisor_id = fields.Many2one('res.users', string='Service Advisor')
 
     def action_print_xlsx(self):
         output = io.BytesIO()

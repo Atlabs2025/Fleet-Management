@@ -583,6 +583,7 @@
     </record>
 
 
+
     <!-- Menu -->
     <menuitem id="menu_job_card_root"
               name="Job Cards"
@@ -603,8 +604,12 @@
 
     <menuitem id="menu_job_card_service_report" name="Service Report" parent="job_card_analysis_report_menu_root"
               action="action_report_job_card_service"/>
-    <menuitem id="menu_job_card_not_invoiced_report" name="WIP Report" parent="job_card_analysis_report_menu_root"
-              action="action_report_job_card_not_completed"/>
+<!--    <menuitem id="menu_job_card_not_invoiced_report" name="WIP Report" parent="job_card_analysis_report_menu_root"-->
+<!--              action="action_report_job_card_not_completed"/>-->
+
+    <menuitem id="menu_job_card_wip_report" name="WIP Report"
+          parent="job_card_analysis_report_menu_root"
+          action="action_job_card_wip_wizard" sequence="30"/>
 
 
 
