@@ -10,6 +10,7 @@
 <!--                    <field name="due_days_label"/>-->
                 </group>
                 <footer>
+                    <button name="action_view_report" type="object" string="View Report" class="btn-info"/>
                     <button name="action_print_report" string="Print" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
