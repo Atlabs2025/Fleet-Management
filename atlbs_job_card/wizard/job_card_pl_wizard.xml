@@ -32,10 +32,6 @@
 
 
 
-
-
-
-
     <record id="view_job_card_pl_line_tree" model="ir.ui.view">
     <field name="name">job.card.pl.line.tree</field>
     <field name="model">job.card.pl.line</field>
