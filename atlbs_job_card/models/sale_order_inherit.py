@@ -27,17 +27,43 @@ class SaleOrder(models.Model):
         }
 
 
-    # def _create_invoices(self, **kwargs):
-    #     invoices = super()._create_invoices(**kwargs)
-    #     for order in self:
-    #         if order.job_card_id:
-    #             invoices.filtered(lambda inv: inv.invoice_origin == order.name).write({
-    #                 "job_card_id": order.job_card_id.id
-    #             })
-    #     return invoices
+
 
 
 # changed create invoice function becuase stock is not there it should not be invoiced
+#     def _create_invoices(self, **kwargs):
+#         for order in self:
+#             # Get stock location for the company
+#             stock_location = self.env['stock.location'].search([
+#                 ('usage', '=', 'internal'),
+#                 ('company_id', '=', order.company_id.id)
+#             ], limit=1)
+#
+#             if not stock_location:
+#                 raise UserError("No internal stock location found for the company's warehouse.")
+#
+#             # Validate stock for all invoiceable products
+#             for line in order.order_line:
+#                 if line.product_id.type in ['product', 'consu']:  # products that track stock
+#                     available_qty = self.env['stock.quant']._get_available_quantity(line.product_id, stock_location)
+#                     if available_qty <= 0:
+#                         raise UserError(
+#                             f"Cannot invoice '{line.product_id.name}' because there is no stock available in {stock_location.name}."
+#                         )
+#
+#         # Call super to create invoices
+#         invoices = super()._create_invoices(**kwargs)
+#
+#         # Link job_card_id if present
+#         for order in self:
+#             if order.job_card_id:
+#                 invoices.filtered(lambda inv: inv.invoice_origin == order.name).write({
+#                     "job_card_id": order.job_card_id.id
+#                 })
+#
+#         return invoices
+
+# please change this code if needed , and use above create invoice code this code i have changed for creating invoice for vehicle product the quantity is 1 (on sep 29)
     def _create_invoices(self, **kwargs):
         for order in self:
             # Get stock location for the company
@@ -49,14 +75,17 @@ class SaleOrder(models.Model):
             if not stock_location:
                 raise UserError("No internal stock location found for the company's warehouse.")
 
-            # Validate stock for all invoiceable products
+            # Validate stock for all invoiceable products (except Vehicles category)
             for line in order.order_line:
-                if line.product_id.type in ['product', 'consu']:  # products that track stock
-                    available_qty = self.env['stock.quant']._get_available_quantity(line.product_id, stock_location)
-                    if available_qty <= 0:
-                        raise UserError(
-                            f"Cannot invoice '{line.product_id.name}' because there is no stock available in {stock_location.name}."
+                if line.product_id.type in ['product', 'consu']:
+                    if line.product_id.categ_id.name != "Vehicles":  # 👈 skip vehicle products
+                        available_qty = self.env['stock.quant']._get_available_quantity(
+                            line.product_id, stock_location
                         )
+                        if available_qty <= 0:
+                            raise UserError(
+                                f"Cannot invoice '{line.product_id.name}' because there is no stock available in {stock_location.name}."
+                            )
 
         # Call super to create invoices
         invoices = super()._create_invoices(**kwargs)
@@ -69,9 +98,6 @@ class SaleOrder(models.Model):
                 })
 
         return invoices
-
-
-
 
     def action_create_job_card(self):
         self.ensure_one()
