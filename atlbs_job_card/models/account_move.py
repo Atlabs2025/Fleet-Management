@@ -156,7 +156,23 @@ class AccountMoveLine(models.Model):
         ('paint_material', 'Paint Material'),
         ('tyre', 'Tyre'),
         ('vehicle', 'Vehicle'),
+        ('consumable', 'Consumable'),
+        ('bodyshop_labour', 'Bodyshop Labour'),
+        ('bodyshop_parts', 'Bodyshop Parts'),
+        ('ppf', 'PPF'),
+        ('paint_materials', 'Paint Materials'),
     ], string="Department")
+
+    # department = fields.Selection([
+    #     ('labour', 'Labour'),
+    #     ('parts', 'Parts'),
+    #     ('material', 'Material'),
+    #     ('lubricant', 'Lubricant'),
+    #     ('sublets', 'Sublets'),
+    #     ('paint_material', 'Paint Material'),
+    #     ('tyre', 'Tyre'),
+    #     ('vehicle', 'Vehicle'),
+    # ], string="Department")
 
 
 
