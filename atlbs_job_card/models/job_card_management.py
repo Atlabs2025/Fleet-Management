@@ -737,6 +737,11 @@ class JobCardLine(models.Model):
         ('paint_material', 'Paint Material'),
         ('tyre', 'Tyre'),
         ('vehicle', 'Vehicle'),
+        ('consumable', 'Consumable'),
+        ('bodyshop_labour', 'Bodyshop Labour'),
+        ('bodyshop_parts', 'Bodyshop Parts'),
+        ('ppf', 'PPF'),
+        ('paint_materials', 'Paint Materials'),
     ], string="Department")
 
     description = fields.Text(string="Description")
@@ -1437,7 +1442,22 @@ class JobEstimateLine(models.Model):
         ('sublets', 'Sublets'),
         ('paint_material', 'Paint Material'),
         ('tyre', 'Tyre'),
+        ('vehicle', 'Vehicle'),
+        ('consumable', 'Consumable'),
+        ('bodyshop_labour', 'Bodyshop Labour'),
+        ('bodyshop_parts', 'Bodyshop Parts'),
+        ('ppf', 'PPF'),
+        ('paint_materials', 'Paint Materials'),
     ], string="Department")
+    # department = fields.Selection([
+    #     ('labour', 'Labour'),
+    #     ('parts', 'Parts'),
+    #     ('material', 'Material'),
+    #     ('lubricant', 'Lubricant'),
+    #     ('sublets', 'Sublets'),
+    #     ('paint_material', 'Paint Material'),
+    #     ('tyre', 'Tyre'),
+    # ], string="Department")
 
     description = fields.Text(string="Description")
     product_template_id = fields.Many2one('product.template', string="Part Number")
