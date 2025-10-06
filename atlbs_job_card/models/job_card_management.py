@@ -71,6 +71,11 @@ class JobCardManagement(models.Model):
     total_paint_material = fields.Float(string="Total Paint Material", compute="_compute_totals")
     total_tyre = fields.Float(string="Total Tyre", compute="_compute_totals")
 
+    total_consumable = fields.Float(string="Total Consumable", compute="_compute_totals")
+    total_bodyshop_labour = fields.Float(string="Total Bodyshop Labour", compute="_compute_totals")
+    total_bodyshop_parts = fields.Float(string="Total Bodyshop Parts", compute="_compute_totals")
+    total_car_care = fields.Float(string="Total Car Care", compute="_compute_totals")
+
     total_price_amt = fields.Float(string="Total Price", compute="_compute_totals")
     total_discount = fields.Float(string="Discount", compute="_compute_totals")
     subtotal = fields.Float(string="Subtotal", compute="_compute_totals")
@@ -170,6 +175,11 @@ class JobCardManagement(models.Model):
     estimate_total_sublets = fields.Float(string="Total Sublets", compute="_compute_estimate_totals")
     estimate_total_paint_material = fields.Float(string="Total Paint Material", compute="_compute_estimate_totals")
     estimate_total_tyre = fields.Float(string="Total Tyre", compute="_compute_estimate_totals")
+
+    estimate_total_consumable = fields.Float(string="Total Consumable", compute="_compute_estimate_totals")
+    estimate_total_bodyshop_labour = fields.Float(string="Total Bodyshop Labour", compute="_compute_estimate_totals")
+    estimate_total_bodyshop_parts = fields.Float(string="Total Bodyshop Parts", compute="_compute_estimate_totals")
+    estimate_total_car_care = fields.Float(string="Total Car Care", compute="_compute_estimate_totals")
 
     estimate_total_price_amt = fields.Float(string="Total Price", compute="_compute_estimate_totals")
     estimate_total_discount = fields.Float(string="Discount", compute="_compute_estimate_totals")
@@ -352,9 +362,14 @@ class JobCardManagement(models.Model):
             rec.total_paint_material = sum(
                 line.after_discount for line in rec.job_detail_line_ids if line.department == 'paint_material'
             )
-            rec.total_tyre = sum(
-                line.after_discount for line in rec.job_detail_line_ids if line.department == 'tyre'
-            )
+            rec.total_tyre = sum(line.after_discount for line in rec.job_detail_line_ids if line.department == 'tyre')
+
+            rec.total_consumable = sum(line.after_discount for line in rec.job_detail_line_ids if line.department == 'consumable')
+            rec.total_bodyshop_labour = sum(line.after_discount for line in rec.job_detail_line_ids if line.department == 'bodyshop_labour')
+            rec.total_bodyshop_parts = sum(line.after_discount for line in rec.job_detail_line_ids if line.department == 'bodyshop_parts')
+            rec.total_car_care = sum(line.after_discount for line in rec.job_detail_line_ids if line.department == 'car_care')
+
+
             rec.total_price_amt = sum(line.price_amt for line in rec.job_detail_line_ids)
             rec.total_discount = sum((line.price_amt - line.after_discount) for line in rec.job_detail_line_ids)
             rec.subtotal = sum(line.after_discount for line in rec.job_detail_line_ids)
@@ -701,9 +716,15 @@ class JobCardManagement(models.Model):
             rec.estimate_total_paint_material = sum(
                 line.after_discount for line in rec.estimate_line_ids if line.department == 'paint_material'
             )
-            rec.estimate_total_tyre = sum(
-                line.after_discount for line in rec.estimate_line_ids if line.department == 'tyre'
-            )
+            rec.estimate_total_tyre = sum(line.after_discount for line in rec.estimate_line_ids if line.department == 'tyre')
+
+            rec.estimate_total_consumable = sum(line.after_discount for line in rec.estimate_line_ids if line.department == 'consumable')
+            rec.estimate_total_bodyshop_labour = sum(line.after_discount for line in rec.estimate_line_ids if line.department == 'bodyshop_labour')
+            rec.estimate_total_bodyshop_parts = sum(line.after_discount for line in rec.estimate_line_ids if line.department == 'bodyshop_parts')
+            rec.estimate_total_car_care = sum(line.after_discount for line in rec.estimate_line_ids if line.department == 'car_care')
+
+
+
             rec.estimate_total_price_amt = sum(line.price_amt for line in rec.estimate_line_ids)
             rec.estimate_total_discount = sum((line.price_amt - line.after_discount) for line in rec.estimate_line_ids)
             rec.estimate_subtotal = sum(line.after_discount for line in rec.estimate_line_ids)
@@ -734,14 +755,13 @@ class JobCardLine(models.Model):
         ('material', 'Material'),
         ('lubricant', 'Lubricant'),
         ('sublets', 'Sublets'),
-        ('paint_material', 'Paint Material'),
         ('tyre', 'Tyre'),
-        ('vehicle', 'Vehicle'),
         ('consumable', 'Consumable'),
         ('bodyshop_labour', 'Bodyshop Labour'),
         ('bodyshop_parts', 'Bodyshop Parts'),
-        ('ppf', 'PPF'),
         ('paint_materials', 'Paint Materials'),
+        ('car_care', 'CarCare'),
+
     ], string="Department")
 
     description = fields.Text(string="Description")
@@ -1440,14 +1460,12 @@ class JobEstimateLine(models.Model):
         ('material', 'Material'),
         ('lubricant', 'Lubricant'),
         ('sublets', 'Sublets'),
-        ('paint_material', 'Paint Material'),
         ('tyre', 'Tyre'),
-        ('vehicle', 'Vehicle'),
         ('consumable', 'Consumable'),
         ('bodyshop_labour', 'Bodyshop Labour'),
         ('bodyshop_parts', 'Bodyshop Parts'),
-        ('ppf', 'PPF'),
-        ('paint_materials', 'Paint Materials'),
+        ('paint_material', 'Paint Material'),
+        ('car_care', 'CarCare'),
     ], string="Department")
     # department = fields.Selection([
     #     ('labour', 'Labour'),
@@ -1631,6 +1649,5 @@ class JobCardVehicleImage(models.Model):
     # name = fields.Char(string="Description")
     # image = fields.Image(string="Image", max_width=1024, max_height=1024)
     image = fields.Binary(string="Image", attachment=True)
-
 
 

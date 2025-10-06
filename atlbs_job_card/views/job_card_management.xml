@@ -226,6 +226,11 @@
                                                 <field name="estimate_total_sublets" readonly="1"/>
                                                 <field name="estimate_total_paint_material" readonly="1"/>
                                                 <field name="estimate_total_tyre" readonly="1"/>
+
+                                                <field name="estimate_total_consumable" readonly="1"/>
+                                                <field name="estimate_total_bodyshop_labour" readonly="1"/>
+                                                <field name="estimate_total_bodyshop_parts" readonly="1"/>
+                                                <field name="estimate_total_car_care" readonly="1"/>
                                             </group>
                                         </div>
                                     </div>
@@ -331,6 +336,12 @@
                                                 <field name="total_sublets" readonly="1"/>
                                                 <field name="total_paint_material" readonly="1"/>
                                                 <field name="total_tyre" readonly="1"/>
+
+                                                <field name="total_consumable" readonly="1"/>
+                                                <field name="total_bodyshop_labour" readonly="1"/>
+                                                <field name="total_bodyshop_parts" readonly="1"/>
+                                                <field name="total_car_care" readonly="1"/>
+
                                             </group>
                                         </div>
                                     </div>
