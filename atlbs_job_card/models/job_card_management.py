@@ -1128,33 +1128,33 @@ class JobCardServiceLine(models.Model):
     product_template_ids = fields.Many2many('product.template', string="Products")
 
 
-    @api.onchange('menu_service')
-    def _onchange_menu_service(self):
-        for rec in self:
-            rec._compute_service_details()
+    # @api.onchange('menu_service')
+    # def _onchange_menu_service(self):
+    #     for rec in self:
+    #         rec._compute_service_details()
+    #
+    # def _compute_service_details(self):
+    #
+    #     service_prices = {
+    #         'regular': 500,
+    #         'medium': 1000,
+    #         'major': 2000,
+    #         'lube_services': 300,
+    #     }
+    #     if self.menu_service:
+    #         self.service_amount = service_prices.get(self.menu_service, 0.0)
+    #         products = self.env['product.template'].search([('menu_service', '=', self.menu_service)])
+    #         self.product_template_ids = [(6, 0, products.ids)]
+    #     else:
+    #         self.service_amount = 0.0
+    #         self.product_template_ids = [(5, 0, 0)]  # clear
 
-    def _compute_service_details(self):
-
-        service_prices = {
-            'regular': 500,
-            'medium': 1000,
-            'major': 2000,
-            'lube_services': 300,
-        }
-        if self.menu_service:
-            self.service_amount = service_prices.get(self.menu_service, 0.0)
-            products = self.env['product.template'].search([('menu_service', '=', self.menu_service)])
-            self.product_template_ids = [(6, 0, products.ids)]
-        else:
-            self.service_amount = 0.0
-            self.product_template_ids = [(5, 0, 0)]  # clear
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super().create(vals_list)
-        for record in records:
-            record._compute_service_details()
-        return records
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     records = super().create(vals_list)
+    #     for record in records:
+    #         record._compute_service_details()
+    #     return records
 
 
 class JobCardTimeSheet(models.Model):
