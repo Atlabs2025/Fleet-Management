@@ -14,3 +14,4 @@ from .import checklist_name
 from .import quality_checklist
 from .import sale_order_inherit
 from .import purchase_order_inherit
+from .import service_description
