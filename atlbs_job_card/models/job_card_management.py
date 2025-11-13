@@ -1120,6 +1120,9 @@ class JobCardServiceLine(models.Model):
         ('lube_services', 'Lube Services'),
     ], string="Menu Service")
 
+
+    description = fields.Many2one('service.description',string="Description")
+
     service_amount = fields.Float(string="Service Amount")
 
     product_template_ids = fields.Many2many('product.template', string="Products")

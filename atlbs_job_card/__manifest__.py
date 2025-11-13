@@ -37,6 +37,7 @@
     'views/sale_order_inherit.xml',
     'views/purchase_order_form.xml',
     # 'views/dynamic_report_wiz_menu.xml',
+    'views/service_description.xml',
     'wizard/job_card_cost_analysis_wizard_view.xml',
     'wizard/job_card_invoice_wizard.xml',
     'wizard/job_card_department_summary_wizard.xml',
