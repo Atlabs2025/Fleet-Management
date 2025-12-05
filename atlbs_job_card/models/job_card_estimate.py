@@ -286,29 +286,53 @@ class JobCardEstimate(models.Model):
 
 
 
-
     # def action_create_job_card(self):
     #     self.ensure_one()
+    #
+    #     # 1. All estimate lines go to job_card_estimate_line_ids
+    #     all_estimate_lines = [(0, 0, {
+    #         'description': l.description,
+    #         'product_template_id': l.product_template_id.id,
+    #         'quantity': l.quantity,
+    #         'uom':l.uom.id,
+    #         'price_unit': l.price_unit,
+    #         'department': l.department,
+    #         'estimate_check': l.estimate_check,  # <-- this fixes the issue
+    #     }) for l in self.estimate_detail_line_ids]
+    #
+    #     # 2. Only checked lines go to job_detail_line_ids
+    #     checked_lines = self.estimate_detail_line_ids.filtered(lambda l: l.estimate_check)
+    #     checked_job_lines = [(0, 0, {
+    #         'description': l.description,
+    #         'product_template_id': l.product_template_id.id,
+    #         'quantity': l.quantity,
+    #         'price_unit': l.price_unit,
+    #         'department': l.department,
+    #     }) for l in checked_lines]
+    #
+    #     # 3. Create the Job Card
     #     job_card = self.env['job.card.management'].create({
-    #         'name': 'New',  # 👈 Add this line to trigger the sequence
+    #         'name': 'New',
     #         'register_no': self.register_no.id,
     #         'partner_id': self.partner_id.id,
     #         'vehicle_in_out': self.vehicle_in_out,
     #         'estimate_id': self.id,
-    #         'job_detail_line_ids': [(0, 0, {
-    #             'description': l.description,
-    #             'product_template_id': l.product_template_id.id,
-    #             'quantity': l.quantity,
-    #             'price_unit': l.price_unit,
-    #             'department': l.department,
-    #         }) for l in self.estimate_detail_line_ids],
+    #
+    #         # 👇 Add all estimate lines
+    #         'estimate_line_ids': all_estimate_lines,
+    #
+    #         # 👇 Add only checked ones to job_detail_line_ids
+    #         'job_detail_line_ids': checked_job_lines,
+    #
     #         'complaint_ids': [(0, 0, {
     #             'service_requested': c.service_requested,
     #             'description': c.description,
     #             'remarks': c.remarks,
     #         }) for c in self.complaint_ids],
     #     })
+    #
     #     self.job_card_id = job_card.id
+    #
     #     return {
     #         'type': 'ir.actions.act_window',
     #         'res_model': 'job.card.management',
@@ -317,6 +341,7 @@ class JobCardEstimate(models.Model):
     #         'target': 'current',
     #     }
 
+# function changed on dec 05 for moving the state in memo when we create job card from estimate
     def action_create_job_card(self):
         self.ensure_one()
 
@@ -325,10 +350,10 @@ class JobCardEstimate(models.Model):
             'description': l.description,
             'product_template_id': l.product_template_id.id,
             'quantity': l.quantity,
-            'uom':l.uom.id,
+            'uom': l.uom.id,
             'price_unit': l.price_unit,
             'department': l.department,
-            'estimate_check': l.estimate_check,  # <-- this fixes the issue
+            'estimate_check': l.estimate_check,
         }) for l in self.estimate_detail_line_ids]
 
         # 2. Only checked lines go to job_detail_line_ids
@@ -341,7 +366,7 @@ class JobCardEstimate(models.Model):
             'department': l.department,
         }) for l in checked_lines]
 
-        # 3. Create the Job Card
+        # 3. Create the Job Card and set to MEMO state
         job_card = self.env['job.card.management'].create({
             'name': 'New',
             'register_no': self.register_no.id,
@@ -349,10 +374,9 @@ class JobCardEstimate(models.Model):
             'vehicle_in_out': self.vehicle_in_out,
             'estimate_id': self.id,
 
-            # 👇 Add all estimate lines
-            'estimate_line_ids': all_estimate_lines,
+            'state': 'memo',  # SET STATE HERE
 
-            # 👇 Add only checked ones to job_detail_line_ids
+            'estimate_line_ids': all_estimate_lines,
             'job_detail_line_ids': checked_job_lines,
 
             'complaint_ids': [(0, 0, {
@@ -371,7 +395,6 @@ class JobCardEstimate(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
-
 
 
     def action_approve_estimate(self):
