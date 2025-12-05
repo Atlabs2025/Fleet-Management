@@ -443,6 +443,99 @@
                                     <field name="description" column_invisible="1"/>
 
                                     <field name="is_ok"/>
+
+                                    <field name="repair_required"/>
+                                    <field name="replace_required"/>
+                                    <field name="check_mark"/>
+                                    <field name="remarks"/>
+                                    <field name="check_mark"
+                                           options='{"bg_color": "red: check_mark == False; green: check_mark == True", "fg_color": "red: check_mark == False"}'/>
+
+                                </list>
+                            </field>
+                        </page>
+
+                        <page name="quality_checklist" string="Initial Inspection">
+                            <field name="quality_checklist_ids" widget="section_and_note_one2many" mode="list">
+                                <list editable="bottom" default_order="serial_no" limit="100">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section"
+                                                context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note"
+                                                context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+
+                                    <field name="serial_no" column_invisible="1"/>
+                                    <field name="name" widget="section_and_note_text" optional="show"
+                                           string="Checklist"/>
+                                    <field name="display_type" column_invisible="1"/>
+                                    <field name="checklist_name_id" column_invisible="1"/>
+                                    <field name="description" column_invisible="1"/>
+
+                                    <field name="is_ok"/>
+                                    <field name="repair_required"/>
+                                    <field name="replace_required"/>
+                                    <field name="check_mark"/>
+                                    <field name="remarks"/>
+                                    <field name="check_mark"
+                                           options='{"bg_color": "red: check_mark == False; green: check_mark == True", "fg_color": "red: check_mark == False"}'/>
+
+                                </list>
+                            </field>
+                        </page>
+
+
+                        <page name="quality_checklist" string="Workshop Inspection">
+                            <field name="quality_checklist_ids" widget="section_and_note_one2many" mode="list">
+                                <list editable="bottom" default_order="serial_no" limit="100">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section"
+                                                context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note"
+                                                context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+
+                                    <field name="serial_no" column_invisible="1"/>
+                                    <field name="name" widget="section_and_note_text" optional="show"
+                                           string="Checklist"/>
+                                    <field name="display_type" column_invisible="1"/>
+                                    <field name="checklist_name_id" column_invisible="1"/>
+                                    <field name="description" column_invisible="1"/>
+
+                                    <field name="is_ok"/>
+                                    <field name="repair_required"/>
+                                    <field name="replace_required"/>
+                                    <field name="check_mark"/>
+                                    <field name="remarks"/>
+                                    <field name="check_mark"
+                                           options='{"bg_color": "red: check_mark == False; green: check_mark == True", "fg_color": "red: check_mark == False"}'/>
+
+                                </list>
+                            </field>
+                        </page>
+
+
+                        <page name="quality_checklist" string="Final Inspection">
+                            <field name="quality_checklist_ids" widget="section_and_note_one2many" mode="list">
+                                <list editable="bottom" default_order="serial_no" limit="100">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section"
+                                                context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note"
+                                                context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+
+                                    <field name="serial_no" column_invisible="1"/>
+                                    <field name="name" widget="section_and_note_text" optional="show"
+                                           string="Checklist"/>
+                                    <field name="display_type" column_invisible="1"/>
+                                    <field name="checklist_name_id" column_invisible="1"/>
+                                    <field name="description" column_invisible="1"/>
+
+                                    <field name="is_ok"/>
                                     <field name="repair_required"/>
                                     <field name="replace_required"/>
                                     <field name="check_mark"/>
