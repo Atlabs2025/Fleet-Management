@@ -18,3 +18,6 @@ odoo.define('atlbs_job_card.hide_sidebar', function (require) {
         }
     });
 });
+
+
+
