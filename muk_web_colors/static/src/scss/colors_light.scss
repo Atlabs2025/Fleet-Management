@@ -1,7 +1,7 @@
 // Colors
 
-$mk_color_brand: #243742;
-$mk_color_primary: #5D8DA8;
+$mk_color_brand: #0032A6;
+$mk_color_primary: #0032A6;
 
 $mk_color_success: #28A745;
 $mk_color_info: #17A2B8;
@@ -29,3 +29,39 @@ $o-theme-text-colors: (
     "warning": $o-warning,
     "danger": $o-danger,
 );
+
+/* ===== Custom Soft Gray Background ===== */
+
+.o_web_client,
+.o_web_client > .o_action_manager,
+.o_web_client > .o_action_manager > .o_action {
+    background-color: #e9f5fb !important;
+}
+
+/* List and Kanban area */
+.o_list_view,
+.o_kanban_view,
+.o_form_view {
+    background-color: #e9f5fb !important;
+}
+
+/* Control Panel (filter bar area) */
+.o_control_panel {
+    background-color: #e9f5fb !important;
+}
+
+/* Sheet area (inside form view) */
+.o_form_sheet_bg {
+    background-color: #e9f5fb !important;
+}
+
+/* Page content container */
+.o_content {
+    background-color: #e9f5fb !important;
+}
+
+/* Optional: body color as fallback */
+body {
+    background-color: #e9f5fb !important;
+}
+

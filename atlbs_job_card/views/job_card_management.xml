@@ -441,7 +441,7 @@
                                     <field name="display_type" column_invisible="1"/>
                                     <field name="checklist_name_id" column_invisible="1"/>
                                     <field name="description" column_invisible="1"/>
-
+<!--need to change this field visibility-->
                                     <field name="is_ok"/>
 
                                     <field name="repair_required"/>

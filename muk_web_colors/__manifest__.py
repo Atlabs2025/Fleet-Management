@@ -27,7 +27,7 @@
             (
                 'before', 
                 'muk_web_colors/static/src/scss/colors.scss', 
-                'muk_web_colors/static/src/scss/colors_light.scss'
+                'muk_web_colors/static/src/scss/colors_light.scss',
             ),
         ],
         'web.assets_web_dark': [
@@ -37,6 +37,7 @@
                 'muk_web_colors/static/src/scss/colors_dark.scss'
             ),
         ],
+
     },
     'images': [
         'static/description/banner.png',
