@@ -200,6 +200,71 @@ class JobCardManagement(models.Model):
 
     all_lines_invoiced = fields.Boolean(compute='_compute_all_lines_invoiced', store=True)
 
+
+# new fields for visibility
+    estimate_labour_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_parts_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_material_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_lubricant_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_sublets_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_tyre_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_consumable_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_bodyshop_labour_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_bodyshop_parts_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_paint_materials_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+    estimate_car_care_exists = fields.Boolean(compute="_compute_estimate_department_flags")
+
+    labour_exists = fields.Boolean(compute="_compute_department_flags")
+    parts_exists = fields.Boolean(compute="_compute_department_flags")
+    material_exists = fields.Boolean(compute="_compute_department_flags")
+    lubricant_exists = fields.Boolean(compute="_compute_department_flags")
+    sublets_exists = fields.Boolean(compute="_compute_department_flags")
+    tyre_exists = fields.Boolean(compute="_compute_department_flags")
+    consumable_exists = fields.Boolean(compute="_compute_department_flags")
+    bodyshop_labour_exists = fields.Boolean(compute="_compute_department_flags")
+    bodyshop_parts_exists = fields.Boolean(compute="_compute_department_flags")
+    paint_materials_exists = fields.Boolean(compute="_compute_department_flags")
+    car_care_exists = fields.Boolean(compute="_compute_department_flags")
+
+    @api.depends('estimate_line_ids.department')
+    def _compute_estimate_department_flags(self):
+        for rec in self:
+            departments = rec.estimate_line_ids.mapped('department')
+
+            rec.estimate_labour_exists = 'labour' in departments
+            rec.estimate_parts_exists = 'parts' in departments
+            rec.estimate_material_exists = 'material' in departments
+            rec.estimate_lubricant_exists = 'lubricant' in departments
+            rec.estimate_sublets_exists = 'sublets' in departments
+            rec.estimate_tyre_exists = 'tyre' in departments
+            rec.estimate_consumable_exists = 'consumable' in departments
+            rec.estimate_bodyshop_labour_exists = 'bodyshop_labour' in departments
+            rec.estimate_bodyshop_parts_exists = 'bodyshop_parts' in departments
+            rec.estimate_paint_materials_exists = 'paint_materials' in departments
+            rec.estimate_car_care_exists = 'car_care' in departments
+
+
+
+    @api.depends('job_detail_line_ids.department')
+    def _compute_department_flags(self):
+        for rec in self:
+            departments = rec.job_detail_line_ids.mapped('department')
+
+            rec.labour_exists = 'labour' in departments
+            rec.parts_exists = 'parts' in departments
+            rec.material_exists = 'material' in departments
+            rec.lubricant_exists = 'lubricant' in departments
+            rec.sublets_exists = 'sublets' in departments
+            rec.tyre_exists = 'tyre' in departments
+            rec.consumable_exists = 'consumable' in departments
+            rec.bodyshop_labour_exists = 'bodyshop_labour' in departments
+            rec.bodyshop_parts_exists = 'bodyshop_parts' in departments
+            rec.paint_materials_exists = 'paint_materials' in departments
+            rec.car_care_exists = 'car_care' in departments
+
+
+
+
     @api.model
     def get_quality_checklist(self):
         quality_lines = []

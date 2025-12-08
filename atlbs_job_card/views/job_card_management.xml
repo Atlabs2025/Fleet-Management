@@ -219,18 +219,18 @@
                                     <div style="flex: 1;">
                                         <div style="display: grid; grid-template-columns: auto 1fr; row-gap: 6px; column-gap: 8px;">
                                             <group string="Summary" col="2" style="text-align: left;">
-                                                <field name="estimate_total_labour" readonly="1"/>
-                                                <field name="estimate_total_parts" readonly="1"/>
-                                                <field name="estimate_total_material" readonly="1"/>
-                                                <field name="estimate_total_lubricant" readonly="1"/>
-                                                <field name="estimate_total_sublets" readonly="1"/>
-                                                <field name="estimate_total_paint_material" readonly="1"/>
-                                                <field name="estimate_total_tyre" readonly="1"/>
+                                                <field name="estimate_total_labour" readonly="1" invisible="estimate_labour_exists == False"/>
+                                                <field name="estimate_total_parts" readonly="1" invisible="estimate_parts_exists == False"/>
+                                                <field name="estimate_total_material" readonly="1" invisible="estimate_material_exists == False"/>
+                                                <field name="estimate_total_lubricant" readonly="1" invisible="estimate_lubricant_exists == False"/>
+                                                <field name="estimate_total_sublets" readonly="1" invisible="estimate_sublets_exists == False"/>
+                                                <field name="estimate_total_paint_material" readonly="1" invisible="estimate_paint_materials_exists == False"/>
+                                                <field name="estimate_total_tyre" readonly="1" invisible="estimate_tyre_exists == False"/>
 
-                                                <field name="estimate_total_consumable" readonly="1"/>
-                                                <field name="estimate_total_bodyshop_labour" readonly="1"/>
-                                                <field name="estimate_total_bodyshop_parts" readonly="1"/>
-                                                <field name="estimate_total_car_care" readonly="1"/>
+                                                <field name="estimate_total_consumable" readonly="1" invisible="estimate_consumable_exists == False"/>
+                                                <field name="estimate_total_bodyshop_labour" readonly="1" invisible="estimate_bodyshop_labour_exists == False"/>
+                                                <field name="estimate_total_bodyshop_parts" readonly="1" invisible="estimate_bodyshop_parts_exists == False"/>
+                                                <field name="estimate_total_car_care" readonly="1" invisible="estimate_car_care_exists == False"/>
                                             </group>
                                         </div>
                                     </div>
@@ -329,18 +329,18 @@
                                     <div style="flex: 1;">
                                         <div style="display: grid; grid-template-columns: auto 1fr; row-gap: 6px; column-gap: 8px;">
                                             <group string="Summary" col="2" style="text-align: left;">
-                                                <field name="total_labour" readonly="1"/>
-                                                <field name="total_parts" readonly="1"/>
-                                                <field name="total_material" readonly="1"/>
-                                                <field name="total_lubricant" readonly="1"/>
-                                                <field name="total_sublets" readonly="1"/>
-                                                <field name="total_paint_material" readonly="1"/>
-                                                <field name="total_tyre" readonly="1"/>
+                                                <field name="total_labour" readonly="1"  invisible="labour_exists == False"/>
+                                                <field name="total_parts" readonly="1" invisible="parts_exists == False"/>
+                                                <field name="total_material" readonly="1" invisible="material_exists == False"/>
+                                                <field name="total_lubricant" readonly="1" invisible="lubricant_exists == False"/>
+                                                <field name="total_sublets" readonly="1" invisible="sublets_exists == False"/>
+                                                <field name="total_paint_material" readonly="1" invisible="paint_materials_exists == False"/>
+                                                <field name="total_tyre" readonly="1" invisible="tyre_exists == False"/>
 
-                                                <field name="total_consumable" readonly="1"/>
-                                                <field name="total_bodyshop_labour" readonly="1"/>
-                                                <field name="total_bodyshop_parts" readonly="1"/>
-                                                <field name="total_car_care" readonly="1"/>
+                                                <field name="total_consumable" readonly="1" invisible="consumable_exists == False"/>
+                                                <field name="total_bodyshop_labour" readonly="1" invisible="bodyshop_labour_exists == False"/>
+                                                <field name="total_bodyshop_parts" readonly="1" invisible="bodyshop_parts_exists == False"/>
+                                                <field name="total_car_care" readonly="1" invisible="car_care_exists == False"/>
 
                                             </group>
                                         </div>
