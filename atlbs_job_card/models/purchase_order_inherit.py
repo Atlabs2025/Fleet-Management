@@ -6,8 +6,6 @@ class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
 
-
-
     # def action_add_vehicle_products(self):
     #     all_vehicles = self.env['product.product'].search([('categ_id.name', '=', 'Vehicles')])
     #     wizard = self.env['purchase.order.vehicle.product.wizard'].create({'purchase_order_id': self.id})
@@ -71,6 +69,24 @@ class PurchaseOrderLine(models.Model):
     )
 
     description = fields.Char(string='Description')
+
+
+
+###########################################3remove this code before pushing################3
+    is_storable = fields.Boolean(
+        compute="_compute_is_storable",
+        store=False
+    )
+
+    def _compute_is_storable(self):
+        for rec in self:
+            rec.is_storable = rec.product_id.type == 'product'
+
+
+###########################################################################
+
+
+
 
     @api.depends("product_id")
     def _compute_stock_qty(self):
