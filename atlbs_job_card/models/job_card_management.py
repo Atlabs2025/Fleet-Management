@@ -240,7 +240,7 @@ class JobCardManagement(models.Model):
             rec.estimate_consumable_exists = 'consumable' in departments
             rec.estimate_bodyshop_labour_exists = 'bodyshop_labour' in departments
             rec.estimate_bodyshop_parts_exists = 'bodyshop_parts' in departments
-            rec.estimate_paint_materials_exists = 'paint_materials' in departments
+            rec.estimate_paint_materials_exists = 'paint_material' in departments
             rec.estimate_car_care_exists = 'car_care' in departments
 
 
