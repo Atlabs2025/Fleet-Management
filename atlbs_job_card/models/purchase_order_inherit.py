@@ -72,7 +72,7 @@ class PurchaseOrderLine(models.Model):
 
 
 
-###########################################3remove this code before pushing################3
+#################################remove this code before pushing################3
     is_storable = fields.Boolean(
         compute="_compute_is_storable",
         store=False
