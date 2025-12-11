@@ -397,15 +397,42 @@ class JobCardEstimate(models.Model):
         }
 
 
+    # def action_approve_estimate(self):
+    #     for rec in self:
+    #         rec.state = 'approved'
+
+
+# changed function on Dec11
     def action_approve_estimate(self):
-        for rec in self:
-            rec.state = 'approved'
+        self.ensure_one()
 
+        # Step 1: Move estimate state
+        self.state = 'approved'
 
+        # Step 2: Find linked job card
+        job_card = self.job_card_id
+        if not job_card:
+            raise UserError("No Job Card linked to this Estimate.")
 
+        # Step 3: Get only checked estimate lines
+        checked_lines = self.estimate_detail_line_ids.filtered(lambda l: l.estimate_check)
 
+        if not checked_lines:
+            raise UserError("No lines are checked to add into Job Card.")
 
+        # Step 4: Create job card lines from checked lines
+        for line in checked_lines:
+            self.env['job.card.line'].create({
+                'job_card_id': job_card.id,
+                'description': line.description,
+                'product_template_id': line.product_template_id.id,
+                'quantity': line.quantity,
+                'price_unit': line.price_unit,
+                'department': line.department,
+                'tax_ids': [(6, 0, line.tax_ids.ids)],
+            })
 
+        return True
 
 
 class JobEstimateLine(models.Model):
