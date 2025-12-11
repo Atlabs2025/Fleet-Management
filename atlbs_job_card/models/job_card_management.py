@@ -691,6 +691,63 @@ class JobCardManagement(models.Model):
 #                 'tax_ids': [(6, 0, line.tax_ids.ids)],
 #             })
 
+    # def action_approve_estimate(self):
+    #     self.ensure_one()
+    #
+    #     if not self.estimate_line_ids:
+    #         raise UserError("No estimate lines to approve.")
+    #
+    #     # 1. Create Job Card Estimate and fill ALL estimate lines
+    #     estimate = self.env['job.card.estimate'].create({
+    #         'register_no': self.register_no.id,
+    #         'partner_id': self.partner_id.id,
+    #         'vehicle_in_out': self.vehicle_in_out,
+    #         'job_card_id': self.id,
+    #         'estimate_detail_line_ids': [
+    #             (0, 0, {
+    #                 'description': l.description,
+    #                 'product_template_id': l.product_template_id.id,
+    #                 'quantity': l.quantity,
+    #                 'uom':l.uom.id,
+    #                 'price_unit': l.price_unit,
+    #                 'department': l.department,
+    #                 'tax_ids': [(6, 0, l.tax_ids.ids)],
+    #                 'discount': l.discount,
+    #                 'after_discount': l.after_discount,
+    #                 'price_amt': l.price_amt,
+    #                 'tax_amount': l.tax_amount,
+    #                 'total': l.total,
+    #                 'estimate_check': l.estimate_check,
+    #             }) for l in self.estimate_line_ids  # ✅ all lines
+    #         ]
+    #     })
+    #
+    #     # 2. Save estimate reference to job card
+    #     self.estimate_id = estimate.id
+    #
+    #     # 3. Create job card lines from only checked ones
+    #     checked_lines = self.estimate_line_ids.filtered(lambda l: l.estimate_check)
+    #     for line in checked_lines:
+    #         self.env['job.card.line'].create({
+    #             'job_card_id': self.id,
+    #             'description': line.description,
+    #             'product_template_id': line.product_template_id.id,
+    #             'quantity': line.quantity,
+    #             'price_unit': line.price_unit,
+    #             'department': line.department,
+    #             'tax_ids': [(6, 0, line.tax_ids.ids)],
+    #         })
+    #
+    #     self.state = 'memo'
+    #
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'job.card.estimate',
+    #         'res_id': estimate.id,
+    #         'view_mode': 'form',
+    #         'target': 'current',
+    #     }
+
     def action_approve_estimate(self):
         self.ensure_one()
 
@@ -708,7 +765,7 @@ class JobCardManagement(models.Model):
                     'description': l.description,
                     'product_template_id': l.product_template_id.id,
                     'quantity': l.quantity,
-                    'uom':l.uom.id,
+                    'uom': l.uom.id,
                     'price_unit': l.price_unit,
                     'department': l.department,
                     'tax_ids': [(6, 0, l.tax_ids.ids)],
@@ -718,26 +775,19 @@ class JobCardManagement(models.Model):
                     'tax_amount': l.tax_amount,
                     'total': l.total,
                     'estimate_check': l.estimate_check,
-                }) for l in self.estimate_line_ids  # ✅ all lines
+                }) for l in self.estimate_line_ids
             ]
         })
 
         # 2. Save estimate reference to job card
         self.estimate_id = estimate.id
 
-        # 3. Create job card lines from only checked ones
-        checked_lines = self.estimate_line_ids.filtered(lambda l: l.estimate_check)
-        for line in checked_lines:
-            self.env['job.card.line'].create({
-                'job_card_id': self.id,
-                'description': line.description,
-                'product_template_id': line.product_template_id.id,
-                'quantity': line.quantity,
-                'price_unit': line.price_unit,
-                'department': line.department,
-                'tax_ids': [(6, 0, line.tax_ids.ids)],
-            })
+        # ❌ Remove the job card line creation — no lines should be created
+        # checked_lines = self.estimate_line_ids.filtered(lambda l: l.estimate_check)
+        # for line in checked_lines:
+        #     self.env['job.card.line'].create({...})
 
+        # 3. Set state after approval
         self.state = 'memo'
 
         return {
@@ -748,8 +798,7 @@ class JobCardManagement(models.Model):
             'target': 'current',
         }
 
-
-# estimate total section
+    # estimate total section
 
     @api.depends('estimate_line_ids.total')
     def _compute_estimate_total_amount(self):
