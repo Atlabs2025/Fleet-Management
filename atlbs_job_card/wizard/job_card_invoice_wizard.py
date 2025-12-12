@@ -353,11 +353,32 @@ class JobCardInvoiceWizard(models.TransientModel):
             raise UserError("No internal stock location found for the job card's company.")
 
         # Job Card Detail Lines
-        for line in selected_lines:
-            if line.quantity <= 0:
-                raise UserError(f"Quantity must be greater than 0 for line: {line.description}")
 
-            # --- STOCK VALIDATION FOR ALL PRODUCTS ---
+        # for line in selected_lines:
+        #     if line.quantity <= 0:
+        #         raise UserError(f"Quantity must be greater than 0 for line: {line.description}")
+        #
+        #     # --- STOCK VALIDATION FOR ALL PRODUCTS ---
+        #     if line.product_template_id:
+        #         product = line.product_template_id.product_variant_id
+        #         available_qty = self.env['stock.quant']._get_available_quantity(product, stock_location)
+        #         if available_qty <= 0:
+        #             raise UserError(
+        #                 f"Cannot invoice '{product.name}' because there is no stock available in {stock_location.name}."
+        #             )
+
+        # changed this function on dec12 for quantity is zero it should not be invoiced for other departments except parts
+        for line in selected_lines:
+
+                # ---------------------------------------------
+                # Quantity check ONLY when department = 'parts'
+                # ---------------------------------------------
+            if line.department == 'parts' and line.quantity <= 0:
+                raise UserError(
+                    f"Quantity must be greater than 0 for line: {line.description}"
+                )
+
+                # --- STOCK VALIDATION FOR ALL PRODUCTS ---
             if line.product_template_id:
                 product = line.product_template_id.product_variant_id
                 available_qty = self.env['stock.quant']._get_available_quantity(product, stock_location)
@@ -365,6 +386,7 @@ class JobCardInvoiceWizard(models.TransientModel):
                     raise UserError(
                         f"Cannot invoice '{product.name}' because there is no stock available in {stock_location.name}."
                     )
+###########################################################################################
 
             product_id = False
             if line.department in ['parts', 'vehicle'] and line.product_template_id:
